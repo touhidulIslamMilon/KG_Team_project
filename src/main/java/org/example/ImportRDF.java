@@ -22,6 +22,8 @@ public class ImportRDF {
         } finally { d.end(); } d.close(); System.out.println("finish ...");
 
 
+        //Test
+
         String sparqlQueryString ="PREFIX humans: <http://www.inria.fr/2007/09/11/humans.rdfs#> PREFIX inst: <http://www.inria.fr/2007/09/11/humans.rdfs-instances#> SELECT ?x WHERE {?x humans:hasSpouse inst:Catherine .}";
         // See http://incubator.apache.org/jena/documentation/query/app_api.html
         Query query = QueryFactory.create(sparqlQueryString) ; QueryExecution qexec = QueryExecutionFactory.create(query, d) ; try {
