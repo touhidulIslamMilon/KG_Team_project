@@ -8,6 +8,8 @@ import org.apache.jena.tdb.TDBLoader;
 
 import java.util.Iterator;
 
+
+//test from Alsu
 public class ImportRDF {
     public static void importDataset(String directory, String sparqlQueryString){
         //importing rdf data from directory
