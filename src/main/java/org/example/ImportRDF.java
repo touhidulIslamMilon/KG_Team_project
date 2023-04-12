@@ -8,6 +8,8 @@ import org.apache.jena.tdb.TDBLoader;
 
 import java.util.Iterator;
 
+
+//test from Alsu
 public class ImportRDF {
     public static void importDataset(String directory){
         Dataset d = TDBFactory.createDataset(directory); Model model = d.getDefaultModel();
