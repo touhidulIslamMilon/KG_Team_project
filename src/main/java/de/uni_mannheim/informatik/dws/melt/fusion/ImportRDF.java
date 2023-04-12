@@ -1,4 +1,4 @@
-package org.example;
+package de.uni_mannheim.informatik.dws.melt.fusion;
 
 import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.Model;
@@ -11,7 +11,15 @@ import java.util.Iterator;
 
 //test from Alsu
 public class ImportRDF {
-    public static void importDataset(String directory){
+    public static void importDataset(String directory, String sparqlQueryString){
+        //importing rdf data from directory
+        ImportRDF importRDF = new ImportRDF();
+        String Directory="";
+        //String sparqlQueryString ="PREFIX humans: <http://www.inria.fr/2007/09/11/humans.rdfs#> " +
+        //        "PREFIX inst: <http://www.inria.fr/2007/09/11/humans.rdfs-instances#> SELECT ?x WHERE " +
+        //        "{?x humans:hasSpouse inst:Catherine .}";
+        importRDF.importDataset(Directory, sparqlQueryString);
+
         Dataset d = TDBFactory.createDataset(directory); Model model = d.getDefaultModel();
 
         d.begin(ReadWrite.READ); try {
@@ -24,7 +32,7 @@ public class ImportRDF {
         } finally { d.end(); } d.close(); System.out.println("finish ...");
 
 
-        String sparqlQueryString ="PREFIX humans: <http://www.inria.fr/2007/09/11/humans.rdfs#> PREFIX inst: <http://www.inria.fr/2007/09/11/humans.rdfs-instances#> SELECT ?x WHERE {?x humans:hasSpouse inst:Catherine .}";
+
         // See http://incubator.apache.org/jena/documentation/query/app_api.html
         Query query = QueryFactory.create(sparqlQueryString) ; QueryExecution qexec = QueryExecutionFactory.create(query, d) ; try {
             ResultSet results = qexec.execSelect() ;
