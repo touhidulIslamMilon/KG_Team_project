@@ -3,12 +3,18 @@ package de.uni_mannheim.informatik.dws.melt.fusion;
 import de.uni_mannheim.informatik.dws.melt.matching_data.TrackRepository;
 import de.uni_mannheim.informatik.dws.melt.matching_jena.OntologyCacheJena;
 import java.io.File;
+import java.util.List;
+
 import org.apache.jena.graph.Node;
 import org.apache.jena.graph.NodeFactory;
 import org.apache.jena.graph.Triple;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntProperty;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.rdf.model.StmtIterator;
 import org.apache.jena.util.iterator.ExtendedIterator;
+import org.apache.jena.util.FileManager;
 import org.semanticweb.owlapi.io.SystemOutDocumentTarget;
 
 
@@ -45,6 +51,14 @@ public class Main {
         while(properties.hasNext()){
             OntProperty property = properties.next();
             System.out.println(property);
+        }
+
+        //List all resources:
+        ExtendedIterator<Statement> statements = swtorKG.listStatements();
+        while (statements.hasNext()) {
+            Statement statement = statements.next();
+            Resource subject = statement.getSubject();
+            System.out.println(subject.getURI());
         }
         
     }
