@@ -9,6 +9,7 @@ import org.apache.jena.graph.Triple;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntProperty;
 import org.apache.jena.util.iterator.ExtendedIterator;
+import org.semanticweb.owlapi.io.SystemOutDocumentTarget;
 
 
 public class Main {
