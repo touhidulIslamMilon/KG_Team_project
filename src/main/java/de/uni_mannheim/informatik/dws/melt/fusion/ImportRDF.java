@@ -20,7 +20,8 @@ public class ImportRDF {
         //        "{?x humans:hasSpouse inst:Catherine .}";
         importRDF.importDataset(Directory, sparqlQueryString);
 
-        Dataset d = TDBFactory.createDataset(directory); Model model = d.getDefaultModel();
+        Dataset d = TDBFactory.createDataset(directory);
+        Model model = d.getDefaultModel();
 
         d.begin(ReadWrite.READ); try {
             Iterator<Quad> iter = d.asDatasetGraph().find(); int i=0;
@@ -34,7 +35,9 @@ public class ImportRDF {
 
 
         // See http://incubator.apache.org/jena/documentation/query/app_api.html
-        Query query = QueryFactory.create(sparqlQueryString) ; QueryExecution qexec = QueryExecutionFactory.create(query, d) ; try {
+        Query query = QueryFactory.create(sparqlQueryString) ;
+        QueryExecution qexec = QueryExecutionFactory.create(query, d) ;
+        try {
             ResultSet results = qexec.execSelect() ;
             while (results.hasNext()) {
                 QuerySolution sol = results.next();
