@@ -3,18 +3,17 @@ package de.uni_mannheim.informatik.dws.melt.fusion;
 import de.uni_mannheim.informatik.dws.melt.matching_data.TrackRepository;
 import de.uni_mannheim.informatik.dws.melt.matching_jena.OntologyCacheJena;
 import java.io.File;
+import java.util.List;
+
 import org.apache.jena.graph.Node;
 import org.apache.jena.graph.NodeFactory;
 import org.apache.jena.graph.Triple;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntProperty;
-import org.apache.jena.query.Dataset;
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.riot.Lang;
-import org.apache.jena.riot.RDFDataMgr;
-import org.apache.jena.tdb.TDBFactory;
+
 import org.apache.jena.util.iterator.ExtendedIterator;
+import org.apache.jena.util.FileManager;
+import org.semanticweb.owlapi.io.SystemOutDocumentTarget;
 
 
 public class Main {
