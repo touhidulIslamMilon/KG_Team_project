@@ -27,7 +27,9 @@ public class Main {
         OntModel swtorKG = TrackRepository.Knowledgegraph.V4.getTestCase("starwars-swtor").getTargetOntology(OntModel.class);
 
         //print out the entire dataset
-        swtorKG.write(System.out, "RDF/XML-ABBREV");
+        //swtorKG.write(System.out, "RDF/XML-ABBREV");
+        //swtorKG.write(System.out, "TRIPLE");
+        swtorKG.write(System.out, "RDF/XML");
 
         //iterate over triples
         ExtendedIterator<Triple> triples = swtorKG.getGraph().find(Node.ANY, Node.ANY, Node.ANY);
