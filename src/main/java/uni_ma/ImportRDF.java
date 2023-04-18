@@ -1,4 +1,4 @@
-package de.uni_mannheim.informatik.dws.melt.fusion;
+package uni_ma;
 
 import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.Model;
