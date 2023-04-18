@@ -1,4 +1,4 @@
-package uni_ma.merger;
+package uni_ma.kg_merger;
 
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.util.FileManager;
