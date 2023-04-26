@@ -1,4 +1,4 @@
-package de.uni_mannheim.informatik.dws.melt.fusion;
+package uni_ma;
 
 import de.uni_mannheim.informatik.dws.melt.matching_data.TrackRepository;
 import de.uni_mannheim.informatik.dws.melt.matching_jena.OntologyCacheJena;

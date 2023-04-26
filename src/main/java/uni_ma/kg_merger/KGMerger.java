@@ -1,8 +1,7 @@
-package de.uni_mannheim.informatik.dws.melt.fusion.merger;
+package uni_ma.kg_merger;
 
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
 
