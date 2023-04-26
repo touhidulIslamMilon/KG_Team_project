@@ -15,7 +15,10 @@ import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
 import org.apache.jena.util.iterator.ExtendedIterator;
 import org.apache.jena.util.FileManager;
+import org.semanticweb.owlapi.io.RDFNode;
 import org.semanticweb.owlapi.io.SystemOutDocumentTarget;
+
+import com.google.j2objc.annotations.Property;
 
 
 public class Main {
@@ -39,10 +42,16 @@ public class Main {
         
         //search for specific triples
         Node genderProperty = NodeFactory.createURI("http://dbkwik.webdatacommons.org/swtor.wikia.com/property/gender");
+        Node planetProperty = NodeFactory.createURI("http://dbkwik.webdatacommons.org/swtor.wikia.com/property/planet");
         triples = swtorKG.getGraph().find(Node.ANY, genderProperty, Node.ANY);
         while(triples.hasNext()){
             Triple t = triples.next();
+
             System.out.println(t);
+            System.out.println("There is the Object: "+t.getObject());
+            System.out.println("There is the subject: "+t.getSubject());
+            System.out.println("There is the predicate: "+t.getPredicate());
+            System.out.println("There is the discription: "+t.getClass().getName());
             break;
         }
         
@@ -54,13 +63,48 @@ public class Main {
         }
 
         //List all resources:
-        ExtendedIterator<Statement> statements = swtorKG.listStatements();
-        while (statements.hasNext()) {
-            Statement statement = statements.next();
-            Resource subject = statement.getSubject();
-            System.out.println(subject.getURI());
+       ExtendedIterator<Statement> statements = swtorKG.listStatements();
+       while (statements.hasNext()) {
+           Statement statement = statements.next();
+           Resource subject = statement.getSubject();
+           System.out.println(subject.getURI());
+       }
+       //print out rdf file
+       // swtorKG.write(System.out, "RDF/XML-ABBREV");
+        //list all statements
+        StmtIterator iter = swtorKG.listStatements();
+        // print out the predicate, subject and object of each statement
+        // while (iter.hasNext()) {
+        //     Statement stmt      = iter.nextStatement();  // get next statement
+        //     Resource  subject   = stmt.getSubject();     // get the subject
+        //     Property  predicate = (Property) stmt.getPredicate();   // get the predicate
+        //     RDFNode   object    = (RDFNode) stmt.getObject();      // get the object
+        //     System.out.print(subject.toString());
+        //     System.out.print(" " + predicate.toString() + " ");
+        //     if (object instanceof Resource) {
+        //         System.out.print(object.toString());
+        //     } else {
+        //         // object is a literal
+        //         System.out.print(" \"" + object.toString() + "\"");
+        //     }
+        //     System.out.println(" .");
+        // }
+
+        // print each subject, object and predicate
+        //write text subject, object, and predicate before each subject, object, and predicate
+
+        while (iter.hasNext()) {
+            Statement stmt      = iter.nextStatement();  // get next statement
+            Resource  subject   = stmt.getSubject();     // get the subject
+            Property  predicate = (Property) stmt.getPredicate();   // get the predicate
+            RDFNode   object    = (RDFNode) stmt.getObject();      // get the object
+            System.out.println("Subject: "+subject.toString());
+            System.out.println("Predicate: "+predicate.toString());
+            System.out.println("Object: "+object.toString());
         }
-        
+        //write file in xml formate
+        // write file in xml formate
+        //swtorKG.write(System.out, "RDF/XML-ABBREV");
     }
     
 }
