@@ -1,5 +1,7 @@
 package uni_ma.kg_merger;
 
+import de.uni_mannheim.informatik.dws.melt.matching_data.TrackRepository;
+import org.apache.jena.ontology.OntModel;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Statement;
@@ -13,8 +15,8 @@ public class KGMerger {
         Model model2 = ModelFactory.createDefaultModel();
 
         // Load data into the models from RDF files or other sources
-        model1.read("knowledge_graph1.rdf");
-        model2.read("knowledge_graph2.rdf");
+        model1.read("testA.rdf");
+        model2.read("testB.rdf");
 
         // Create a new model to hold the merged knowledge graph
         Model mergedModel = ModelFactory.createDefaultModel();
