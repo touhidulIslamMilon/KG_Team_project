@@ -1,35 +1,29 @@
 package fusion;
 
-import org.apache.jena.rdf.model.*;
-import org.apache.jena.riot.RDFDataMgr;
-
-import java.io.InputStream;
+import de.uni_mannheim.informatik.dws.melt.fusion.merger.InOu;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Statement;
+import org.apache.jena.rdf.model.StmtIterator;
+import org.springframework.util.StopWatch;
 
 public class Main {
     
     public static void main(String[] args){
-        // create an empty model
+
+        //measure time of execution
+        //will help to increase the efficiency of the code
+        StopWatch watch = new StopWatch();
+        watch.start();
 
         Model model1 = ModelFactory.createDefaultModel();
         Model model2 = ModelFactory.createDefaultModel();
         // use the RDFDataMgr to find the input file
-        InputStream testA = RDFDataMgr.open("/Users/mdtouhidulislam/Documents/testA.rdf" );
-        if (testA == null)
-        {
-            throw new IllegalArgumentException("File: " + "/Users/mdtouhidulislam/Documents/testA.rdf" + " not found");
-        }
-
-        // read the RDF/XML file
-        model1.read(testA, null);
-
-        InputStream testB = RDFDataMgr.open("/Users/mdtouhidulislam/Documents/testB.rdf" );
-        if (testB == null)
-        {
-            throw new IllegalArgumentException("File: " + "/Users/mdtouhidulislam/Documents/testB.rdf" + " not found");
-        }
-
-        // read the RDF/XML file
-        model2.read(testB, null);
+        InOu inOu = new InOu();
+        
+        model1 = inOu.inputModel("/Users/mdtouhidulislam/Documents/testA.rdf");
+        model2 = inOu.inputModel("/Users/mdtouhidulislam/Documents/testB.rdf");
+        
 
         System.out.println( "#testA" );
         // write it to standard out
@@ -42,68 +36,67 @@ public class Main {
         //Model fusedModels = modelA.union(modelB);
         //create a custom union model
         Model fusedModels = ModelFactory.createDefaultModel();
-        fusedModels.add(model1);
-        fusedModels.add(model2);
+
         //fusedModels.write(System.out);
 
 
-        Model mergedModel = ModelFactory.createDefaultModel();
+
+        Model mergedModel = mergedModel(model1,model2);
+        System.out.println( "#Conflict models" );
+        mergedModel.write(System.out,"TURTLE");
+
         StmtIterator iter1 = model1.listStatements();
         StmtIterator iter2 = model2.listStatements();
-        Model Marges = mergedModel(model1,model2);
+        StmtIterator marge = mergedModel.listStatements();
 
+        //print all statements in marge
+        while (iter1.hasNext()){
+            Statement stmt1 = iter1.nextStatement();
+            while (marge.hasNext()){
+                Statement stmt2 = marge.nextStatement();
+                if (stmt1.getSubject().hasURI(stmt2.getSubject().getURI())){
+                    System.out.println("Su1: "+ stmt1);
+                    break;
+                }
+            }
+            fusedModels.add(stmt1.getSubject(), stmt1.getPredicate(), stmt1.getObject());
+//
+
+        }
+        while (iter2.hasNext()){
+            Statement stmt1 = iter2.nextStatement();
+            while (marge.hasNext()){
+                Statement stmt2 = marge.nextStatement();
+                if (stmt1.getSubject().hasURI(stmt2.getSubject().getURI())){
+                    System.out.println("Su1: "+ stmt2);
+                    break;
+                }
+            }
+            fusedModels.add(stmt1.getSubject(), stmt1.getPredicate(), stmt1.getObject());
+
+        }
+
+        //System.out.println( "#FUSED models" );
+        //fusedModels.write(System.out,"rdf/xml");
+
+        watch.stop();
+        System.out.println( "Eecution time: "+  watch.getTotalTimeMillis() + " ms" );
     }
 
     private static Model mergedModel(Model model1, Model model2) {
         Model mergedModel = ModelFactory.createDefaultModel();
-        StmtIterator iter1 = model1.listStatements();
-        StmtIterator iter2 = model2.listStatements();
-        Model conflict = ModelFactory.createDefaultModel();
-
-
+        ConflictManagement conflictManagement = new ConflictManagement();
+        mergedModel = conflictManagement.DetectConflict(model1,model2);
 
         //cheak if the subject of model1 is equal to the subject of model2
-        while (iter1.hasNext()) {
-            Statement stmt = iter1.next();
-            Resource subj = stmt.getSubject();
-
-            // Add the mapped statements from model2 to the merged model
-            while (iter2.hasNext()) {
-                Statement stmt1 = iter2.next();
-
-                //if the subject of model1 is equal to the subject of model2
-                if(stmt.getSubject().hasURI(stmt1.getSubject().getURI())){
-                    //if the predicate of model1 is equal to the predicate of model2
-                    ConflictManagement conflictManagement = new ConflictManagement();
-                    Statement marges = conflictManagement.ManageConflict(stmt, stmt1,stmt1.getSubject().getURI());
-                    System.out.println("Su: " + stmt1.getSubject() + " " + stmt1.getPredicate().toString() + " " + stmt1.getObject());
-                    System.out.println("Su1: " + stmt.getSubject() + " " + stmt.getPredicate().getLocalName() + " " + stmt.getObject());
-                    mergedModel.add(marges.getSubject(), marges.getPredicate(), marges.getObject());
-                    Resource resource = model2.getResource(stmt1.getSubject().getURI());
-                    Resource resource1 = model1.getResource(stmt1.getSubject().getURI());
-                    System.out.println(resource.getProperty(stmt.getPredicate()));
-                    if(resource.getProperty(stmt.getPredicate())!=null){
-                        conflict.add(resource.getProperty(stmt.getPredicate()));
-                        conflict.add(resource1.getProperty(stmt.getPredicate()));
-                    }
-
-                    break;
-                }
-
-                mergedModel.add(stmt1.getSubject(), stmt1.getPredicate(), stmt1.getObject());
-
-            }
-            Property pred = stmt.getPredicate();
-            RDFNode obj = stmt.getObject();
-            mergedModel.add(subj, pred, obj);
-        }
-
-
-        mergedModel.write(System.out);
-        conflict.write(System.out);
 
         return mergedModel;
     }
+
+
+
+
+
 
 }
 
