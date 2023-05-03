@@ -6,6 +6,7 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
+import org.semanticweb.owlapi.io.SystemOutDocumentTarget;
 
 public class KGMerger {
 
@@ -16,26 +17,18 @@ public class KGMerger {
 
         // Load data into the models from RDF files or other sources
         model1.read("testA.rdf");
+        System.out.println("Graph A");
+        model1.write(System.out, "RDF/XML-ABBREV");
         model2.read("testB.rdf");
+        System.out.println("Graph B");
+        model1.write(System.out, "RDF/XML-ABBREV");
 
         // Create a new model to hold the merged knowledge graph
         Model mergedModel = ModelFactory.createDefaultModel();
-
-        // Add the statements from the first model to the merged model
-        StmtIterator iter1 = model1.listStatements();
-        while (iter1.hasNext()) {
-            Statement stmt = iter1.next();
-            mergedModel.add(stmt);
-        }
-
-        // Add the statements from the second model to the merged model
-        StmtIterator iter2 = model2.listStatements();
-        while (iter2.hasNext()) {
-            Statement stmt = iter2.next();
-            mergedModel.add(stmt);
-        }
+        mergedModel = model1.union(model2);
 
         // Output the merged model to an RDF file or other destination
+        System.out.println("Merged");
         mergedModel.write(System.out, "RDF/XML-ABBREV");
     }
 

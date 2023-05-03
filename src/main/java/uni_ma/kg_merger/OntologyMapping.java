@@ -1,11 +1,48 @@
 package uni_ma.kg_merger;
 
+import org.apache.jena.ontology.*;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.util.FileManager;
+import org.apache.jena.vocabulary.OWL;
 
 public class OntologyMapping {
 
-    public static void main(String[] args) {
+    public Model map(Model model1, Model model2){
+        Model mappingOntModel = ModelFactory.createDefaultModel();
+        OntModel ontModel1 = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM, model1);
+        OntModel ontModel2 = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM, model2);
+
+        // Iterate over the classes in ontology 1 and find matching classes in ontology 2
+        for (OntClass ontClass1 : ontModel1.listClasses().toList()) {
+            for (OntClass ontClass2 : ontModel2.listClasses().toList()) {
+                if (ontClass1.getLabel(null).equals(ontClass2.getLabel(null))) {
+                    mappingOntModel.add(ontClass1, OWL.sameAs, ontClass2);
+                }
+            }
+        }
+
+        // Iterate over the properties in ontology 1 and find matching properties in ontology 2
+        for (OntProperty ontProp1 : ontModel1.listAllOntProperties().toList()) {
+            for (OntProperty ontProp2 : ontModel2.listAllOntProperties().toList()) {
+                if (ontProp1.getLabel(null).equals(ontProp2.getLabel(null))) {
+                    mappingOntModel.add(ontProp1, OWL.sameAs, ontProp2);
+                }
+            }
+        }
+
+        // Iterate over the individuals in ontology 1 and find matching individuals in ontology 2
+        for (Individual ind1 : ontModel1.listIndividuals().toList()) {
+            for (Individual ind2 : ontModel2.listIndividuals().toList()) {
+                if (ind1.getLabel(null).equals(ind2.getLabel(null))) {
+                    mappingOntModel.add(ind1, OWL.sameAs, ind2);
+                }
+            }
+        }
+
+        return mappingOntModel;
+    }
+
+    /*public static void main(String[] args) {
         // Load the two RDF models to be merged
         Model model1 = FileManager.get().loadModel("knowledge_graph1.rdf");
         Model model2 = FileManager.get().loadModel("knowledge_graph2.rdf");
@@ -66,7 +103,7 @@ public class OntologyMapping {
 
         // Output the merged model to an RDF file or other destination
         mergedModel.write(System.out, "RDF/XML-ABBREV");
-    }
+    }*/
 
 }
 
