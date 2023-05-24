@@ -2,7 +2,6 @@ package uni_ma.kg_merger;
 
 import org.apache.jena.ontology.*;
 import org.apache.jena.rdf.model.*;
-import org.apache.jena.util.FileManager;
 import org.apache.jena.util.iterator.ExtendedIterator;
 import org.apache.jena.ontology.FunctionalProperty;
 

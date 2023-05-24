@@ -1,19 +1,11 @@
 package uni_ma.kg_merger;
 
-import de.uni_mannheim.informatik.dws.melt.matching_data.TrackRepository;
 import org.apache.jena.ontology.FunctionalProperty;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
 import org.apache.jena.ontology.OntProperty;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.util.iterator.ExtendedIterator;
-import org.semanticweb.owlapi.io.SystemOutDocumentTarget;
-
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-import java.util.function.Function;
-import java.util.function.Predicate;
 
 public class KGMerger {
 
