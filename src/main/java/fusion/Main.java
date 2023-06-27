@@ -1,11 +1,12 @@
-package fusion;
+package de.uni_mannheim.informatik.dws.melt.fusion;
 
-
-import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.rdf.model.Statement;
-import org.apache.jena.rdf.model.StmtIterator;
+import de.uni_mannheim.informatik.dws.melt.fusion.merger.ConflictManagement;
+import de.uni_mannheim.informatik.dws.melt.fusion.merger.InOu;
+import org.apache.jena.ontology.OntModel;
+import org.apache.jena.ontology.OntModelSpec;
 import org.springframework.util.StopWatch;
+
+import org.apache.jena.rdf.model.*;
 
 public class Main {
     
@@ -19,10 +20,10 @@ public class Main {
         Model model1 = ModelFactory.createDefaultModel();
         Model model2 = ModelFactory.createDefaultModel();
         // use the RDFDataMgr to find the input file
-        //InOu inOu = new InOu();
+        InOu inOu = new InOu();
         
-        //model1 = inOu.inputModel("/Users/mdtouhidulislam/Documents/testA.rdf");
-        //model2 = inOu.inputModel("/Users/mdtouhidulislam/Documents/testB.rdf");
+        model1 = inOu.inputModel("/Users/mdtouhidulislam/Documents/testA.rdf");
+        model2 = inOu.inputModel("/Users/mdtouhidulislam/Documents/testB.rdf");
         
 
         System.out.println( "#testA" );
@@ -47,11 +48,19 @@ public class Main {
 
         StmtIterator iter1 = model1.listStatements();
         StmtIterator iter2 = model2.listStatements();
+
+        OntModel ontModel = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM, model1);
+
+
         StmtIterator marge = mergedModel.listStatements();
 
         //print all statements in marge
         while (iter1.hasNext()){
             Statement stmt1 = iter1.nextStatement();
+
+            // we define not
+            Property invfunctionalproperty = ontModel.getInverseFunctionalProperty(stmt1.getSubject().getURI());
+            System.out.println("Inverse Functional property: "+ invfunctionalproperty);
             while (marge.hasNext()){
                 Statement stmt2 = marge.nextStatement();
                 if (stmt1.getSubject().hasURI(stmt2.getSubject().getURI())){
@@ -60,7 +69,6 @@ public class Main {
                 }
             }
             fusedModels.add(stmt1.getSubject(), stmt1.getPredicate(), stmt1.getObject());
-//
 
         }
         while (iter2.hasNext()){
@@ -86,7 +94,7 @@ public class Main {
     private static Model mergedModel(Model model1, Model model2) {
         Model mergedModel = ModelFactory.createDefaultModel();
         ConflictManagement conflictManagement = new ConflictManagement();
-        //mergedModel = conflictManagement.DetectConflict(model1,model2);
+        mergedModel = conflictManagement.DetectConflict(model1,model2);
 
         //cheak if the subject of model1 is equal to the subject of model2
 

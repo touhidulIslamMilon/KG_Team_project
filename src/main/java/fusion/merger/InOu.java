@@ -1,4 +1,4 @@
-package fusion.merger;
+package de.uni_mannheim.informatik.dws.melt.fusion.merger;
 
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
