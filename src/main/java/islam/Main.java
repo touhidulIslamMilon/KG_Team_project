@@ -1,7 +1,7 @@
 package islam;
 
-import de.uni_mannheim.informatik.dws.melt.fusion.merger.ConflictManagement;
-import de.uni_mannheim.informatik.dws.melt.fusion.merger.InOu;
+import islam.merger.ConflictManagement;
+import islam.merger.InOu;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
 import org.springframework.util.StopWatch;
