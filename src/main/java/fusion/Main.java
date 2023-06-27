@@ -1,10 +1,11 @@
-package de.uni_mannheim.informatik.dws.melt.fusion;
+package fusion;
 
-import de.uni_mannheim.informatik.dws.melt.fusion.merger.ConflictManagement;
-import de.uni_mannheim.informatik.dws.melt.fusion.merger.InOu;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
 import org.springframework.util.StopWatch;
+
+import fusion.merger.ConflictManagement;
+import fusion.merger.InOu;
 
 import org.apache.jena.rdf.model.*;
 
