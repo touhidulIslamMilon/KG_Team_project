@@ -7,6 +7,7 @@ import org.apache.jena.ontology.OntProperty;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.util.iterator.ExtendedIterator;
 
+
 public class KGMerger {
 
     public static void main(String[] args) {
@@ -14,6 +15,7 @@ public class KGMerger {
         Model model1 = ModelFactory.createDefaultModel();
         Model model2 = ModelFactory.createDefaultModel();
         Model model3 = ModelFactory.createDefaultModel();
+        Model model4 = ModelFactory.createDefaultModel();
 
         // Test 1 Merge two simple graphs
         // Load data into the models from RDF files or other sources
@@ -56,8 +58,72 @@ public class KGMerger {
             System.out.println("Functional Property: " + property.getLocalName() + " " + property.getURI());
         }
 
+        System.out.println("\nTest 3");
+        model4.read("swtor.rdf");
+        int count = 0;
+        int functional = 0;
+
+        StmtIterator stmtIterator = model4.listStatements();
+        while (stmtIterator.hasNext()) {
+            Statement statement = stmtIterator.next();
+            count ++;
+            Property predicate = statement.getPredicate();
+            Resource subject = statement.getSubject();
+            System.out.println("Subject: " + subject.getURI() + "\nPredicate: " + predicate.getURI());
+            RDFNode object = statement.getObject();
+            if (object.isResource()) {
+                Resource resource = object.asResource();
+                System.out.println("Object (Resource): " + resource.getURI() + "\n");
+            } else if (object.isLiteral()) {
+                Literal literal = object.asLiteral();
+                System.out.println("Object (Literal): " + literal.getLexicalForm() + "\n");
+            }
+
+            if (isFunctionalProperty(model4, predicate)){
+                functional++;
+            }
+        }
+
+        System.out.println("\nFunctionalProperties");
+
+        StmtIterator stmtIterator2 = model4.listStatements();
+        while (stmtIterator2.hasNext()) {
+            Statement statement = stmtIterator2.next();
+            Property predicate = statement.getPredicate();
+
+            if (isFunctionalProperty(model4, predicate)){
+                Resource subject = statement.getSubject();
+                RDFNode object = statement.getObject();
+                if (object.isResource()) {
+                    Resource resource = object.asResource();
+                    System.out.println("Subject: " + subject.getURI() + "\nPredicate: " + predicate.getURI());
+                    System.out.println("Object (Resource): " + resource.getURI() + "\n");
+                } else if (object.isLiteral()) {
+                    Literal literal = object.asLiteral();
+                    System.out.println("Subject: " + subject.getURI() + "\nPredicate: " + predicate.getURI());
+                    System.out.println("Object (Literal): " + literal.getLexicalForm() + "\n");
+                }
+            }
+
+        }
+
+        System.out.println("All pairs: " + count);
+        System.out.println("Functional pairs: " + functional);
 
 
+    }
+
+    private static boolean isFunctionalProperty(Model model, Property property) {
+        StmtIterator stmtIterator = model.listStatements(null, property, (RDFNode) null);
+        int objectCount = 0;
+        while (stmtIterator.hasNext()) {
+            stmtIterator.next();
+            objectCount++;
+            if (objectCount > 1) {
+                return false;
+            }
+        }
+        return true;
     }
 
 }

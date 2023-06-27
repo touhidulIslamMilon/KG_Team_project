@@ -1,6 +1,6 @@
 package fusion;
 
-import de.uni_mannheim.informatik.dws.melt.fusion.merger.InOu;
+
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Statement;
@@ -19,10 +19,10 @@ public class Main {
         Model model1 = ModelFactory.createDefaultModel();
         Model model2 = ModelFactory.createDefaultModel();
         // use the RDFDataMgr to find the input file
-        InOu inOu = new InOu();
+        //InOu inOu = new InOu();
         
-        model1 = inOu.inputModel("/Users/mdtouhidulislam/Documents/testA.rdf");
-        model2 = inOu.inputModel("/Users/mdtouhidulislam/Documents/testB.rdf");
+        //model1 = inOu.inputModel("/Users/mdtouhidulislam/Documents/testA.rdf");
+        //model2 = inOu.inputModel("/Users/mdtouhidulislam/Documents/testB.rdf");
         
 
         System.out.println( "#testA" );
@@ -86,7 +86,7 @@ public class Main {
     private static Model mergedModel(Model model1, Model model2) {
         Model mergedModel = ModelFactory.createDefaultModel();
         ConflictManagement conflictManagement = new ConflictManagement();
-        mergedModel = conflictManagement.DetectConflict(model1,model2);
+        //mergedModel = conflictManagement.DetectConflict(model1,model2);
 
         //cheak if the subject of model1 is equal to the subject of model2
 
