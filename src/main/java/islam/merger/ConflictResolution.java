@@ -1,6 +1,7 @@
-package uni_ma.kg_merger;
+package islam.merger;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.util.FileManager;
+import org.apache.jena.vocabulary.*;
 
 public class ConflictResolution {
 

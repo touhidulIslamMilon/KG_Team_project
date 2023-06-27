@@ -1,4 +1,4 @@
-package de.uni_mannheim.informatik.dws.melt.fusion;
+package islam;
 
 import de.uni_mannheim.informatik.dws.melt.fusion.merger.ConflictManagement;
 import de.uni_mannheim.informatik.dws.melt.fusion.merger.InOu;

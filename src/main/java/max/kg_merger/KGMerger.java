@@ -1,4 +1,4 @@
-package uni_ma.kg_merger;
+package max.kg_merger;
 
 import org.apache.jena.ontology.FunctionalProperty;
 import org.apache.jena.ontology.OntModel;

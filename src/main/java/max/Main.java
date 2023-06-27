@@ -1,9 +1,6 @@
-package uni_ma;
+package max;
 
 import de.uni_mannheim.informatik.dws.melt.matching_data.TrackRepository;
-import de.uni_mannheim.informatik.dws.melt.matching_jena.OntologyCacheJena;
-import java.io.File;
-import java.util.List;
 
 import org.apache.jena.graph.Node;
 import org.apache.jena.graph.NodeFactory;
@@ -14,9 +11,7 @@ import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
 import org.apache.jena.util.iterator.ExtendedIterator;
-import org.apache.jena.util.FileManager;
 import org.semanticweb.owlapi.io.RDFNode;
-import org.semanticweb.owlapi.io.SystemOutDocumentTarget;
 
 import com.google.j2objc.annotations.Property;
 

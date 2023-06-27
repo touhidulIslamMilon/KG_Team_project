@@ -1,4 +1,4 @@
-package uni_ma;
+package max;
 
 import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.Model;

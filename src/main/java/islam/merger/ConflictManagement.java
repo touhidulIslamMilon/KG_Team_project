@@ -1,4 +1,4 @@
-package de.uni_mannheim.informatik.dws.melt.fusion.merger;
+package islam.merger;
 
 import org.apache.jena.rdf.model.*;
 
