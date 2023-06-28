@@ -6,28 +6,16 @@ public class ConflictResolution {
 
     public static void main(String[] args) {
         // Load the two RDF models to be merged
-        Model model1 = FileManager.get().loadModel("knowledge_graph1.rdf");
-        Model model2 = FileManager.get().loadModel("knowledge_graph2.rdf");
+        Model model1 = ModelFactory.createDefaultModel();
+        model1.read("testA.rdf");
+        Model model2 = ModelFactory.createDefaultModel();
+        model1.read("testB.rdf");
 
         // Load the common ontology
         Model ontologyModel = FileManager.get().loadModel("common_ontology.rdf");
 
         // Create a new model to hold the merged knowledge graph
         Model mergedModel = ModelFactory.createDefaultModel();
-
-        // Map the ontology terms used in model1 to the common ontology
-        Property hasName1 = model1.createProperty("http://example.com/hasName");
-        Property hasAge1 = model1.createProperty("http://example.com/hasAge");
-        Property isFriendWith1 = model1.createProperty("http://example.com/isFriendWith");
-
-        Property hasName = ontologyModel.getProperty("http://example.com/hasName");
-        Property hasAge = ontologyModel.getProperty("http://example.com/hasAge");
-        Property isFriendWith = ontologyModel.getProperty("http://example.com/isFriendWith");
-
-        // Map the ontology terms used in model2 to the common ontology
-        Property hasName2 = model2.createProperty("http://example.com/personName");
-        Property hasAge2 = model2.createProperty("http://example.com/personAge");
-        Property isFriendWith2 = model2.createProperty("http://example.com/personFriend");
 
         // Merge the common data from both models into the merged model
         StmtIterator commonIter = ontologyModel.listStatements();
