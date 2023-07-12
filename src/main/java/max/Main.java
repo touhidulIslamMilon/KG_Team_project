@@ -1,15 +1,14 @@
 package max;
 
-import max.kg_merger.FunctionalPropertyDetector;
+import max.kg_merger.alignmentBasedMerge;
+import max.kg_merger.intersectionMerge;
+import max.kg_merger.unionMerge;
 import max.loadRDF.LoadRDF;
 import org.apache.jena.rdf.model.*;
-
-import static max.kg_merger.FunctionalPropertyDetector.isFunctionalProperty;
 
 public class Main {
 
     public static void main(String[] args) {
-        System.out.println("Test 1");
 
         Model model1 = LoadRDF.getModel("testA.rdf");
         System.out.println("Graph A");
@@ -17,7 +16,16 @@ public class Main {
 
         Model model2 = LoadRDF.getModel("testB.rdf");
         System.out.println("Graph B");
-        model1.write(System.out, "RDF/XML-ABBREV");
+        model2.write(System.out, "RDF/XML-ABBREV");
+
+        Model model3 = LoadRDF.getModel("swtor.rdf");
+
+        /*
+            Test 1: Merge two graphs
+         */
+
+        /*
+        System.out.println("Test 1");
 
         // Create a new model to hold the merged knowledge graph
         Model mergedModel = ModelFactory.createDefaultModel();
@@ -26,10 +34,15 @@ public class Main {
         // Output the merged model to an RDF file or other destination
         System.out.println("Merged");
         mergedModel.write(System.out, "RDF/XML-ABBREV");
+         */
 
 
-        System.out.println("\nTest 3");
-        Model model3 = LoadRDF.getModel("swtor.rdf");
+        /*
+            Test 2: Functional Properties
+         */
+        /*
+        System.out.println("\nTest 2");
+
         int count = 0;
         int functional = 0;
 
@@ -78,7 +91,19 @@ public class Main {
         }
         System.out.println("All pairs: " + count);
         System.out.println("Functional pairs: " + functional);
+        */
+
+        /*
+            Test 3: Merge two graphs
+         */
+        Model mergedModel = alignmentBasedMerge.mergeGraphs(model1, model2);
+
+        // Output the merged model to an RDF file or other destination
+        System.out.println("Merged");
+        mergedModel.write(System.out, "RDF/XML-ABBREV");
+
+
+
+
     }
-
-
 }
