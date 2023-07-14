@@ -2,6 +2,10 @@ package islam;
 
 import islam.merger.ConflictManagement;
 import islam.merger.InOu;
+import max.loadRDF.LoadRDF;
+
+import java.net.URI;
+
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
 import org.springframework.util.StopWatch;
@@ -42,25 +46,31 @@ public class Main {
 
 
 
-        Model mergedModel = mergedModel(model1,model2);
+        //Model mergedModel = mergedModel(model1,model2);
+
+
         System.out.println( "#Conflict models" );
-        mergedModel.write(System.out,"TURTLE");
+        //mergedModel.write(System.out,"TURTLE");
 
         StmtIterator iter1 = model1.listStatements();
         StmtIterator iter2 = model2.listStatements();
+        Model model = LoadRDF.getModel("swtor.rdf");
 
-        OntModel ontModel = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM, model1);
+        OntModel ontModel1 = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM, model1);
+        OntModel ontModel = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM, model);
+        OntModel functionalProperty = getFunctionalProperty(model);
+        
 
 
-        StmtIterator marge = mergedModel.listStatements();
+        //StmtIterator marge = mergedModel.listStatements();
 
         //print all statements in marge
-        while (iter1.hasNext()){
+        /* while (iter1.hasNext()){
             Statement stmt1 = iter1.nextStatement();
 
             // we define not
-            Property invfunctionalproperty = ontModel.getInverseFunctionalProperty(stmt1.getSubject().getURI());
-            System.out.println("Inverse Functional property: "+ invfunctionalproperty);
+            //Property invfunctionalproperty = ontModel.getInverseFunctionalProperty(stmt1.getSubject().getURI());
+            //System.out.println("Inverse Functional property: "+ invfunctionalproperty);
             while (marge.hasNext()){
                 Statement stmt2 = marge.nextStatement();
                 if (stmt1.getSubject().hasURI(stmt2.getSubject().getURI())){
@@ -71,6 +81,8 @@ public class Main {
             fusedModels.add(stmt1.getSubject(), stmt1.getPredicate(), stmt1.getObject());
 
         }
+
+
         while (iter2.hasNext()){
             Statement stmt1 = iter2.nextStatement();
             while (marge.hasNext()){
@@ -82,13 +94,43 @@ public class Main {
             }
             fusedModels.add(stmt1.getSubject(), stmt1.getPredicate(), stmt1.getObject());
 
-        }
+        } */
 
         //System.out.println( "#FUSED models" );
         //fusedModels.write(System.out,"rdf/xml");
 
         watch.stop();
         System.out.println( "Eecution time: "+  watch.getTotalTimeMillis() + " ms" );
+    }
+
+    private static OntModel getFunctionalProperty(Model model) {
+        Model mergedModel = ModelFactory.createDefaultModel();
+        StmtIterator iter = model.listStatements();
+        int nonfunctionalProperty = 0;
+        int count = 0;
+        while (iter.hasNext()) {
+            Statement stmt = iter.next();
+            Resource subj = stmt.getSubject();
+            String uri = stmt.getSubject().getURI();
+            Property  property =  stmt.getPredicate();
+            Resource resource = model.getResource(uri);
+            StmtIterator stmtIterator = model.listStatements(subj, property, (RDFNode) null);
+            int duplicate=0;
+            while(stmtIterator.hasNext()){
+                count +=1;
+                duplicate+=1;
+                Statement statement = stmtIterator.next();
+            }
+            if(duplicate>1){
+                 System.out.println(duplicate+" Duplicate: "+property.toString());
+                 nonfunctionalProperty+=1;
+            }
+            
+        }
+         System.out.println(" Not Functional Property: "+nonfunctionalProperty);
+         System.out.println("All property: "+count);
+         System.out.println("Functional property: "+(count-nonfunctionalProperty));
+        return null;
     }
 
     private static Model mergedModel(Model model1, Model model2) {
@@ -102,10 +144,6 @@ public class Main {
     }
 
 
-
-
-
-
 }
 
 
@@ -114,61 +152,3 @@ public class Main {
 
 
 
-
-
-//        while (iter1.hasNext()) {
-//            Statement stmt = iter1.next();
-//            Resource subj = stmt.getSubject();
-//
-//            // Add the mapped statements from model2 to the merged model
-//            while (iter2.hasNext()) {
-//                Statement stmt1 = iter2.next();
-//                Resource subj1 = stmt1.getSubject();
-//
-////                if(stmt.getSubject().equals(stmt1.getSubject())){
-////                    matched.add(stmt);
-////                    matched.add(stmt1);
-////                    System.out.println("Su: " + stmt1 + " " + stmt1.getPredicate() + " " + stmt1.getObject());
-////                }
-////                if(stmt.getObject().equals(stmt1.getObject())){
-////                    matched.add(stmt);
-////                    matched.add(stmt1);
-////                    System.out.println("Oj: " + stmt1 + " " + stmt1.getPredicate() + " " + stmt1.getObject());
-////                }
-////                if(stmt.getPredicate().equals(stmt1.getPredicate())){
-////                    matched.add(stmt);
-////                    matched.add(stmt1);
-////                    System.out.println("Pre: " + stmt1.getSubject() + " " + stmt1.getPredicate() + " " + stmt1.getObject());
-////                    System.out.println("Pre1: " + stmt.getSubject() + " " + stmt.getPredicate() + " " + stmt.getObject());
-////                }
-//
-//                if(subj1.hasProperty(stmt.getPredicate())){
-//                    matched.add(subj1.getProperty(stmt.getPredicate()));
-//
-//                    StmtIterator matchedlist = matched.listStatements();
-//                    while (matchedlist.hasNext()){
-//                        Statement macthed = matchedlist.next();
-//                        if (macthed == stmt.getSubject()){
-//                            System.out.println("Subject: " + subj1 + " " + stmt1.getPredicate() + " " + stmt1.getObject());
-//                        }
-//                        if (macthed.getObject()==stmt.getObject()){
-//                            System.out.println("Object: " + subj1 + " " + stmt1.getPredicate() + " " + stmt1.getObject());
-//                        }
-//                        if (macthed.getPredicate()== stmt.getPredicate()){
-//                            System.out.println("Predicate: " + subj1 + " " + stmt1.getPredicate() + " " + stmt1.getObject());
-//                        }
-//                        //System.out.println("FN: " + stmt2 + " " + stmt2.getPredicate() + " " + stmt2.getObject());
-//                    }
-//                    System.out.println("FN: " + stmt1.getSubject() + " " + stmt1.getPredicate() + " " + stmt1.getObject());
-//                    System.out.println("FN1: " + stmt.getSubject() + " " + stmt.getPredicate() + " " + stmt.getObject());
-//                }else{
-//                    Property pred1 = stmt1.getPredicate();
-//                    RDFNode obj1 = stmt1.getObject();
-//                    mergedModel.add(subj1, pred1, obj1);
-//                }
-//            }
-//            Property pred = stmt.getPredicate();
-//            RDFNode obj = stmt.getObject();
-//            mergedModel.add(subj, pred, obj);
-//
-//        }
