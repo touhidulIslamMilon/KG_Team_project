@@ -61,8 +61,6 @@ public class ConflictManagement {
 //
         }
 
-        conflict.write(System.out,"TURTLE");
-        fusedModels.write(System.out,"rdf/xml");
 
         return mergedModel;
 
