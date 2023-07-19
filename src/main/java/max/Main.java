@@ -1,5 +1,6 @@
 package max;
 
+import max.kg_merger.FunctionalPropertyDetector;
 import max.kg_merger.alignmentBasedMerge;
 import max.kg_merger.intersectionMerge;
 import max.kg_merger.unionMerge;

@@ -27,13 +27,13 @@ public class alignmentBasedMerge {
         while (iter.hasNext()) {
             Resource resource1 = iter.nextResource();
 
-            // Find the corresponding resource in model2
+            // Find the corresponding resource in model2 based on property alignment
             ResIterator alignedIter = infModel2.listSubjects();
             while (alignedIter.hasNext()) {
                 Resource resource2 = alignedIter.nextResource();
 
-                // Check if the resources are aligned based on their labels
-                if (hasSameLabel(resource1, resource2)) {
+                // Check if the resources are aligned based on property alignment
+                if (arePropertiesAligned(resource1, resource2)) {
                     // Merge the properties of aligned resources
                     StmtIterator stmtIter = infModel1.listStatements(resource1, null, (RDFNode) null);
                     while (stmtIter.hasNext()) {
@@ -53,18 +53,28 @@ public class alignmentBasedMerge {
         return mergedModel;
     }
 
-    // Helper method to check if two resources have the same label
-    private static boolean hasSameLabel(Resource resource1, Resource resource2) {
-        Statement labelStmt1 = resource1.getProperty(RDFS.label);
-        Statement labelStmt2 = resource2.getProperty(RDFS.label);
+    // Helper method to check if two resources have aligned properties
+    private static boolean arePropertiesAligned(Resource resource1, Resource resource2) {
+        StmtIterator stmtIter1 = resource1.listProperties();
+        StmtIterator stmtIter2 = resource2.listProperties();
 
-        if (labelStmt1 == null || labelStmt2 == null) {
-            return false; // At least one resource doesn't have a label property
+        while (stmtIter1.hasNext()) {
+            Statement stmt1 = stmtIter1.nextStatement();
+
+            while (stmtIter2.hasNext()) {
+                Statement stmt2 = stmtIter2.nextStatement();
+
+                // Check if the property of stmt1 exists in stmt2
+                if (stmt1.getPredicate().equals(stmt2.getPredicate())) {
+                    return true; // Properties are aligned
+                }
+            }
+
+            // Reset the iterator for stmt2
+            stmtIter2 = resource2.listProperties();
         }
 
-        String label1 = labelStmt1.getObject().toString();
-        String label2 = labelStmt2.getObject().toString();
-        return label1.equals(label2);
+        return false; // No aligned properties found
     }
 
     public static void main(String[] args) {
