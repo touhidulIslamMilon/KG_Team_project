@@ -70,41 +70,22 @@ public class Main {
 
         //marge functional marger knowledge graph
         KnowledgeGraphFusion fusion = new KnowledgeGraphFusion();
-        //SOntModel fusedKnowledgeGraph = fusion.mergeKnowledgeGraphslength(ontModel1, ontModel2);
-        OntModel fusedKnowledgeGraph = fusion.mergeKnowledgeGraphslink(ontModel1, ontModel2);
+        //OntModel fusedKnowledgeGraph = fusion.mergeKnowledgeGraphslength(ontModel1, ontModel2);
+        //OntModel fusedKnowledgeGraph = fusion.mergeKnowledgeGraphslink(ontModel1, ontModel2);
         
-        //OntModel fusedKnowledgeGraph = fusion.mergeKnowledgeGraphsrule4(ontModel1, ontModel2);
+        OntModel fusedKnowledgeGraph = fusion.mergeKnowledgeGraphslength(ontModel1, ontModel2);
+        OntModel fusedKnowledgeGraph2 = fusion.mergeKnowledgeGraphslength(ontModel2, ontModel1);
         //OntModel fusedKnowledgeGraph = fusion.mergeKnowledgeGraphs(ontModel1, ontModel2);
         //OntModel fusedKnowledgeGraph = fusion.mergeKnowledgeGraphsrule2(ontModel1, ontModel2);
 
-        // Create a property priority map (higher priority has a lower numerical value)
-      /*   Map<Property, Integer> propertyPriority = new HashMap<>();
-        propertyPriority.put(ontModel1.getProperty("my:property1"), 1);
-        propertyPriority.put(ontModel1.getProperty("my:property2"), 2);
-        propertyPriority.put(ontModel2.getProperty("my:property1"), 1);
-        propertyPriority.put(ontModel2.getProperty("my:property2"), 2);
-        OntModel fusedKnowledgeGraph = fusion.mergeKnowledgeGraphspriority(ontModel1, ontModel2,propertyPriority); */
 
-
-
-
-
-
-        // Print the fused knowledge graph
-       /*  OntModel knowledgeGraph1 = ModelFactory.createOntologyModel(OntModelSpec.OWL_DL_MEM);
-        Model model11 = RDFDataMgr.loadModel("path/to/knowledgeGraph1.ttl");
-        knowledgeGraph1.addSubModel(model11);
-
-        // Load knowledgeGraph2 from Turtle file
-        OntModel knowledgeGraph2 = ModelFactory.createOntologyModel(OntModelSpec.OWL_DL_MEM);
-        Model model21 = RDFDataMgr.loadModel("path/to/knowledgeGraph2.ttl");
-        knowledgeGraph2.addSubModel(model21);
-
-        // Perform knowledge graph fusion
-        OntModel fusedKnowledgeGrap = fusion.mergeKnowledgeGraphs(knowledgeGraph1, knowledgeGraph2); */
+        //union model 
+        Model fusedModels1 = fusedKnowledgeGraph.union(fusedKnowledgeGraph2);
 
         // Print the fused knowledge graph in Turtle format
         fusedKnowledgeGraph.write(System.out, "TURTLE");
+        fusedKnowledgeGraph2.write(System.out, "TURTLE");
+        fusedModels1.write(System.out, "TURTLE");
         
 
 
