@@ -13,7 +13,6 @@ import org.springframework.util.StopWatch;
 import org.apache.jena.rdf.model.*;
 
 import org.apache.jena.ontology.OntModel;
-import org.apache.jena.rdf.model.StmtIterator;
 
 public class functionalProperty {
     
@@ -26,17 +25,21 @@ public class functionalProperty {
             Statement stmt = iter.next();
             Resource subj = stmt.getSubject();
             String uri = stmt.getSubject().getURI();
-            Property  property =  stmt.getPredicate();
+            Property  predicate =  stmt.getPredicate();
             Resource resource = model.getResource(uri);
-            StmtIterator stmtIterator = model.listStatements(subj, property, (RDFNode) null);
+            StmtIterator stmtIterator = model.listStatements(subj, predicate, (RDFNode) null);
             int duplicate=0;
             while(stmtIterator.hasNext()){
                 count +=1;
-                duplicate+=1;
+
                 Statement statement = stmtIterator.next();
+                 if(!stmt.getObject().equals(statement.getObject())){
+                    duplicate+=1;
+                    
+                }
             }
             if(duplicate>1){
-                 System.out.println(duplicate+" Duplicate: "+property.toString());
+                 System.out.println(duplicate+" Duplicate: "+predicate.toString());
                  nonfunctionalProperty+=1;
             }
             

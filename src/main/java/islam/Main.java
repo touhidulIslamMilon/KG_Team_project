@@ -62,18 +62,23 @@ public class Main {
         StmtIterator iter2 = model2.listStatements();
         Model model = LoadRDF.getModel("swtor.rdf");
 
-        
+        /* 
+       //!SECTION --------- this is the code for calculate functional property
+        //code for calculate functional property
         OntModel ontModel = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM, model);
         functionalProperty functionalProperty = new functionalProperty();
-        //OntModel listfunctionalProperty = functionalProperty.getFunctionalProperty(model);
-
+        OntModel listfunctionalProperty = functionalProperty.getFunctionalProperty(model); */
 
         //marge functional marger knowledge graph
         KnowledgeGraphFusion fusion = new KnowledgeGraphFusion();
+
+
+
         //OntModel fusedKnowledgeGraph = fusion.mergeKnowledgeGraphslength(ontModel1, ontModel2);
         //OntModel fusedKnowledgeGraph = fusion.mergeKnowledgeGraphslink(ontModel1, ontModel2);
         
-        OntModel fusedKnowledgeGraph = fusion.mergeKnowledgeGraphslength(ontModel1, ontModel2);
+        
+        /* 
         OntModel fusedKnowledgeGraph2 = fusion.mergeKnowledgeGraphslength(ontModel2, ontModel1);
         //OntModel fusedKnowledgeGraph = fusion.mergeKnowledgeGraphs(ontModel1, ontModel2);
         //OntModel fusedKnowledgeGraph = fusion.mergeKnowledgeGraphsrule2(ontModel1, ontModel2);
@@ -82,51 +87,13 @@ public class Main {
         //union model 
         Model fusedModels1 = fusedKnowledgeGraph.union(fusedKnowledgeGraph2);
 
-        // Print the fused knowledge graph in Turtle format
+        // Print the fused knowledge graph in Turtle format*/
+         //!SECTION --------- this is the code for knowledge graph fusion
+        OntModel fusedKnowledgeGraph = fusion.mergeKnowledgeGraphslength(ontModel1, ontModel2);
+
         fusedKnowledgeGraph.write(System.out, "TURTLE");
-        fusedKnowledgeGraph2.write(System.out, "TURTLE");
-        fusedModels1.write(System.out, "TURTLE");
         
 
-
-
-
-        //StmtIterator marge = mergedModel.listStatements();
-
-        //print all statements in marge
-        /* while (iter1.hasNext()){
-            Statement stmt1 = iter1.nextStatement();
-
-            // we define not
-            //Property invfunctionalproperty = ontModel.getInverseFunctionalProperty(stmt1.getSubject().getURI());
-            //System.out.println("Inverse Functional property: "+ invfunctionalproperty);
-            while (marge.hasNext()){
-                Statement stmt2 = marge.nextStatement();
-                if (stmt1.getSubject().hasURI(stmt2.getSubject().getURI())){
-                    System.out.println("Su1: "+ stmt1);
-                    break;
-                }
-            }
-            fusedModels.add(stmt1.getSubject(), stmt1.getPredicate(), stmt1.getObject());
-
-        }
-
-
-        while (iter2.hasNext()){
-            Statement stmt1 = iter2.nextStatement();
-            while (marge.hasNext()){
-                Statement stmt2 = marge.nextStatement();
-                if (stmt1.getSubject().hasURI(stmt2.getSubject().getURI())){
-                    System.out.println("Su1: "+ stmt2);
-                    break;
-                }
-            }
-            fusedModels.add(stmt1.getSubject(), stmt1.getPredicate(), stmt1.getObject());
-
-        } */
-
-        //System.out.println( "#FUSED models" );
-        //fusedModels.write(System.out,"rdf/xml");
 
         watch.stop();
         System.out.println( "Eecution time: "+  watch.getTotalTimeMillis() + " ms" );
