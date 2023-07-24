@@ -7,12 +7,13 @@ import islam.merger.functionalProperty;
 import max.loadRDF.LoadRDF;
 
 import java.net.URI;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
 import org.springframework.util.StopWatch;
+
+import de.uni_mannheim.informatik.dws.melt.matching_data.TrackRepository.Knowledgegraph;
 
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.riot.RDFDataMgr;
@@ -71,25 +72,40 @@ public class Main {
 
         //marge functional marger knowledge graph
         KnowledgeGraphFusion fusion = new KnowledgeGraphFusion();
+        Model fusedKnowledge= ModelFactory.createDefaultModel();
+
+        //fusedModels.write(System.out);
 
 
-
-        //OntModel fusedKnowledgeGraph = fusion.mergeKnowledgeGraphslength(ontModel1, ontModel2);
-        //OntModel fusedKnowledgeGraph = fusion.mergeKnowledgeGraphslink(ontModel1, ontModel2);
-        
-        
-        /* 
-        OntModel fusedKnowledgeGraph2 = fusion.mergeKnowledgeGraphslength(ontModel2, ontModel1);
-        //OntModel fusedKnowledgeGraph = fusion.mergeKnowledgeGraphs(ontModel1, ontModel2);
-        //OntModel fusedKnowledgeGraph = fusion.mergeKnowledgeGraphsrule2(ontModel1, ontModel2);
+        OntModel fusedKnowledgeGraph = ModelFactory.createOntologyModel(OntModelSpec.OWL_MEM, fusedKnowledge);
 
 
-        //union model 
-        Model fusedModels1 = fusedKnowledgeGraph.union(fusedKnowledgeGraph2);
+       
+
 
         // Print the fused knowledge graph in Turtle format*/
          //!SECTION --------- this is the code for knowledge graph fusion
-        OntModel fusedKnowledgeGraph = fusion.mergeKnowledgeGraphslength(ontModel1, ontModel2);
+        //OntModel fusedKnowledgeGraph = fusion.mergeKnowledgeGraphslength(model1, model2);
+        OntModel mergeKnowledgeGraphsfirst = fusion.mergeKnowledgeGraphslength(model1, model2);
+         //!SECTION --------- this is the code for knowledge graph fusion
+        //marge knowledge graph using marger knowledge graph function in accordance with the priority
+        List<KnowledgeGraph> knowledgeGraphs = new ArrayList<>();
+        knowledgeGraphs.add(new KnowledgeGraph(1,model2,new Date(1234567890L))); // Higher priority
+        knowledgeGraphs.add(new KnowledgeGraph(2,model1,new Date(2345678901L)));
+
+        //Short base on priority
+        //knowledgeGraphs = sortKnowledgeGraphsByPriority(knowledgeGraphs);
+
+        //Short base on date
+        knowledgeGraphs = sortKnowledgeGraphsByDate(knowledgeGraphs);
+
+        while(knowledgeGraphs.size() >= 1) {
+            KnowledgeGraph graph1 = knowledgeGraphs.get(0);
+            knowledgeGraphs.remove(graph1);
+            fusedKnowledgeGraph = fusion.mergeKnowledgeGraphsfirst(fusedKnowledgeGraph,graph1.getGraph());
+        }
+
+         //!SECTION --------- this is the code for knowledge graph date
 
         fusedKnowledgeGraph.write(System.out, "TURTLE");
         
@@ -110,7 +126,17 @@ public class Main {
 
         return mergedModel;
     }
-
+     public static List<KnowledgeGraph> sortKnowledgeGraphsByPriority(List<KnowledgeGraph> graphs) {
+        // Sort the list in ascending order based on priority
+        Collections.sort(graphs, Comparator.comparingInt(KnowledgeGraph::getPriority));
+        return graphs;
+    }
+    public static List<KnowledgeGraph> sortKnowledgeGraphsByDate(List<KnowledgeGraph> graphs) {
+        // Sort the list in ascending order based on date
+        Collections.sort(graphs, Comparator.comparing(KnowledgeGraph::getDate));
+        return graphs;
+    }
+    
 
 }
 
