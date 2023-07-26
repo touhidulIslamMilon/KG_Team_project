@@ -94,13 +94,11 @@ public class Main {
         /*
             Test 3: Merge two graphs
          */
-        Model mergedModel = Merger.mergeGraphs(model1, model2);
+        Model mergedModel = Merger.mergeGraphs(Merger.mergeGraphs(model1, model2), model1);
 
         // Output the merged model to an RDF file or other destination
         System.out.println("Merged");
         mergedModel.write(System.out, "RDF/XML-ABBREV");
-
-
 
 
     }

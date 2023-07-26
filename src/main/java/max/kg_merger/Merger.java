@@ -1,7 +1,14 @@
 package max.kg_merger;
 
 import org.apache.jena.rdf.model.*;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
+import org.apache.jena.riot.RDFFormat;
+import org.apache.jena.riot.RDFWriter;
 import org.apache.jena.vocabulary.RDF;
+
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 
 public class Merger {
 
