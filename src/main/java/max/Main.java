@@ -1,9 +1,6 @@
 package max;
 
-import max.kg_merger.FunctionalPropertyDetector;
-import max.kg_merger.alignmentBasedMerge;
-import max.kg_merger.intersectionMerge;
-import max.kg_merger.unionMerge;
+import max.kg_merger.*;
 import max.loadRDF.LoadRDF;
 import org.apache.jena.rdf.model.*;
 
@@ -97,7 +94,7 @@ public class Main {
         /*
             Test 3: Merge two graphs
          */
-        Model mergedModel = alignmentBasedMerge.mergeGraphs(model1, model2);
+        Model mergedModel = Merger.mergeGraphs(model1, model2);
 
         // Output the merged model to an RDF file or other destination
         System.out.println("Merged");
