@@ -11,6 +11,7 @@ xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
 <ex:city>Los Angeles</ex:city>
 <ex:occupation>Graphic Designer</ex:occupation>
 <ex:dateOfBirth>1990-06-15</ex:dateOfBirth>
+<ex:experience>10</ex:experience>
 <ex:sex>female</ex:sex>
 </rdf:Description>
 

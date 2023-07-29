@@ -25,11 +25,6 @@ public class normlaisationFunctions {
         return entity.replaceAll("[^a-zA-Z0-9]", "_");
     }
 
-    //URI Normalization
-    public static String normalizeURI(String oldURI) {
-        // Implement the function based on your specific requirements
-        return null;
-    }
 
     //Date Normalization
 
