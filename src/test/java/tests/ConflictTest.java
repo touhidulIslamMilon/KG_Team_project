@@ -1,6 +1,6 @@
 package tests;
 
-import max.kg_merger.Merger;
+import FinalPackage.Merging.Merger;
 import org.apache.jena.rdf.model.*;
 import org.junit.Assert;
 import org.junit.Test;

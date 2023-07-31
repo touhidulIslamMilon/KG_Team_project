@@ -1,11 +1,11 @@
 package tests;
 
-import max.loadRDF.LoadRDF;
+import FinalPackage.Merging.Merger;
+import FinalPackage.Merging.LoadRDF;
 import org.apache.jena.rdf.model.Model;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +24,7 @@ public class MergerTest {
         models.add(model3);
 
         // Call the mergeGraphs method to merge the sample models
-        Model mergedModel = max.kg_merger.Merger.mergeGraphs(models);
+        Model mergedModel = Merger.mergeGraphs(models);
 
         // Load the expected merged model from file
         Model expectedModel = LoadRDF.getModel("expected-graph.rdf");
