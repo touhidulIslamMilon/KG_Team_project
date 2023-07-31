@@ -14,6 +14,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static FinalPackage.Merging.FunctionalPropertyDetector.isFunctionalProperty;
+
 public class Merger {
 
     // Method to merge multiple knowledge graphs from a list of RDF models
@@ -38,14 +40,31 @@ public class Merger {
                     } else {
                         // Remove the old statements (if any) from the targetModel
                         targetModel.removeAll(subject, predicate, null);
-                        // Call a method to find the resolved value and add it to the targetModel
-                        RDFNode resolvedObject = getResolvedObjectValue(models, subject, predicate);
-                        targetModel.add(subject, predicate, resolvedObject);
-                        // Mark the statement as resolved by adding it to the resolvedModel
-                        resolvedModel.add(stmt);
+
+                        //Check if functional. If not for every single model: Add all statements with this subject predicate comnbination
+                        for (Model model1 : models) {
+                            functionalProperty = isFunctionalProperty(model1, predicate);
+                            if (!functionalProperty){
+                                Model allStatements = getDistinctStatements(models, subject, predicate);
+                                targetModel.add(allStatements);
+                                resolvedModel.add(stmt);
+                                System.out.println("Not Functional: " + subject + predicate);
+                                break;
+                            }
+                        }
+
+                        if (functionalProperty){
+                            // Call a method to find the resolved value and add it to the targetModel
+                            System.out.println("Functional: " + subject + predicate);
+                            RDFNode resolvedObject = getResolvedObjectValue(models, subject, predicate);
+                            targetModel.add(subject, predicate, resolvedObject);
+                            // Mark the statement as resolved by adding it to the resolvedModel
+                            resolvedModel.add(stmt);
+                        }
                     }
 
                 }
+                functionalProperty = true;
             }
         }
 
@@ -73,7 +92,7 @@ public class Merger {
                     commonObject = object;
                 } else if (!commonObject.equals(object)) {
                     hasConflict = true;
-                    System.out.println("Conflict:" + subject.getURI() + predicate.getURI());
+                    System.out.println("Conflict");
                     break;
                 }
             }
@@ -82,6 +101,19 @@ public class Merger {
         return hasConflict ? dummyObject : commonObject;
     }
 
+    public static Model getDistinctStatements(List<Model> models, Resource subject, Property predicate) {
+        Model distinctStatements = ModelFactory.createDefaultModel();
+
+        for (Model model : models) {
+            StmtIterator iter = model.listStatements(subject, predicate, (RDFNode) null);
+            while (iter.hasNext()) {
+                Statement stmt = iter.nextStatement();
+                distinctStatements.add(stmt);
+            }
+        }
+
+        return distinctStatements;
+    }
 
 
 

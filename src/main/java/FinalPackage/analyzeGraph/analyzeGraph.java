@@ -7,7 +7,8 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static max.kg_merger.FunctionalPropertyDetector.isFunctionalProperty;
+import static FinalPackage.Merging.FunctionalPropertyDetector.isFunctionalProperty;
+
 
 public class analyzeGraph {
     public static int numberOfPredicates(Model model) {

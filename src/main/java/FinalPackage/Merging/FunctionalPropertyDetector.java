@@ -50,6 +50,22 @@ public class FunctionalPropertyDetector {
         return true;
     }
 
+    // Method to check if a property is functional for a single model
+    public static boolean isFunctionalProperty(Model model, Resource subject, Property predicate) {
+        RDFNode commonObject = null;
 
+        StmtIterator iter = model.listStatements(subject, predicate, (RDFNode) null);
+        if (iter.hasNext()) {
+            commonObject = iter.nextStatement().getObject();
+            while (iter.hasNext()) {
+                RDFNode object = iter.nextStatement().getObject();
+                if (!commonObject.equals(object)) {
+                    return false; // Property is not functional for this model
+                }
+            }
+        }
+
+        return true; // Property is functional for this model
+    }
 
 }
