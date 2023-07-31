@@ -1,4 +1,4 @@
-package graphComparison;
+package alsu.graphComparison;
 import org.apache.jena.rdf.model.*;
 
 import java.util.*;
@@ -132,7 +132,99 @@ public class graphComparison {
         return sharedPredicatesWithTypes;
     }
 
-    // s and predicate same, object different -> conflict. Print them out
+
+    // s and predicate same, object different -> conflict. Print them out and count them.
+
+    public static Map<Resource, Map<Property, Set<RDFNode>>> getSubjectsWithDifferentObjects(Set<Model> models) {
+        Map<Resource, Map<Property, Set<RDFNode>>> subjectsWithDifferentObjects = new HashMap<>();
+
+        for (Model model : models) {
+            StmtIterator stmtIterator = model.listStatements();
+
+            while (stmtIterator.hasNext()) {
+                Statement stmt = stmtIterator.nextStatement();
+                Resource subject = stmt.getSubject();
+                Property predicate = stmt.getPredicate();
+                RDFNode object = stmt.getObject();
+
+                subjectsWithDifferentObjects.computeIfAbsent(subject, k -> new HashMap<>())
+                        .computeIfAbsent(predicate, k -> new HashSet<>())
+                        .add(object);
+            }
+        }
+
+        subjectsWithDifferentObjects.entrySet().removeIf(e -> e.getValue().values().stream().allMatch(objects -> objects.size() <= 1));
+
+        return subjectsWithDifferentObjects;
+    }
+
+    // displaying the above output in a normal way
+
+    public static void displaySubjectsObjects(Map<Resource, Map<Property, Set<RDFNode>>> subjectsObjectsMap) {
+        for (Map.Entry<Resource, Map<Property, Set<RDFNode>>> entry : subjectsObjectsMap.entrySet()) {
+            System.out.println("Subject: " + entry.getKey().getURI());
+
+            for (Map.Entry<Property, Set<RDFNode>> subEntry : entry.getValue().entrySet()) {
+                System.out.println("\tPredicate: " + subEntry.getKey().getURI());
+
+                for (RDFNode object : subEntry.getValue()) {
+                    if (object.isResource()) {
+                        System.out.println("\t\tObject: " + object.asResource().getURI());
+                    } else {
+                        System.out.println("\t\tObject: " + object.asLiteral().getString());
+                    }
+                }
+            }
+        }
+    }
+
+    // number of predicates per subject.
+
+    public static Map<Resource, Integer> countConnections(Set<Model> models) {
+        Map<Resource, Integer> connectionCount = new HashMap<>();
+
+        for (Model model : models) {
+            StmtIterator stmtIterator = model.listStatements();
+
+            while (stmtIterator.hasNext()) {
+                Statement stmt = stmtIterator.nextStatement();
+                Resource subject = stmt.getSubject();
+
+                if (connectionCount.containsKey(subject)) {
+                    connectionCount.put(subject, connectionCount.get(subject) + 1);
+                } else {
+                    connectionCount.put(subject, 1);
+                }
+            }
+        }
+
+        return connectionCount;
+    }
+
+    // display the above function in a normal way
+
+    public static void compareGraphConnections(Map<Resource, Integer> connections1, Map<Resource, Integer> connections2) {
+        for (Resource subject : connections1.keySet()) {
+            if (connections2.containsKey(subject)) {
+                int difference = Math.abs(connections1.get(subject) - connections2.get(subject));
+                System.out.println("Subject: " + subject.getURI()
+                        + " has " + connections1.get(subject) + " predicates in the first graph and "
+                        + connections2.get(subject) + " predicates in the second graph.");
+            } else {
+                System.out.println("Subject: " + subject.getURI()
+                        + " is only present in the first graph and has " + connections1.get(subject) + " predicates.");
+            }
+        }
+
+        for (Resource subject : connections2.keySet()) {
+            if (!connections1.containsKey(subject)) {
+                System.out.println("Subject: " + subject.getURI()
+                        + " is only present in the second graph and has " + connections2.get(subject) + " predicates.");
+            }
+        }
+    }
+
+
     // number of connections per entity
     // similarity measure
 }

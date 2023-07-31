@@ -27,27 +27,18 @@ public class normlaisationFunctions {
 
 
     //Date Normalization
-
-    private static final String[] dateFormats = {"dd/MM/yyyy", "MM-dd-yyyy", "yyyy.MM.dd"};
+    private static final String[] dateFormats = { "MM-dd-yyyy", "yyyy.MM.dd","MM.dd.yyyy", "dd.MM.yyyy"};
     public static String normalizeDate(String oldDateString) {
+        DateTimeFormatter inputFormat = DateTimeFormatter.ofPattern("yyyy.MM.dd");
+        DateTimeFormatter outputFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-        for (String format : dateFormats) {
-            try {
-                DateTimeFormatter formatter = new DateTimeFormatterBuilder()
-                        .appendPattern(format)
-                        .parseDefaulting(ChronoField.MONTH_OF_YEAR, 1)
-                        .parseDefaulting(ChronoField.DAY_OF_MONTH, 1)
-                        .parseStrict()
-                        .toFormatter();
-
-                LocalDate date = LocalDate.parse(oldDateString, formatter);
-                return date.toString();
-            } catch (DateTimeParseException e) {
-                // This format did not work, try the next one
-            }
+        try {
+            LocalDate date = LocalDate.parse(oldDateString, inputFormat);
+            return date.format(outputFormat);
+        } catch (DateTimeParseException e) {
+            // The string could not be parsed as a date in the provided input format
+            return null;
         }
-        // None of the formats worked
-        return null;
     }
 
     public static Model normalizeDates(Model model) {
@@ -65,11 +56,9 @@ public class normlaisationFunctions {
                 String normalizedDate = normalizeDate(potentialDateString);
                 if (normalizedDate != null) {
                     // The string was successfully parsed as a date and normalized
-                    object = normalizedModel.createTypedLiteral(normalizedDate, XSDDatatype.XSDdate);
-                } else {
-                    // The string could not be parsed as a date in any of the provided formats, leave it as is
-
+                    object = normalizedModel.createTypedLiteral(normalizedDate, XSDDatatype.XSDstring);
                 }
+                // The string could not be parsed as a date in any of the provided formats, leave it as is
             }
 
             Statement normalizedStatement = ResourceFactory.createStatement(subject, predicate, object);
@@ -77,6 +66,8 @@ public class normlaisationFunctions {
         }
         return normalizedModel;
     }
+
+
 
     public static Model normalizeModel(Model originalModel) {
         Model normalizedModel = ModelFactory.createDefaultModel();

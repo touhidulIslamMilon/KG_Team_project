@@ -6,8 +6,10 @@ xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
 <ex:city>New York</ex:city>
 <ex:city>LA</ex:city>
 <ex:experience>12</ex:experience>
+<ex:yearsOld>45</ex:yearsOld>
 <ex:occupation>Software Developer</ex:occupation>
-<ex:dateOfBirth>2000.05.22</ex:dateOfBirth>
+<ex:dateOfBirth>22.05.2000</ex:dateOfBirth>
+<ex:marriedTo rdf:resource="http://example.com/person/mary"/>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://example.com/person/mary">
@@ -15,6 +17,7 @@ xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
 <ex:occupation>Graphic Designer1111</ex:occupation>
 <ex:numberOfChildren>2</ex:numberOfChildren>
 <ex:dateOfBirth>15.05.1990</ex:dateOfBirth>
+<ex:dateOfMarriage>20.04.2020</ex:dateOfMarriage>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://example.com/person/bob">

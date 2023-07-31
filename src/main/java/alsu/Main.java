@@ -1,14 +1,12 @@
 package alsu;
 
-import alsu.kg_fusion.WeightedFusion;
 import org.apache.jena.rdf.model.*;
 
 import java.util.*;
 
+import static alsu.analyzeGraph.analyzeGraph.*;
 import static alsu.normalisation.normlaisationFunctions.normalizeModel;
-import static analyzeGraph.analyzeGraph.*;
-import static graphComparison.graphComparison.*;
-import  static max.kg_merger.alignmentBasedMerge.mergeGraphs;
+import static alsu.graphComparison.graphComparison.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -123,12 +121,52 @@ public class Main {
             //////////////////////////////////////////////////////////////////////////////////
 
             // test AnalyzeGraph functions
-            /*
+
 
             Model model = ModelFactory.createDefaultModel();
             model.read("graph1.rdf");
             model=normalizeModel(model);
 
+            // display the first graph
+
+            System.out.println("First graph:");
+            StmtIterator stmtIterator = model.listStatements();
+            while (stmtIterator.hasNext()) {
+                    Statement stmt = stmtIterator.next();
+                    Resource stmtSubject = stmt.getSubject();
+                    Property stmtProperty = stmt.getPredicate();
+                    RDFNode stmtObject = stmt.getObject();
+
+                    String output = String.format("Subject: %s | Property: %s | Object: %s",
+                            stmtSubject.toString(), stmtProperty.toString(), stmtObject.toString());
+
+                    System.out.println(output);
+            }
+
+            Model model2 = ModelFactory.createDefaultModel();
+            model2.read("graph2.rdf");
+            model2=normalizeModel(model2);
+
+            System.out.println("Second graph:");
+            StmtIterator stmtIterator1 = model2.listStatements();
+            while (stmtIterator1.hasNext()) {
+                    Statement stmt = stmtIterator1.next();
+                    Resource stmtSubject = stmt.getSubject();
+                    Property stmtProperty = stmt.getPredicate();
+                    RDFNode stmtObject = stmt.getObject();
+
+                    String output = String.format("Subject: %s | Property: %s | Object: %s",
+                            stmtSubject.toString(), stmtProperty.toString(), stmtObject.toString());
+
+                    System.out.println(output);
+            }
+
+            Set<Model> models= new HashSet();
+            models.add(model);
+            models.add(model2);
+
+            System.out.println("TESTING THE ANALYSIS FUNCTIONS:");
+            System.out.println("//////////////////////////////////////////////////////////////");
             // counting overall number of predicates for all subjects
 
             int numberOfPredicates = numberOfPredicates(model);
@@ -151,17 +189,43 @@ public class Main {
 
             // counting the number of predicates with numeric values. Displaying predicate's name as well.
 
-            Set<Property> setOfNumericPredicates = countNumericPredicates(model);
+            Set<Property> setOfNumericPredicates = countNumericObjects(model);
             int numberOfNumericPredicates = setOfNumericPredicates.size();
-            System.out.println("Number of numeric predicates: "+numberOfNumericPredicates);
-            */
+            System.out.println("Number of overall numeric predicates: "+numberOfNumericPredicates);
 
-            ////////////////////////////////////////////////////////
+            // counting the number of predicates with string values. Displaying respective predicates
+            Set<Property> setOfLiteralObjects = countStringPredicates(model);
+            int numberOfLiteralObjects = setOfLiteralObjects.size();
+            System.out.println("Number of overall literal predicates: "+numberOfLiteralObjects);
+
+            for (Property property : setOfLiteralObjects) {
+                    System.out.println(property);
+            }
+
+            // counting the number of subjects that have a resource as an objects
+            int numberOfResourcesAsObjects = countSubjectsWithResourceObjects(model);
+            System.out.println("Number of overall subjects with resources as an objects: "+numberOfResourcesAsObjects);
+
+            Set<Property> propertiesWithDateTypeObjects = getDatePredicates(model);
+            System.out.println("Number of date type predicates "+propertiesWithDateTypeObjects.size());
+
+
+            System.out.println("TESTING THE COMPARISON FUNCTIONS");
+            System.out.println("//////////////////////////////////////////////////////////////");
+            Map<Resource, Map<Property, Set<RDFNode>>> subjectsWithDifferentObjects = getSubjectsWithDifferentObjects(models);
+            displaySubjectsObjects(subjectsWithDifferentObjects);
+
+            System.out.println("//////////////////////////////////////////////////////////////");
+
+
+
+
+            /////////////////////////////////////////////////////////////////////////////////////
 
             // Graph comparison test
 
             // function for counting the number of the same properties in the fused 2 graphs
-
+            /*
             // First graph
             Model model = ModelFactory.createDefaultModel();
             model.read("graph1.rdf");
@@ -176,7 +240,7 @@ public class Main {
             //Model fusedGraphs = model.add(model2);
 
             // display the first graph
-            /*
+
             System.out.println("First graph:");
             StmtIterator stmtIterator = model.listStatements();
             while (stmtIterator.hasNext()) {
@@ -190,7 +254,7 @@ public class Main {
 
                     System.out.println(output);
             }
-            */
+
 
             // display the second graph
             /*
@@ -208,7 +272,7 @@ public class Main {
                     System.out.println(output1);
 
             }
-             */
+
 
             // Count the number of similar properties of 2 graphs
             int numberOfSimilarProperties =  countSimilarProperties(model,model2);
@@ -229,5 +293,9 @@ public class Main {
                     System.out.println("Object types: " + entry.getValue());
             }
 
+             */
+
+
+            /////////////////////////////////////////////////////////////////////////////////////////
     }
 }

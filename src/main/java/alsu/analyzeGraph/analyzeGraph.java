@@ -1,12 +1,9 @@
-package analyzeGraph;
+package alsu.analyzeGraph;
 
-import alsu.WeightedModel;
+import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.rdf.model.*;
-import scala.sys.Prop;
 
-import javax.security.auth.Subject;
 import java.util.*;
-import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -84,7 +81,7 @@ public class analyzeGraph {
     }
 
     // counting the number of numeric predicates
-    public static Set<Property> countNumericPredicates(Model model) {
+    public static Set<Property> countNumericObjects(Model model) {
         Set<Property> numericPredicates = new HashSet<>();
         StmtIterator stmtIterator = model.listStatements();
         // Regular expression to check if the object is a number
@@ -103,6 +100,75 @@ public class analyzeGraph {
         }
         return numericPredicates;
     }
+
+    // counting the number of literals
+
+
+    public static Set<Property> countStringPredicates(Model model) {
+        Set<Property> stringPredicates = new HashSet<>();
+        StmtIterator stmtIterator = model.listStatements();
+
+        // Regular expression patterns to exclude numeric and normalized date literals
+        Pattern numericPattern = Pattern.compile("-?\\d+(\\.\\d+)?");
+        Pattern datePattern = Pattern.compile("\\d{4}_\\d{2}_\\d{2}");  // This matches "yyyy_MM_dd"
+
+        while (stmtIterator.hasNext()) {
+            Statement stmt = stmtIterator.nextStatement();
+            RDFNode object = stmt.getObject();
+
+            if (object.isLiteral()) {
+                String literalString = object.asLiteral().getString();
+
+                // Check if the literal is neither numeric nor a normalized date
+                if (!numericPattern.matcher(literalString).matches() &&
+                        !datePattern.matcher(literalString).matches()) {
+                    stringPredicates.add(stmt.getPredicate());
+                }
+            }
+        }
+
+        return stringPredicates;
+    }
+
+    // function which counts the number of subjects that have a resource as an object
+
+    public static int countSubjectsWithResourceObjects(Model model) {
+        Set<Resource> subjectsWithResourceObjects = new HashSet<>();
+        StmtIterator stmtIterator = model.listStatements();
+
+        while (stmtIterator.hasNext()) {
+            Statement stmt = stmtIterator.nextStatement();
+            RDFNode object = stmt.getObject();
+
+            if (object.isResource()) {
+                subjectsWithResourceObjects.add(stmt.getSubject());
+            }
+        }
+        return subjectsWithResourceObjects.size();
+    }
+
+    private static final Pattern DATE_PATTERN = Pattern.compile("\\d{2}_\\d{2}_\\d{4}");
+
+    public static Set<Property> getDatePredicates(Model model) {
+        Set<Property> datePredicates = new HashSet<>();
+        StmtIterator stmtIterator = model.listStatements();
+
+        while (stmtIterator.hasNext()) {
+            Statement stmt = stmtIterator.nextStatement();
+            RDFNode object = stmt.getObject();
+
+            if (object.isLiteral() && DATE_PATTERN.matcher(object.asLiteral().getString()).matches()) {
+                datePredicates.add(stmt.getPredicate());
+            }
+        }
+
+        return datePredicates;
+    }
+
+
+    // print out the functional properties !!!
+
+
 
     // whether the object/subject  is literal or resource
     // whether we have data type properties and how many
