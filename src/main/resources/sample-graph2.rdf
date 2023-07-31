@@ -1,0 +1,11 @@
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:ex="http://example.com/">
+  <rdf:Description rdf:about="http://example.com/person/mary">
+    <ex:city>Los Angeles</ex:city>
+    <ex:occupation>Graphic Designer</ex:occupation>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.com/person/john">
+    <ex:city>New York</ex:city>
+    <ex:occupation>Software Developer</ex:occupation>
+  </rdf:Description>
+</rdf:RDF>
