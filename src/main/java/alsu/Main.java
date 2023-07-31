@@ -3,13 +3,12 @@ package alsu;
 import alsu.kg_fusion.WeightedFusion;
 import org.apache.jena.rdf.model.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 import static alsu.normalisation.normlaisationFunctions.normalizeModel;
-
+import static analyzeGraph.analyzeGraph.*;
+import static graphComparison.graphComparison.*;
+import  static max.kg_merger.alignmentBasedMerge.mergeGraphs;
 
 public class Main {
     public static void main(String[] args) {
@@ -58,6 +57,7 @@ public class Main {
         // Check the WeightedFusion function
 
             // Load the RDF files
+            /*
             Model model1 = ModelFactory.createDefaultModel();
             model1.read("graph1.rdf");
             model1=normalizeModel(model1);
@@ -79,7 +79,7 @@ public class Main {
 
             // Sort the weighted models based on their weights
             Collections.sort(weightedModels, Comparator.comparingDouble(WeightedModel::getWeight).reversed());
-
+            */
             // check the order
             /*
                 for (WeightedModel weightedModel : weightedModels) {
@@ -102,7 +102,7 @@ public class Main {
              */
 
             // Test of the WeightedFusion
-
+            /*
             Model testM = WeightedFusion.WeightedFusion(weightedModels);
             StmtIterator stmtIterator = testM.listStatements();
             while (stmtIterator.hasNext()) {
@@ -117,7 +117,117 @@ public class Main {
                 System.out.println(output);
             }
 
+             */
 
+
+            //////////////////////////////////////////////////////////////////////////////////
+
+            // test AnalyzeGraph functions
+            /*
+
+            Model model = ModelFactory.createDefaultModel();
+            model.read("graph1.rdf");
+            model=normalizeModel(model);
+
+            // counting overall number of predicates for all subjects
+
+            int numberOfPredicates = numberOfPredicates(model);
+            System.out.println("Overall number of predicates:" +numberOfPredicates);
+
+            // counting the number of subjects
+
+            int numberOfSubjects = numberOfSubjects(model);
+            System.out.println("Number of subjects: "+ numberOfSubjects);
+
+            // counting the number of unique objects
+
+            int numberOfObjects = numberOfObjects(model);
+            System.out.println("Number of  objects: "+ numberOfObjects);
+
+            // number of functional properties
+
+            int numberOfFunctionalProperties = countFunctionalProperties(model);
+            System.out.println("Number of functional properties: "+ numberOfFunctionalProperties);
+
+            // counting the number of predicates with numeric values. Displaying predicate's name as well.
+
+            Set<Property> setOfNumericPredicates = countNumericPredicates(model);
+            int numberOfNumericPredicates = setOfNumericPredicates.size();
+            System.out.println("Number of numeric predicates: "+numberOfNumericPredicates);
+            */
+
+            ////////////////////////////////////////////////////////
+
+            // Graph comparison test
+
+            // function for counting the number of the same properties in the fused 2 graphs
+
+            // First graph
+            Model model = ModelFactory.createDefaultModel();
+            model.read("graph1.rdf");
+            model=normalizeModel(model);
+
+            //Second graph
+            Model model2 = ModelFactory.createDefaultModel();
+            model2.read("graph2.rdf");
+            model2=normalizeModel(model2);
+
+            // used Max's function to merge to graphs
+            //Model fusedGraphs = model.add(model2);
+
+            // display the first graph
+            /*
+            System.out.println("First graph:");
+            StmtIterator stmtIterator = model.listStatements();
+            while (stmtIterator.hasNext()) {
+                    Statement stmt = stmtIterator.next();
+                    Resource stmtSubject = stmt.getSubject();
+                    Property stmtProperty = stmt.getPredicate();
+                    RDFNode stmtObject = stmt.getObject();
+
+                    String output = String.format("Subject: %s | Property: %s | Object: %s",
+                            stmtSubject.toString(), stmtProperty.toString(), stmtObject.toString());
+
+                    System.out.println(output);
+            }
+            */
+
+            // display the second graph
+            /*
+            System.out.println("Second graph:");
+            StmtIterator stmtIterator1 = model2.listStatements();
+            while (stmtIterator1.hasNext()) {
+                    Statement stmt1 = stmtIterator1.next();
+                    Resource stmtSubject = stmt1.getSubject();
+                    Property stmtProperty = stmt1.getPredicate();
+                    RDFNode stmtObject = stmt1.getObject();
+
+                    String output1 = String.format("Subject: %s | Property: %s | Object: %s",
+                            stmtSubject.toString(), stmtProperty.toString(), stmtObject.toString());
+
+                    System.out.println(output1);
+
+            }
+             */
+
+            // Count the number of similar properties of 2 graphs
+            int numberOfSimilarProperties =  countSimilarProperties(model,model2);
+            System.out.println("Number of similar properties: "+ numberOfSimilarProperties);
+
+            // Count the number of similar objects
+            int numberOfSimilarObjects = countSimilarObjects(model,model2);
+            System.out.println("Number of similar objects:"+ numberOfSimilarObjects);
+
+            // Count the number of similar subjects
+            int numberOfSimilarSubjects = countSimilarSubjects(model,model2);
+            System.out.println("Number of similar subjects:"+ numberOfSimilarSubjects);
+
+            //shared predicates and respective types
+            Map<String, Set<String>> comparisonResult = comparePredicatesAndObjectTypes(model, model2);
+            for (Map.Entry<String, Set<String>> entry : comparisonResult.entrySet()) {
+                    System.out.println("Predicate: " + entry.getKey());
+                    System.out.println("Object types: " + entry.getValue());
+            }
 
     }
 }

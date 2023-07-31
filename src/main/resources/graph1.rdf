@@ -4,6 +4,8 @@ xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
 
 <rdf:Description rdf:about="http://example.com/person/john">
 <ex:city>New York</ex:city>
+<ex:city>LA</ex:city>
+<ex:experience>12</ex:experience>
 <ex:occupation>Software Developer</ex:occupation>
 <ex:dateOfBirth>2000.05.22</ex:dateOfBirth>
 </rdf:Description>
@@ -11,7 +13,8 @@ xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
 <rdf:Description rdf:about="http://example.com/person/mary">
 <ex:city>Los Angeles</ex:city>
 <ex:occupation>Graphic Designer1111</ex:occupation>
-<ex:dateOfBirth>1990-05-15</ex:dateOfBirth>
+<ex:numberOfChildren>2</ex:numberOfChildren>
+<ex:dateOfBirth>15.05.1990</ex:dateOfBirth>
 </rdf:Description>
 
 <rdf:Description rdf:about="http://example.com/person/bob">

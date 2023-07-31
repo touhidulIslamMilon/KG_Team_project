@@ -1,25 +1,33 @@
 package max;
 
-import max.kg_merger.FunctionalPropertyDetector;
-import max.kg_merger.alignmentBasedMerge;
-import max.kg_merger.intersectionMerge;
-import max.kg_merger.unionMerge;
+import max.kg_merger.*;
 import max.loadRDF.LoadRDF;
 import org.apache.jena.rdf.model.*;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main {
 
     public static void main(String[] args) {
 
-        Model model1 = LoadRDF.getModel("testA.rdf");
-        System.out.println("Graph A");
+        Model model1 = LoadRDF.getModel("graph1.rdf");
+        System.out.println("Graph 1");
         model1.write(System.out, "RDF/XML-ABBREV");
 
-        Model model2 = LoadRDF.getModel("testB.rdf");
-        System.out.println("Graph B");
+        Model model2 = LoadRDF.getModel("graph2.rdf");
+        System.out.println("Graph 2");
         model2.write(System.out, "RDF/XML-ABBREV");
 
-        Model model3 = LoadRDF.getModel("swtor.rdf");
+        Model model3 = LoadRDF.getModel("graph3.rdf");
+        System.out.println("Graph 3");
+        model3.write(System.out, "RDF/XML-ABBREV");
+
+        /*
+        Model model4 = LoadRDF.getModel("swtor.rdf");
+        Model model5 = LoadRDF.getModel("starwars.rdf");
+        Model model6 = LoadRDF.getModel("swg.rdf");
+
 
         /*
             Test 1: Merge two graphs
@@ -96,14 +104,25 @@ public class Main {
 
         /*
             Test 3: Merge two graphs
-         */
-        Model mergedModel = alignmentBasedMerge.mergeGraphs(model1, model2);
+
+        Model mergedModel = Merger.mergeGraphs(Merger.mergeGraphs(model1, model2), model1);
 
         // Output the merged model to an RDF file or other destination
         System.out.println("Merged");
         mergedModel.write(System.out, "RDF/XML-ABBREV");
+        */
+        /*
+            Test 4: Merge more than two graphs
+         */
+        List<Model> models = new ArrayList<>();
+        models.add(model1);
+        models.add(model2);
+        models.add(model3);
 
 
+        Model mergedModel = Merger.mergeGraphs(models);
+        System.out.println("Merged");
+        //mergedModel.write(System.out, "RDF/XML-ABBREV");
 
 
     }
