@@ -25,7 +25,7 @@ public class KnowledgeGraphFusion {
 
     
    
-    public static OntModel mergeKnowledgeGraphslength(Model model1, Model model2) {
+    public static OntModel mergeKnowledgeGraphs(Model model1, Model model2) {
         normlaisationFunctions normlaisationFunctions = new normlaisationFunctions();
 
         //!SECTION
@@ -59,13 +59,8 @@ public class KnowledgeGraphFusion {
                 System.out.println(stmt);
 
                 //!SECTION conflict management goes here
-                //RDFNode res = resolvePredicateConflictlenght(statement.getObject(),stmt.getObject());
-
-                //if there is a conflict then return the first one
-                //RDFNode res = resolvePredicateConflictfrist(statement.getObject(),stmt.getObject());
-
-                //if there is a conflict then return the last one
-                RDFNode res = resolvePredicateConflictlast(statement.getObject(),stmt.getObject());
+                fusionStrategy fusionStrategy = new fusionStrategy();
+                RDFNode res = fusionStrategy.resolvePredicateConflict(statement.getObject(),stmt.getObject());
                 
                 System.out.println(res);
                 mergedModel.remove(subj, predicate, statement.getObject());
@@ -91,7 +86,7 @@ public class KnowledgeGraphFusion {
     private static RDFNode resolvePredicateConflictfrist(RDFNode object, RDFNode object1) {
         return object;
     }
-      private static RDFNode resolvePredicateConflictlast(RDFNode object, RDFNode object1) {
+    private static RDFNode resolvePredicateConflictlast(RDFNode object, RDFNode object1) {
         return object1;
     }
     
@@ -167,9 +162,5 @@ public class KnowledgeGraphFusion {
 
 
         return ontModelont;
-    }
-
-   
-    
-    
+    }    
 }

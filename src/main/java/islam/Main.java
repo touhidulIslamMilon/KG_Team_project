@@ -86,7 +86,9 @@ public class Main {
         // Print the fused knowledge graph in Turtle format*/
          //!SECTION --------- this is the code for knowledge graph fusion
         //OntModel fusedKnowledgeGraph = fusion.mergeKnowledgeGraphslength(model1, model2);
-        OntModel mergeKnowledgeGraphsfirst = fusion.mergeKnowledgeGraphslength(model1, model2);
+        OntModel mergeKnowledgeGraphsfirst = fusion.mergeKnowledgeGraphs(model1, model2);
+
+        
          //!SECTION --------- this is the code for knowledge graph fusion
         //marge knowledge graph using marger knowledge graph function in accordance with the priority
         List<KnowledgeGraph> knowledgeGraphs = new ArrayList<>();
