@@ -6,11 +6,65 @@ import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.riot.RDFFormat;
 import org.apache.jena.riot.RDFWriter;
 import org.apache.jena.vocabulary.RDF;
+import org.semanticweb.owlapi.io.SystemOutDocumentTarget;
 
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class Merger {
+
+    // Method to merge multiple knowledge graphs from a list of RDF models
+    public static Model mergeGraphs(List<Model> models) {
+        Model targetModel = ModelFactory.createDefaultModel();
+        Model resolvedModel = ModelFactory.createDefaultModel();
+
+        // Iterate over each model and merge its properties
+        for (Model model : models) {
+            StmtIterator iter = model.listStatements();
+            while (iter.hasNext()) {
+                Statement stmt = iter.nextStatement();
+                Resource subject = stmt.getSubject();
+                Property predicate = stmt.getPredicate();
+
+                // Check if the subject-predicate combination has been resolved before
+                if (!resolvedModel.contains(subject, predicate)) {
+                    // Check if the Subject-Predicate combination exists in the targetModel
+                    if (!targetModel.contains(subject, predicate)) {
+                        targetModel.add(stmt);
+                    } else {
+                        // Remove the old statements (if any) from the targetModel
+                        targetModel.removeAll(subject, predicate, null);
+                        // Call a method to find the resolved value and add it to the targetModel
+                        RDFNode resolvedObject = getResolvedObjectValue(models, subject, predicate);
+                        targetModel.add(subject, predicate, resolvedObject);
+                        // Mark the statement as resolved by adding it to the resolvedModel
+                        resolvedModel.add(stmt);
+                    }
+
+                }
+            }
+        }
+
+        return targetModel;
+    }
+
+    // Method to find the resolved value for a subject-predicate combination from multiple models
+    private static RDFNode getResolvedObjectValue(List<Model> models, Resource subject, Property predicate) {
+        for (Model model : models) {
+            StmtIterator iter = model.listStatements(subject, predicate, (RDFNode) null);
+            if (iter.hasNext()) {
+                System.out.println("Conflict:" + subject.getURI() + predicate.getURI());
+                return iter.nextStatement().getObject();
+            }
+        }
+        return null; // Return null if the subject-predicate combination is not found in any model
+    }
+
+
+
 
     public static Model mergeGraphs(Model model1, Model model2){
         Model targetModel = ModelFactory.createDefaultModel();
