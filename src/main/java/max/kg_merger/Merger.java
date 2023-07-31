@@ -52,16 +52,35 @@ public class Merger {
     }
 
     // Method to find the resolved value for a subject-predicate combination from multiple models
-    private static RDFNode getResolvedObjectValue(List<Model> models, Resource subject, Property predicate) {
+    public static RDFNode getResolvedObjectValue(List<Model> models, Resource subject, Property predicate) {
+        RDFNode commonObject = null;
+        boolean hasConflict = false;
+        RDFNode dummyObject = null;
+
         for (Model model : models) {
             StmtIterator iter = model.listStatements(subject, predicate, (RDFNode) null);
             if (iter.hasNext()) {
-                System.out.println("Conflict:" + subject.getURI() + predicate.getURI());
-                return iter.nextStatement().getObject();
+                dummyObject = iter.nextStatement().getObject();
             }
         }
-        return null; // Return null if the subject-predicate combination is not found in any model
+
+        for (Model model : models) {
+            StmtIterator iter = model.listStatements(subject, predicate, (RDFNode) null);
+            if (iter.hasNext()) {
+                RDFNode object = iter.nextStatement().getObject();
+                if (commonObject == null) {
+                    commonObject = object;
+                } else if (!commonObject.equals(object)) {
+                    hasConflict = true;
+                    System.out.println("Conflict:" + subject.getURI() + predicate.getURI());
+                    break;
+                }
+            }
+        }
+
+        return hasConflict ? dummyObject : commonObject;
     }
+
 
 
 

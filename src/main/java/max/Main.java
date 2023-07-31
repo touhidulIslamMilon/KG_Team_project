@@ -23,7 +23,11 @@ public class Main {
         System.out.println("Graph 3");
         model3.write(System.out, "RDF/XML-ABBREV");
 
+        /*
         Model model4 = LoadRDF.getModel("swtor.rdf");
+        Model model5 = LoadRDF.getModel("starwars.rdf");
+        Model model6 = LoadRDF.getModel("swg.rdf");
+
 
         /*
             Test 1: Merge two graphs
@@ -118,7 +122,7 @@ public class Main {
 
         Model mergedModel = Merger.mergeGraphs(models);
         System.out.println("Merged");
-        mergedModel.write(System.out, "RDF/XML-ABBREV");
+        //mergedModel.write(System.out, "RDF/XML-ABBREV");
 
 
     }
