@@ -2,6 +2,7 @@ package FinalPackage.analyzeGraph;
 
 import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.rdf.model.*;
+import org.apache.jena.vocabulary.RDF;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -166,6 +167,145 @@ public class analyzeGraph {
         return datePredicates;
     }
 
+    // number of predicates per subject
+    public static Map<Resource, Integer> countPredicatesPerSubject(Model model) {
+        Map<Resource, Integer> predicateCountPerSubject = new HashMap<>();
+
+        StmtIterator stmtIterator = model.listStatements();
+        while (stmtIterator.hasNext()) {
+            Statement stmt = stmtIterator.nextStatement();
+            Resource subject = stmt.getSubject();
+            predicateCountPerSubject.put(subject, predicateCountPerSubject.getOrDefault(subject, 0) + 1);
+        }
+
+        // Create a sorted map from the original one
+        Map<Resource, Integer> sortedMap = new LinkedHashMap<>();
+        predicateCountPerSubject.entrySet().stream()
+                .sorted(Map.Entry.<Resource, Integer>comparingByValue().reversed())
+                .forEachOrdered(entry -> sortedMap.put(entry.getKey(), entry.getValue()));
+
+        return sortedMap;
+    }
+
+    //Distribution of types of the nodes (How many statements do we have with “Person”, “Animal” types
+    // (from the most to the least frequent types))
+    public static Map<Resource, Integer> countTypes(Model model) {
+        Map<Resource, Integer> typeCount = new HashMap<>();
+        StmtIterator stmtIterator = model.listStatements();
+
+        while (stmtIterator.hasNext()) {
+            Statement stmt = stmtIterator.nextStatement();
+
+            if (stmt.getPredicate().equals(RDF.type)) {
+                Resource type = stmt.getObject().asResource();
+
+                if (typeCount.containsKey(type)) {
+                    typeCount.put(type, typeCount.get(type) + 1);
+                } else {
+                    typeCount.put(type, 1);
+                }
+            }
+        }
+
+        return typeCount;
+    }
+
+    //number of connected nodes
+    public static List<Set<Resource>> findConnectedComponents(Model model) {
+        List<Set<Resource>> connectedComponents = new ArrayList<>();
+        Set<Resource> visited = new HashSet<>();
+
+        ResIterator resIterator = model.listSubjects();
+
+        while (resIterator.hasNext()) {
+            Resource subject = resIterator.next();
+
+            if (!visited.contains(subject)) {
+                Set<Resource> component = new HashSet<>();
+                dfs(model, subject, visited, component);
+                connectedComponents.add(component);
+            }
+        }
+
+        return connectedComponents;
+    }
+
+
+    private static void dfs(Model model, Resource start, Set<Resource> visited, Set<Resource> component) {
+        Stack<Resource> stack = new Stack<>();
+        stack.push(start);
+
+        while (!stack.isEmpty()) {
+            Resource current = stack.pop();
+
+            if (visited.contains(current)) {
+                continue;
+            }
+
+            visited.add(current);
+            component.add(current);
+
+            // Iterate over all statements where current is the subject
+            StmtIterator stmtIterator = current.listProperties();
+            while (stmtIterator.hasNext()) {
+                Statement stmt = stmtIterator.next();
+                RDFNode object = stmt.getObject();
+                if (object.isResource() && !visited.contains(object.asResource())) {
+                    stack.push(object.asResource());
+                }
+            }
+
+            // Iterate over all statements where current is the object
+            StmtIterator stmtIterator2 = model.listStatements(null, null, current);
+            while (stmtIterator2.hasNext()) {
+                Statement stmt = stmtIterator2.next();
+                Resource subject = stmt.getSubject();
+                if (!visited.contains(subject)) {
+                    stack.push(subject);
+                }
+            }
+        }
+    }
+
+    // the frequency of predicates
+    public static Map<Property, Integer> countPredicateFrequencies(Model model) {
+        Map<Property, Integer> predicateFrequencies = new HashMap<>();
+        StmtIterator statements = model.listStatements();
+
+        while (statements.hasNext()) {
+            Property predicate = statements.nextStatement().getPredicate();
+            predicateFrequencies.put(predicate, predicateFrequencies.getOrDefault(predicate, 0) + 1);
+        }
+
+        return predicateFrequencies;
+    }
+
+    // the frequency of subjects
+    public static Map<Resource, Integer> countSubjectFrequencies(Model model) {
+        Map<Resource, Integer> subjectFrequencies = new HashMap<>();
+        StmtIterator statements = model.listStatements();
+
+        while (statements.hasNext()) {
+            Resource subject = statements.nextStatement().getSubject();
+            subjectFrequencies.put(subject, subjectFrequencies.getOrDefault(subject, 0) + 1);
+        }
+
+        return subjectFrequencies;
+    }
+
+    //counting the most frequent objects for the most frequent predicates
+
+    public static Map<RDFNode, Integer> countObjectFrequencies(Model model, Property predicate) {
+        Map<RDFNode, Integer> objectFrequencies = new HashMap<>();
+        StmtIterator statements = model.listStatements(null, predicate, (RDFNode) null);
+
+        while (statements.hasNext()) {
+            RDFNode object = statements.nextStatement().getObject();
+            objectFrequencies.put(object, objectFrequencies.getOrDefault(object, 0) + 1);
+        }
+
+        return objectFrequencies;
+    }
 
     // print out the functional properties !!!
 

@@ -51,6 +51,7 @@ public class FunctionalPropertyDetector {
     }
 
     // Method to check if a property is functional for a single model
+
     public static boolean isFunctionalProperty(Model model, Resource subject, Property predicate) {
         RDFNode commonObject = null;
 
@@ -67,5 +68,7 @@ public class FunctionalPropertyDetector {
 
         return true; // Property is functional for this model
     }
+
+
 
 }
