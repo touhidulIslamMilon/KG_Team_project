@@ -56,7 +56,7 @@ public class Merger {
 
                         if (functionalProperty){
                             // Call a method to find the resolved value and add it to the targetModel
-                            System.out.println("Functional: " + subject + predicate);
+                            System.out.println("Functional: ");
                             RDFNode resolvedObject = getResolvedObjectValue(models, subject, predicate);
                             targetModel.add(subject, predicate, resolvedObject);
                             // Mark the statement as resolved by adding it to the resolvedModel
@@ -95,9 +95,16 @@ public class Merger {
                     hasConflict = true;
                     Set<RDFNode> allObjects = getAllObjects(models, subject, predicate);
                     System.out.println("Conflict: "+ subject + predicate);
+                    for (RDFNode object1 : allObjects) {
+                        System.out.println(object1.toString());
+                    }
                     break;
                 } else {
                     System.out.println("Dummy: " + subject + predicate);
+                    Set<RDFNode> allObjects = getAllObjects(models, subject, predicate);
+                    for (RDFNode object1 : allObjects) {
+                        System.out.println(object1.toString());
+                    }
                 }
             }
         }
