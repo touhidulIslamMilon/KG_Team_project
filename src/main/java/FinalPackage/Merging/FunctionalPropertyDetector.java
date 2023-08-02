@@ -15,11 +15,38 @@ public class FunctionalPropertyDetector {
 
      */
     public static List<Property> getFunctionalPredicates(List<Model> models) {
-        Set<Property> functionalProperties = new HashSet<>();
+        List<Set<Property>> predicateSets = new ArrayList<>();
 
-        String queryString = "SELECT DISTINCT ?p ?s (COUNT(DISTINCT ?o) AS ?count) WHERE { ?s ?p ?o . } GROUP BY ?p ?s";
+        String queryString = "SELECT DISTINCT ?p WHERE { ?s ?p ?o . }";
         Query query = QueryFactory.create(queryString);
 
+        // Find the set of predicates for each dataset separately
+        for (Model model : models) {
+            Set<Property> predicateSet = new HashSet<>();
+            try (QueryExecution qexec = QueryExecutionFactory.create(query, model)) {
+                ResultSet results = qexec.execSelect();
+                while (results.hasNext()) {
+                    QuerySolution soln = results.nextSolution();
+                    RDFNode predicateNode = soln.get("p");
+                    if (predicateNode.isURIResource()) {
+                        String predicateURI = predicateNode.asResource().getURI();
+                        predicateSet.add(ResourceFactory.createProperty(predicateURI));
+                    }
+                }
+            }
+            predicateSets.add(predicateSet);
+        }
+
+        // Find the intersection of predicate sets from all datasets
+        Set<Property> commonPredicates = new HashSet<>(predicateSets.get(0));
+        for (int i = 1; i < predicateSets.size(); i++) {
+            commonPredicates.retainAll(predicateSets.get(i));
+        }
+
+        // Find functional predicates with a count of 1 in each dataset
+        Map<Property, Integer> predicateCountMap = new HashMap<>();
+        queryString = "SELECT ?p (COUNT(DISTINCT ?o) AS ?count) WHERE { ?s ?p ?o . } GROUP BY ?p";
+        query = QueryFactory.create(queryString);
         for (Model model : models) {
             try (QueryExecution qexec = QueryExecutionFactory.create(query, model)) {
                 ResultSet results = qexec.execSelect();
@@ -28,15 +55,21 @@ public class FunctionalPropertyDetector {
                     RDFNode predicateNode = soln.get("p");
                     RDFNode countNode = soln.get("count");
                     if (predicateNode.isURIResource() && countNode.isLiteral()) {
-                        Property predicate = ResourceFactory.createProperty(predicateNode.asResource().getURI());
-                        int count = countNode.asLiteral().getInt();
-                        if (count <= 1) {
-                            functionalProperties.add(predicate);
-                        } else {
-                            functionalProperties.remove(predicate);
+                        String predicateURI = predicateNode.asResource().getURI();
+                        if (commonPredicates.contains(ResourceFactory.createProperty(predicateURI))) {
+                            int count = countNode.asLiteral().getInt();
+                            predicateCountMap.put(ResourceFactory.createProperty(predicateURI), predicateCountMap.getOrDefault(predicateURI, 0) + count);
                         }
                     }
                 }
+            }
+        }
+
+        Set<Property> functionalProperties = new HashSet<>();
+        for (Property predicate : predicateCountMap.keySet()) {
+            int totalCount = predicateCountMap.get(predicate);
+            if (commonPredicates.contains(predicate) && totalCount <= models.size()) {
+                functionalProperties.add(predicate);
             }
         }
 
