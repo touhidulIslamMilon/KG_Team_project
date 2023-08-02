@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import static FinalPackage.Merging.FunctionalPropertyDetector.getFunctionalPredicates;
 import static FinalPackage.Merging.FunctionalPropertyDetector.isFunctionalProperty;
 
 public class Merger {
@@ -28,7 +29,7 @@ public class Merger {
         1.  Check if the subject-predicate combination has been resolved before
         2.  Check if the Subject-Predicate combination exists in the targetModel
         3.  Remove the old statements (if any) from the targetModel
-        4.  Check in all models if predicate is functional (for-loop).
+        4.  Check in all models if predicate is functional (use method getFunctionalPredicates()).
         5.  If predicate is not functional for every single model
             -> property cant be functional:
                  Add all statements with this subject predicate combination to the target model
@@ -42,6 +43,8 @@ public class Merger {
         Model targetModel = ModelFactory.createDefaultModel();
         Model resolvedModel = ModelFactory.createDefaultModel();
         boolean functionalProperty = true;
+        List<Property> functionalProperties = getFunctionalPredicates(models);
+        System.out.println("Func ended");
 
         for (Model model : models) {
             StmtIterator iter = model.listStatements();
@@ -55,27 +58,22 @@ public class Merger {
                         targetModel.add(stmt);
                     } else {
                         targetModel.removeAll(subject, predicate, null);
-                        for (Model model1 : models) {
-                            functionalProperty = isFunctionalProperty(model1, predicate);
-                            if (!functionalProperty){
-                                Model allStatements = getDistinctStatements(models, subject, predicate);
-                                targetModel.add(allStatements);
-                                resolvedModel.add(stmt);
-                                System.out.println("Not Functional: " + subject + predicate);
-                                break;
-                            }
-                        }
-                        if (functionalProperty){
-                            System.out.println("Functional: ");
+                        if (functionalProperties.contains(predicate)){
+                            System.out.println("Functional: " + subject + predicate);
                             // Call a method to find the resolved value and add it to the targetModel
                             RDFNode resolvedObject = getResolvedObjectValue(models, subject, predicate);
                             targetModel.add(subject, predicate, resolvedObject);
                             resolvedModel.add(stmt);
+                        } else {
+                            Model allStatements = getDistinctStatements(models, subject, predicate);
+                            targetModel.add(allStatements);
+                            resolvedModel.add(stmt);
+                            System.out.println("Not Functional: " + subject + predicate);
+                            break;
                         }
                     }
 
                 }
-                functionalProperty = true;
             }
         }
         return targetModel;

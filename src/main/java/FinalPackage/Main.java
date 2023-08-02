@@ -12,21 +12,23 @@ public class Main {
     public static void main(String[] args) {
 
         Model model1 = LoadRDF.getModel("graph1.rdf");
-        System.out.println("Graph 1");
-        model1.write(System.out, "RDF/XML-ABBREV");
+        //System.out.println("Graph 1");
+        //model1.write(System.out, "RDF/XML-ABBREV");
 
         Model model2 = LoadRDF.getModel("graph2.rdf");
-        System.out.println("Graph 2");
-        model2.write(System.out, "RDF/XML-ABBREV");
+        //System.out.println("Graph 2");
+        //model2.write(System.out, "RDF/XML-ABBREV");
 
         Model model3 = LoadRDF.getModel("graph3.rdf");
-        System.out.println("Graph 3");
-        model3.write(System.out, "RDF/XML-ABBREV");
+        //System.out.println("Graph 3");
+        //model3.write(System.out, "RDF/XML-ABBREV");
 
-/*
-        Model model4 = LoadRDF.getModel("swtor.rdf");
-        Model model5 = LoadRDF.getModel("starwars.rdf");
-        Model model6 = LoadRDF.getModel("swg.rdf");
+
+        //Model model4 = LoadRDF.getModel("swtor.rdf");
+        //Model model5 = LoadRDF.getModel("starwars.rdf");
+        //Model model6 = LoadRDF.getModel("swg.rdf");
+        System.out.println("Read");
+
 
 
         /*
@@ -122,7 +124,7 @@ public class Main {
 
         Model mergedModel = Merger.mergeGraphs(models);
         System.out.println("Merged");
-        mergedModel.write(System.out, "RDF/XML-ABBREV");
+        //mergedModel.write(System.out, "RDF/XML-ABBREV");
 
 
     }
