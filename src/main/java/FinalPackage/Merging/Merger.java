@@ -102,7 +102,12 @@ public class Merger {
                 } else if (!commonObject.equals(object)) {
                     conflict = true;
                     Set<RDFNode> allObjects = getAllObjects(models, subject, predicate);
-                    //todo: Resolve for all objects
+                    /*
+                        TODO:
+                        Resolve from set of objects for subject/predicate to just one object
+                        RDFNode resolved Object = ...Method(allObjects, subject, predicate)
+
+                     */
 
                     System.out.println("Conflict: " + subject + predicate);
                     for (RDFNode object1 : allObjects) {
