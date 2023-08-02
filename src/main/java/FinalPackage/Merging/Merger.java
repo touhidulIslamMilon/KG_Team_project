@@ -113,7 +113,7 @@ public class Merger {
             }
         }
         return commonObject;
-        //at the moment we just return the first entry until we find a conflict
+        //at the moment we just return the first entry (correct if we dont have a conflict)
         //when we implement solution we need tio return this or return directly in loop
         //return conflict ? resolvedObject : commonObject;
     }
