@@ -164,12 +164,15 @@ public class Merger {
     // Method to resolve conflicts when the same subject and predicate combination have different objects in both graphs
     private static void resolveConflict(Resource subject, Property predicate, RDFNode object1, RDFNode object2) {
 
+        fusionStrategy fusionStrategy = new fusionStrategy();
         //Both objects are resources -> Both objects are literals -> one is a literal, and one is a resource
         if (object1.isResource() && object2.isResource()) {
             // Handle conflict between two resources
             Resource resource1 = object1.asResource();
             Resource resource2 = object2.asResource();
             // Your resource conflict resolution logic here.
+            fusionStrategy.fuseResources(resource1, resource2);
+
             System.out.println("Conflict detected for resources: " + subject + " " + predicate);
             System.out.println("Resource in model1: " + resource1);
             System.out.println("Resource in model2: " + resource2);
@@ -178,6 +181,9 @@ public class Merger {
             Literal literal1 = object1.asLiteral();
             Literal literal2 = object2.asLiteral();
             // Your literal conflict resolution logic here.
+            //Here are the code that take the two literals and fuse them
+            fusionStrategy.fuseLiterals(literal1, literal2);
+
             System.out.println("Conflict detected for literals: " + subject + " " + predicate);
             System.out.println("Literal in model1: " + literal1);
             System.out.println("Literal in model2: " + literal2);
@@ -186,6 +192,8 @@ public class Merger {
             Resource resource = object1.isResource() ? object1.asResource() : object2.asResource();
             Literal literal = object1.isLiteral() ? object1.asLiteral() : object2.asLiteral();
             // Your resource-literal conflict resolution logic here.
+            fusionStrategy.fuseResourceLiteral(resource, literal);
+
             System.out.println("Conflict detected for resource-literal: " + subject + " " + predicate);
             System.out.println("Resource in model: " + resource);
             System.out.println("Literal in model: " + literal);
