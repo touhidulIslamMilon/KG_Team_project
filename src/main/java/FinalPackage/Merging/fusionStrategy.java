@@ -152,6 +152,9 @@ public class fusionStrategy {
     public void fuseResourceLiteral(Resource resource, Literal literal) {
         //TODO - This is where the new literal is created
         // we will return literal as a resource
+        //return resource.addLiteral(null, literal);
+        
+
     }
 
     public static Literal findLongestString(Literal stringLiteral1, Literal stringLiteral2) {
@@ -261,7 +264,6 @@ public class fusionStrategy {
             return "unknown";
         }
     }
-
     //take two literal and return the concatination of them
     public static Literal concatenateLiterals(Literal literal1, Literal literal2) {
             String concatenatedValue = literal1.getString() + literal2.getString();
