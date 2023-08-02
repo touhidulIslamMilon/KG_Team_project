@@ -10,6 +10,7 @@ import org.semanticweb.owlapi.io.SystemOutDocumentTarget;
 
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -92,8 +93,11 @@ public class Merger {
                     commonObject = object;
                 } else if (!commonObject.equals(object)) {
                     hasConflict = true;
-                    System.out.println("Conflict");
+                    Set<RDFNode> allObjects = getAllObjects(models, subject, predicate);
+                    System.out.println("Conflict: "+ subject + predicate);
                     break;
+                } else {
+                    System.out.println("Dummy: " + subject + predicate);
                 }
             }
         }
@@ -115,7 +119,19 @@ public class Merger {
         return distinctStatements;
     }
 
+    public static Set<RDFNode> getAllObjects(List<Model> models, Resource subject, Property predicate) {
+        Set<RDFNode> objects = new HashSet<>();
 
+        for (Model model : models) {
+            StmtIterator iter = model.listStatements(subject, predicate, (RDFNode) null);
+            while (iter.hasNext()) {
+                Statement stmt = iter.nextStatement();
+                objects.add(stmt.getObject());
+            }
+        }
+
+        return objects;
+    }
 
 
     public static Model mergeGraphs(Model model1, Model model2){
