@@ -27,9 +27,9 @@ public class Main {
         //model3.write(System.out, "RDF/XML-ABBREV");
 
 
-        Model model4 = LoadRDF.getModel("swtor.rdf");
-        Model model5 = LoadRDF.getModel("starwars.rdf");
-        Model model6 = LoadRDF.getModel("swg.rdf");
+        //Model model4 = LoadRDF.getModel("swtor.rdf");
+        //Model model5 = LoadRDF.getModel("starwars.rdf");
+        //Model model6 = LoadRDF.getModel("swg.rdf");
         System.out.println("Read");
 
 
@@ -124,14 +124,14 @@ public class Main {
             Test 4: Merge more than two graphs
         */
         List<Model> models = new ArrayList<>();
-        models.add(model4);
-        models.add(model5);
-        models.add(model6);
+        models.add(model1);
+        models.add(model2);
+        models.add(model3);
 
 
         Model mergedModel = Merger.mergeGraphs(models);
         System.out.println("Merged");
-        //mergedModel.write(System.out, "RDF/XML-ABBREV");
+        mergedModel.write(System.out, "RDF/XML-ABBREV");
 
         /*
         List<Model> models = new ArrayList<>();
