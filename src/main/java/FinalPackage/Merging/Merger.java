@@ -44,6 +44,10 @@ public class Merger {
         Model resolvedModel = ModelFactory.createDefaultModel();
         boolean functionalProperty = true;
         List<Property> functionalProperties = getFunctionalPredicates(models);
+        System.out.println("Functional Properties");
+        for (Property property : functionalProperties) {
+            System.out.println(property.getURI());
+        }
         System.out.println("Func ended");
 
         for (Model model : models) {

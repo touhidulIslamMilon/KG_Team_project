@@ -11,15 +11,15 @@ public class Main {
 
     public static void main(String[] args) {
 
-        Model model1 = LoadRDF.getModel("graph1.rdf");
+        Model model1 = LoadRDF.getModel("starwars1.rdf");
         //System.out.println("Graph 1");
         //model1.write(System.out, "RDF/XML-ABBREV");
 
-        Model model2 = LoadRDF.getModel("graph2.rdf");
+        Model model2 = LoadRDF.getModel("starwars2.rdf");
         //System.out.println("Graph 2");
         //model2.write(System.out, "RDF/XML-ABBREV");
 
-        Model model3 = LoadRDF.getModel("graph3.rdf");
+        Model model3 = LoadRDF.getModel("starwars3.rdf");
         //System.out.println("Graph 3");
         //model3.write(System.out, "RDF/XML-ABBREV");
 
@@ -124,7 +124,7 @@ public class Main {
 
         Model mergedModel = Merger.mergeGraphs(models);
         System.out.println("Merged");
-        //mergedModel.write(System.out, "RDF/XML-ABBREV");
+        mergedModel.write(System.out, "RDF/XML-ABBREV");
 
 
     }

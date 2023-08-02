@@ -1,0 +1,27 @@
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:sw="http://example.org/starwars/">
+
+    <rdf:Description rdf:about="http://example.org/starwars/character/han_solo">
+        <sw:name>Han Solo</sw:name>
+        <sw:gender>Male</sw:gender>
+        <sw:species>Human</sw:species>
+        <sw:lightsaber_color>None</sw:lightsaber_color>
+    </rdf:Description>
+
+    <rdf:Description rdf:about="http://example.org/starwars/character/palpatine">
+        <sw:name>Palpatine</sw:name>
+        <sw:gender>Male</sw:gender>
+        <sw:species>Human</sw:species>
+        <sw:lightsaber_color>Red</sw:lightsaber_color>
+    </rdf:Description>
+
+    <rdf:Description rdf:about="http://example.org/starwars/character/luke_skywalker">
+            <sw:name>Luke Skywalker</sw:name>
+            <sw:gender>Male</sw:gender>
+            <sw:species>Humanoid</sw:species>
+            <sw:lightsaber_color>Green</sw:lightsaber_color>
+            <sw:lightsaber_color>Blue</sw:lightsaber_color>
+        </rdf:Description>
+
+</rdf:RDF>
