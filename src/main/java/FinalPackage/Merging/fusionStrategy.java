@@ -3,15 +3,170 @@
 //boilerplate code for class
 package FinalPackage.Merging;
 
+import org.apache.avro.LogicalTypes.Decimal;
+import org.apache.jena.datatypes.xsd.XSDDatatype;
+import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.Resource;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.apache.jena.riot.RDFDataMgr;
 
 import java.io.InputStream;
+import java.time.LocalDate;
 import java.util.Date;
 
 public class fusionStrategy {
+
+     public void fuseResources(Resource resource1, Resource resource2) {
+        
+    }
+
+    public Literal fuseLiteral(Literal literal1, Literal literal2) {
+        String type1 = literal1.getDatatypeURI();
+        String type2 = literal2.getDatatypeURI();
+        if(type1==type2){
+                switch (type1) {
+                case "string":
+                    //TODO - This is where the new literal is created
+                        // return concatination of two literals
+                        Literal concatinate = concatenateLiterals(literal1, literal2);
+                        //return longest literal
+                        Literal longest = findLongestString(literal1, literal2);
+                        //return the literal with the most capital letters
+                        return concatinate;  
+                case "number":
+                     try{
+                        //if both are number the return the average
+                        Double num1 = literal1.getDouble();
+                        Double num2 = literal2.getDouble();
+                        Double average = (num1+num2)/2;
+                        Literal averageLiteral = ModelFactory.createDefaultModel().createTypedLiteral(average,  XSDDatatype.XSDdecimal);
+                        //TODO - This is where the new literal is created
+                        // we will return average as a literal
+                        return averageLiteral;
+                    }catch(Exception e){
+                        System.out.println("Not a number");
+                        //TODO - This is where the new literal is created
+                        concatenateLiterals(literal1, literal2);
+                        //return longest literal
+                        findLongestString(literal1, literal2);
+                        //return the literal with the most capital letters
+                        return concatenateLiterals(literal1, literal2);  
+                    }
+                case "text":
+                    //TODO - This is where the new literal is created
+                        concatenateLiterals(literal1, literal2);
+                        //return longest literal
+                        findLongestString(literal1, literal2);
+                        //return the literal with the most capital letters
+                        return concatenateLiterals(literal1, literal2);
+                case "decimal":
+                    try{
+                        //if both literal are decimal then return the average
+                        Double num1 = literal1.getDouble();
+                        Double num2 = literal2.getDouble();
+                        Double average = (num1+num2)/2;
+                        Literal averageLiteral = ModelFactory.createDefaultModel().createTypedLiteral(average,  XSDDatatype.XSDdecimal);
+                        //TODO - This is where the new literal is created
+                        // we will return average as a literal
+                        return averageLiteral;
+                        
+                    }catch(Exception e){
+
+                        //TODO - This is where the new literal is created
+                       concatenateLiterals(literal1, literal2);
+                        //return longest literal
+                        findLongestString(literal1, literal2);
+                        //return the literal with the most capital letters
+                        return concatenateLiterals(literal1, literal2);
+                    }
+                    
+                case "integer":
+                    try{
+                        //if both literal are decimal then return the average
+                        Double num1 = literal1.getDouble();
+                        Double num2 = literal2.getDouble();
+                        Double average = (num1+num2)/2;
+                        Literal averageLiteral = ModelFactory.createDefaultModel().createTypedLiteral(average,  XSDDatatype.XSDinteger);
+                        //TODO - This is where the new literal is created
+                        // we will return average as a literal
+                        return averageLiteral;
+                        
+                    }catch(Exception e){
+
+                        //TODO - This is where the new literal is created
+                       concatenateLiterals(literal1, literal2);
+                        //return longest literal
+                        findLongestString(literal1, literal2);
+                        //return the literal with the most capital letters
+                        return concatenateLiterals(literal1, literal2);
+                    }
+                case "boolean":
+                    //TODO - This is where the new literal is created
+                    
+                        findLongestString(literal1, literal2);
+                        //return the literal with the most capital letters
+                        return concatenateLiterals(literal1, literal2);
+                
+                case "date":
+                    //if both are date then return the recent date
+                    if(containsDate(literal1.toString()) && containsDate(literal2.toString())){
+                        Literal recentDate = findMostRecentDate(literal1, literal2);
+                        Literal averageLiteral = ModelFactory.createDefaultModel().createTypedLiteral(recentDate,  XSDDatatype.XSDdate);
+                        //TODO - This is where the new literal is created
+                        // we will return recentDate as a literal
+                        return averageLiteral;
+                    }else{
+
+                        //TODO - This is where the new literal is creat
+                        findLongestString(literal1, literal2);
+                        //return the literal with the most capital letters
+                        return concatenateLiterals(literal1, literal2);
+                    }
+                case "dateTime":
+                    Literal recentDate = findMostRecentDate(literal1, literal2);
+                    Literal recentDateLiteral = ModelFactory.createDefaultModel().createTypedLiteral(recentDate,  XSDDatatype.XSDdateTime);
+                    //TODO - This is where the new literal is created
+                        // we will return recentDate as a literal
+                    return recentDateLiteral;
+                default:
+                    //TODO - This is where the new literal is creat
+                    findLongestString(literal1, literal2);
+                    //return the literal with the most capital letters
+                    return concatenateLiterals(literal1, literal2);
+            }
+        }else{
+            System.out.println("Not same type");
+            //TODO - This is where the new literal is creat
+             // return concatination of two literals
+            System.out.println("Unknown type");
+            return concatenateLiterals(literal1, literal2);
+        }
+        
+
+    }
+
+    public void fuseResourceLiteral(Resource resource, Literal literal) {
+        //TODO - This is where the new literal is created
+        // we will return literal as a resource
+        //return resource.addLiteral(null, literal);
+        
+
+    }
+
+    public static Literal findLongestString(Literal stringLiteral1, Literal stringLiteral2) {
+        String value1 = stringLiteral1.getString();
+        String value2 = stringLiteral2.getString();
+
+        if (value1.length() > value2.length()) {
+            return stringLiteral1;
+        } else {
+            return stringLiteral2;
+        }
+    }
 
     public RDFNode resolvePredicateConflict(RDFNode object, RDFNode object2) {
         //check if object is string or not
@@ -29,6 +184,38 @@ public class fusionStrategy {
         return concatinateString(object, object);
     }
 
+    public static boolean containsDate(String inputString) {
+        String[] dateFormats = {
+                "\\d{4}-\\d{2}-\\d{2}",     // YYYY-MM-DD
+                "\\d{2}/\\d{2}/\\d{4}",     // MM/DD/YYYY
+                "\\d{2}-\\d{2}-\\d{4}",     // MM-DD-YYYY
+                "\\d{2}\\.\\d{2}\\.\\d{4}", // MM.DD.YYYY
+                "\\d{1,2}/\\d{1,2}/\\d{2}", // M/D/YY or MM/DD/YY
+                "\\d{1,2}-\\d{1,2}-\\d{2}", // M-D-YY or MM-DD-YY
+                "\\d{1,2}\\.\\d{1,2}\\.\\d{2}" // M.D.YY or MM.DD.YY
+                // You can add more date formats based on your specific needs
+        };
+
+        for (String dateFormat : dateFormats) {
+            Pattern pattern = Pattern.compile(dateFormat);
+            Matcher matcher = pattern.matcher(inputString);
+            if (matcher.find()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public static boolean containsDecimal(String inputString) {
+        // Regular expression to match decimal numbers
+        String regex = "[-+]?\\d*\\.\\d+";
+        return inputString.matches(regex);
+    }
+
+
+    
+
     //this method take two object and return the concatination of them with coma as a rdfnode
     public RDFNode concatinateString(RDFNode object, RDFNode object2) {
         //return concatination of two string as a rdfnode
@@ -44,7 +231,7 @@ public class fusionStrategy {
         
         if (object.isURIResource()) {
             return "uri";
-        } else if (isDate(object.toString())) {
+        } else if (containsDate(object.toString())) {
             return "date";
             //cheak if a object contain number or not
         } else if (object.toString().matches("-?\\d+(\\.\\d+)?")) {
@@ -56,15 +243,32 @@ public class fusionStrategy {
             return "unknown";
         }
     }
-    //cheak if a object contain date or not
-    private boolean isDate(String object) {
-    
-        try {
-            Date date = new Date(object);
-            return true;
-        } catch (Exception e) {
-            return false;
+    public static String getLiteralType(Literal literal) {
+        String datatypeURI = literal.getDatatypeURI();
+
+        if (datatypeURI == null) {
+            return "string";
+        } else if (datatypeURI.equals("http://www.w3.org/2001/XMLSchema#string")) {
+            return "text";
+        } else if (datatypeURI.equals("http://www.w3.org/2001/XMLSchema#decimal")) {
+            return "decimal";
+        } else if (datatypeURI.equals("http://www.w3.org/2001/XMLSchema#integer")) {
+            return "integer";
+        } else if (datatypeURI.equals("http://www.w3.org/2001/XMLSchema#boolean")) {
+            return "boolean";
+        } else if (datatypeURI.equals("http://www.w3.org/2001/XMLSchema#date")) {
+            return "date";
+        } else if (datatypeURI.equals("http://www.w3.org/2001/XMLSchema#dateTime")) {
+            return "dateTime";
+        } else {
+            return "unknown";
         }
+    }
+    //take two literal and return the concatination of them
+    public static Literal concatenateLiterals(Literal literal1, Literal literal2) {
+            String concatenatedValue = literal1.getString() + literal2.getString();
+            return ModelFactory.createDefaultModel().createTypedLiteral(concatenatedValue,  XSDDatatype.XSDstring);
+       
     }
 
     //this method take two number and return mean of them as a object
@@ -92,6 +296,16 @@ public class fusionStrategy {
             return a;
         } else {
             return b;
+        }
+    }
+    public static Literal findMostRecentDate(Literal dateLiteral1, Literal dateLiteral2) {
+        LocalDate date1 = LocalDate.parse(dateLiteral1.getString());
+        LocalDate date2 = LocalDate.parse(dateLiteral2.getString());
+
+        if (date1.isAfter(date2)) {
+            return dateLiteral1;
+        } else {
+            return dateLiteral2;
         }
     }
 
@@ -207,9 +421,11 @@ public class fusionStrategy {
         return object1;
     }
 
-    public RDFNode uresolvePredicateConflic(RDFNode rdfNode, RDFNode object) {
-        return null;
+    public void fuseLiterals(Literal literal1, Literal literal2) {
     }
+
+
+   
 
     
     

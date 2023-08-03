@@ -1,0 +1,19 @@
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:sw="http://example.org/starwars/">
+
+    <rdf:Description rdf:about="http://example.org/starwars/character/obi_wan_kenobi">
+        <sw:name>Obi-Wan Kenobi</sw:name>
+        <sw:gender>Male</sw:gender>
+        <sw:species>Human</sw:species>
+        <sw:lightsaber_color>Blue</sw:lightsaber_color>
+    </rdf:Description>
+
+    <rdf:Description rdf:about="http://example.org/starwars/character/leia_organa">
+        <sw:name>Leia Organa</sw:name>
+        <sw:gender>Female</sw:gender>
+        <sw:species>Human</sw:species>
+        <sw:lightsaber_color>None</sw:lightsaber_color>
+    </rdf:Description>
+
+</rdf:RDF>
