@@ -12,7 +12,7 @@ import static FinalPackage.Merging.FunctionalPropertyDetector.isFunctionalProper
 
 
 public class analyzeGraph {
-    public static int numberOfPredicates(Model model) {
+    public static Set<Property> numberOfPredicates(Model model) {
         // Create a set to store unique predicates
         Set<Property> uniquePredicates = new HashSet<>();
 
@@ -26,10 +26,10 @@ public class analyzeGraph {
         }
 
         // The size of the set is the number of unique predicates
-        return uniquePredicates.size();
+        return uniquePredicates;
     }
 
-    public static int numberOfSubjects(Model model) {
+    public static Set<Resource> numberOfSubjects(Model model) {
         // Create a set to store unique subjects
         Set<Resource> uniqueSubjects = new HashSet<>();
 
@@ -42,10 +42,10 @@ public class analyzeGraph {
             uniqueSubjects.add(stmt.getSubject());
         }
         // The size of the set is the number of unique subjects
-        return uniqueSubjects.size();
+        return uniqueSubjects;
     }
 
-    public static int numberOfObjects(Model model) {
+    public static Set<RDFNode> numberOfObjects(Model model) {
         // Create a set to store unique objects
         Set<RDFNode> uniqueObjects = new HashSet<>();
 
@@ -59,7 +59,7 @@ public class analyzeGraph {
         }
 
         // The size of the set is the number of unique objects
-        return uniqueObjects.size();
+        return uniqueObjects;
     }
 
     public static int countFunctionalProperties(Model model) {
@@ -112,7 +112,7 @@ public class analyzeGraph {
 
         // Regular expression patterns to exclude numeric and normalized date literals
         Pattern numericPattern = Pattern.compile("-?\\d+(\\.\\d+)?");
-        Pattern datePattern = Pattern.compile("\\d{4}_\\d{2}_\\d{2}");  // This matches "yyyy_MM_dd"
+        Pattern datePattern = Pattern.compile("\\d{2}.\\d{2}.\\d{4}");  // This matches "yyyy-MM-dd"
 
         while (stmtIterator.hasNext()) {
             Statement stmt = stmtIterator.nextStatement();
@@ -126,15 +126,18 @@ public class analyzeGraph {
                         !datePattern.matcher(literalString).matches()) {
                     stringPredicates.add(stmt.getPredicate());
                 }
+            } else if (object.isResource()) {
+                stringPredicates.add(stmt.getPredicate());
             }
         }
 
         return stringPredicates;
     }
 
+
     // function which counts the number of subjects that have a resource as an object
 
-    public static int countSubjectsWithResourceObjects(Model model) {
+    public static Set<Resource> countSubjectsWithResourceObjects(Model model) {
         Set<Resource> subjectsWithResourceObjects = new HashSet<>();
         StmtIterator stmtIterator = model.listStatements();
 
@@ -146,10 +149,10 @@ public class analyzeGraph {
                 subjectsWithResourceObjects.add(stmt.getSubject());
             }
         }
-        return subjectsWithResourceObjects.size();
+        return subjectsWithResourceObjects;
     }
 
-    private static final Pattern DATE_PATTERN = Pattern.compile("\\d{2}_\\d{2}_\\d{4}");
+    private static final Pattern DATE_PATTERN = Pattern.compile("\\d{2}.\\d{2}.\\d{4}");
 
     public static Set<Property> getDatePredicates(Model model) {
         Set<Property> datePredicates = new HashSet<>();
@@ -294,7 +297,6 @@ public class analyzeGraph {
     }
 
     //counting the most frequent objects for the most frequent predicates
-
     public static Map<RDFNode, Integer> countObjectFrequencies(Model model, Property predicate) {
         Map<RDFNode, Integer> objectFrequencies = new HashMap<>();
         StmtIterator statements = model.listStatements(null, predicate, (RDFNode) null);

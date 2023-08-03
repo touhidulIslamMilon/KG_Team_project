@@ -121,7 +121,7 @@ public class Main {
             //////////////////////////////////////////////////////////////////////////////////
 
             // test AnalyzeGraph functions
-
+            /*
 
             Model model = ModelFactory.createDefaultModel();
             model.read("graph1.rdf");
@@ -129,41 +129,6 @@ public class Main {
 
             // display the first graph
 
-            System.out.println("First graph:");
-            StmtIterator stmtIterator = model.listStatements();
-            while (stmtIterator.hasNext()) {
-                    Statement stmt = stmtIterator.next();
-                    Resource stmtSubject = stmt.getSubject();
-                    Property stmtProperty = stmt.getPredicate();
-                    RDFNode stmtObject = stmt.getObject();
-
-                    String output = String.format("Subject: %s | Property: %s | Object: %s",
-                            stmtSubject.toString(), stmtProperty.toString(), stmtObject.toString());
-
-                    System.out.println(output);
-            }
-
-            Model model2 = ModelFactory.createDefaultModel();
-            model2.read("graph2.rdf");
-            model2=normalizeModel(model2);
-
-            System.out.println("Second graph:");
-            StmtIterator stmtIterator1 = model2.listStatements();
-            while (stmtIterator1.hasNext()) {
-                    Statement stmt = stmtIterator1.next();
-                    Resource stmtSubject = stmt.getSubject();
-                    Property stmtProperty = stmt.getPredicate();
-                    RDFNode stmtObject = stmt.getObject();
-
-                    String output = String.format("Subject: %s | Property: %s | Object: %s",
-                            stmtSubject.toString(), stmtProperty.toString(), stmtObject.toString());
-
-                    System.out.println(output);
-            }
-
-            Set<Model> models= new HashSet();
-            models.add(model);
-            models.add(model2);
 
             System.out.println("TESTING THE ANALYSIS FUNCTIONS:");
             System.out.println("//////////////////////////////////////////////////////////////");
@@ -174,12 +139,12 @@ public class Main {
 
             // counting the number of subjects
 
-            int numberOfSubjects = numberOfSubjects(model);
+            int numberOfSubjects = numberOfSubjects(model).size();
             System.out.println("Number of subjects: "+ numberOfSubjects);
 
             // counting the number of unique objects
 
-            int numberOfObjects = numberOfObjects(model);
+            int numberOfObjects = numberOfObjects(model).size();
             System.out.println("Number of  objects: "+ numberOfObjects);
 
             // number of functional properties
@@ -212,8 +177,8 @@ public class Main {
 
             System.out.println("TESTING THE COMPARISON FUNCTIONS");
             System.out.println("//////////////////////////////////////////////////////////////");
-            Map<Resource, Map<Property, Set<RDFNode>>> subjectsWithDifferentObjects = getSubjectsWithDifferentObjects(models);
-            displaySubjectsObjects(subjectsWithDifferentObjects);
+            //Map<Resource, Map<Property, Set<RDFNode>>> subjectsWithDifferentObjects = getSubjectsWithDifferentObjects(models);
+            //displaySubjectsObjects(subjectsWithDifferentObjects);
 
             System.out.println("//////////////////////////////////////////////////////////////");
 
