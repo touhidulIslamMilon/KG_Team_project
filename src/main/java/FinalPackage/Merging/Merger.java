@@ -110,7 +110,8 @@ public class Merger {
                         RDFNode resolved Object = ...Method(allObjects, subject, predicate)
 
                      */
-
+                    fusionStrategy fusionStrategy = new fusionStrategy();
+                    RDFNode resolvedObject = fusionStrategy.fusion(allObjects, subject, predicate);
                     System.out.println("Conflict: " + subject + predicate);
                     for (RDFNode object1 : allObjects) {
                         System.out.println(object1.toString());
