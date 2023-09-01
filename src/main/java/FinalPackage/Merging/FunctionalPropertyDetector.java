@@ -3,13 +3,106 @@ package FinalPackage.Merging;
 import org.apache.jena.ontology.*;
 import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.*;
+import org.apache.jena.reasoner.ValidityReport;
 import org.apache.jena.util.iterator.ExtendedIterator;
 import org.apache.jena.ontology.FunctionalProperty;
 
 import java.util.*;
 
+import static org.apache.jena.vocabulary.SchemaDO.Report;
+
 public class FunctionalPropertyDetector {
 
+    public static List<Property> getFunctionalProperties(List<Model> models) {
+        List<Property> functionalProperties = new ArrayList<>();
+
+        // Iterate over all the models and collect all predicates
+        Set<Property> allPredicates = new HashSet<>();
+        for (Model model : models) {
+            ExtendedIterator<Statement> statements = model.listStatements();
+            while (statements.hasNext()) {
+                Statement statement = statements.next();
+                allPredicates.add(statement.getPredicate());
+            }
+        }
+
+        // Check if each predicate is functional across all models
+        for (Property predicate : allPredicates) {
+            boolean isFunctional = true;
+            for (Model model : models) {
+                if (!isFunctionalInModel(predicate, model)) {
+                    isFunctional = false;
+                    break;
+                }
+            }
+            if (isFunctional) {
+                functionalProperties.add(predicate);
+            }
+        }
+
+        return functionalProperties;
+    }
+
+    private static boolean isFunctionalInModel(Property predicate, Model model) {
+        // SPARQL query to count distinct objects for each subject-predicate combination
+        String queryString = "SELECT ?subject (COUNT(DISTINCT ?object) AS ?count) WHERE { ?subject <" + predicate.getURI() + "> ?object } GROUP BY ?subject HAVING (COUNT(DISTINCT ?object) > 1)";
+
+        try (QueryExecution queryExecution = QueryExecutionFactory.create(queryString, model)) {
+            ResultSet resultSet = queryExecution.execSelect();
+            return !resultSet.hasNext(); // If no results are found, it's functional
+        }
+    }
+
+
+    // My function worked properly only with this function below
+    public static boolean isFunctionalProperty(Model model, Property property) {
+        // Iterate over all subjects in the model.
+        ResIterator subjects = model.listSubjects();
+        while (subjects.hasNext()) {
+            Resource subject = subjects.next();
+
+            // For each subject, count the number of distinct objects linked by the property.
+            NodeIterator objects = model.listObjectsOfProperty(subject, property);
+            int objectCount = 0;
+            while (objects.hasNext()) {
+                objects.next();
+                objectCount++;
+
+                // If a subject is linked to more than one object by the property, it's not functional.
+                if (objectCount > 1) {
+                    return false;
+                }
+            }
+        }
+
+        // If no subject is linked to more than one object by the property, it is functional.
+        return true;
+    }
+
+    // Method to check if a property is functional for a single model
+    public static boolean isFunctionalProperty(Model model, Resource subject, Property predicate) {
+        RDFNode commonObject = null;
+
+        StmtIterator iter = model.listStatements(subject, predicate, (RDFNode) null);
+        if (iter.hasNext()) {
+            commonObject = iter.nextStatement().getObject();
+            while (iter.hasNext()) {
+                RDFNode object = iter.nextStatement().getObject();
+                if (!commonObject.equals(object)) {
+                    return false; // Property is not functional for this model
+                }
+            }
+        }
+
+        return true; // Property is functional for this model
+    }
+
+}
+
+
+//OLD CODE
+
+/*
     public static List<Property> getFunctionalPredicates(List<Model> models) {
         List<Property> allPredicates = new ArrayList<>();
 
@@ -62,7 +155,10 @@ public class FunctionalPropertyDetector {
     }
 
 
-    /*
+
+
+
+
         Build a SPARQL query to find all distinct predicates
 
 
@@ -127,50 +223,3 @@ public class FunctionalPropertyDetector {
 
         return new ArrayList<>(functionalProperties);
     }*/
-
-
-    // My function worked properly only with this function below
-    public static boolean isFunctionalProperty(Model model, Property property) {
-        // Iterate over all subjects in the model.
-        ResIterator subjects = model.listSubjects();
-        while (subjects.hasNext()) {
-            Resource subject = subjects.next();
-
-            // For each subject, count the number of distinct objects linked by the property.
-            NodeIterator objects = model.listObjectsOfProperty(subject, property);
-            int objectCount = 0;
-            while (objects.hasNext()) {
-                objects.next();
-                objectCount++;
-
-                // If a subject is linked to more than one object by the property, it's not functional.
-                if (objectCount > 1) {
-                    return false;
-                }
-            }
-        }
-
-        // If no subject is linked to more than one object by the property, it is functional.
-        return true;
-    }
-
-    // Method to check if a property is functional for a single model
-    public static boolean isFunctionalProperty(Model model, Resource subject, Property predicate) {
-        RDFNode commonObject = null;
-
-        StmtIterator iter = model.listStatements(subject, predicate, (RDFNode) null);
-        if (iter.hasNext()) {
-            commonObject = iter.nextStatement().getObject();
-            while (iter.hasNext()) {
-                RDFNode object = iter.nextStatement().getObject();
-                if (!commonObject.equals(object)) {
-                    return false; // Property is not functional for this model
-                }
-            }
-        }
-
-        return true; // Property is functional for this model
-    }
-
-}
-

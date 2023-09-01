@@ -15,7 +15,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import static FinalPackage.Merging.FunctionalPropertyDetector.getFunctionalPredicates;
+import static FinalPackage.Merging.FunctionalPropertyDetector.getFunctionalProperties;
 import static FinalPackage.Merging.FunctionalPropertyDetector.isFunctionalProperty;
 
 public class Merger {
@@ -43,7 +43,7 @@ public class Merger {
         Model targetModel = ModelFactory.createDefaultModel();
         Model resolvedModel = ModelFactory.createDefaultModel();
         boolean functionalProperty = true;
-        List<Property> functionalProperties = getFunctionalPredicates(models);
+        List<Property> functionalProperties = FunctionalPropertyDetector.getFunctionalProperties(models);
         System.out.println("Functional Properties");
         for (Property property : functionalProperties) {
             System.out.println(property.getURI());
@@ -60,6 +60,7 @@ public class Merger {
                 if (!resolvedModel.contains(subject, predicate)) {
                     if (!targetModel.contains(subject, predicate)) {
                         targetModel.add(stmt);
+                        System.out.println("added: " + subject + predicate);
                     } else {
                         targetModel.removeAll(subject, predicate, null);
                         if (functionalProperties.contains(predicate)){
@@ -73,7 +74,7 @@ public class Merger {
                             targetModel.add(allStatements);
                             resolvedModel.add(stmt);
                             System.out.println("Not Functional: " + subject + predicate);
-                            break;
+
                         }
                     }
 

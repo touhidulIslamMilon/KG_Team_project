@@ -8,11 +8,12 @@ import org.apache.jena.rdf.model.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static FinalPackage.Merging.FunctionalPropertyDetector.getFunctionalPredicates;
+import static FinalPackage.Merging.FunctionalPropertyDetector.getFunctionalProperties;
 
 public class Main {
 
     public static void main(String[] args) {
+
 
         Model model1 = LoadRDF.getModel("starwars1.rdf");
         System.out.println("Graph 1");
