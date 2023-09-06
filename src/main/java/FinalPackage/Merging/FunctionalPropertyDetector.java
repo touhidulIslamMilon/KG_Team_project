@@ -53,7 +53,6 @@ public class FunctionalPropertyDetector {
         }
     }
 
-
     // My function worked properly only with this function below
     public static boolean isFunctionalProperty(Model model, Property property) {
         // Iterate over all subjects in the model.
