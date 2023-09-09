@@ -2,6 +2,7 @@ package FinalPackage.Merging;
 
 import org.apache.jena.rdf.model.*;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -81,7 +82,7 @@ public class Merger {
     */
 
     public static RDFNode getResolvedObjectValue(List<Model> models, Resource subject, Property predicate) {
-        Set<RDFNode> allObjects = getAllObjects(models, subject, predicate);
+        List<RDFNode> allObjects = getAllObjects(models, subject, predicate);
 
         RDFNode firstObject = allObjects.iterator().next();
         for (RDFNode object : allObjects) {
@@ -127,8 +128,8 @@ public class Merger {
     /*
         Get a set of all objects in a list of models which appear in a property with a given subject and predicate
      */
-    public static Set<RDFNode> getAllObjects(List<Model> models, Resource subject, Property predicate) {
-        Set<RDFNode> objects = new HashSet<>();
+    public static List<RDFNode> getAllObjects(List<Model> models, Resource subject, Property predicate) {
+        List<RDFNode> objects = new ArrayList<>();
 
         for (Model model : models) {
             StmtIterator iter = model.listStatements(subject, predicate, (RDFNode) null);
