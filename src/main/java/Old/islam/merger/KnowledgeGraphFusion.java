@@ -15,7 +15,7 @@ import FinalPackage.normalisation.normlaisationFunctions;
 
 public class KnowledgeGraphFusion {
 
-    
+
    
     public static OntModel mergeKnowledgeGraphs(Model model1, Model model2) {
         normlaisationFunctions normlaisationFunctions = new normlaisationFunctions();
@@ -52,12 +52,12 @@ public class KnowledgeGraphFusion {
 
                 //!SECTION conflict management goes here
                 fusionStrategy fusionStrategy = new fusionStrategy();
-                RDFNode res = fusionStrategy.resolvePredicateConflict(statement.getObject(),stmt.getObject());
+                /*RDFNode res = fusionStrategy.resolvePredicateConflict(statement.getObject(),stmt.getObject());
                 
                 System.out.println(res);
                 mergedModel.remove(subj, predicate, statement.getObject());
                 mergedModel.remove(subj, predicate, stmt.getObject());
-                mergedModel.add(stmt.getSubject(), stmt.getPredicate(),res);
+                mergedModel.add(stmt.getSubject(), stmt.getPredicate(),res);*/
             }
             if(duplicate>=1){
                 
@@ -154,5 +154,5 @@ public class KnowledgeGraphFusion {
 
 
         return ontModelont;
-    }    
+    }
 }
