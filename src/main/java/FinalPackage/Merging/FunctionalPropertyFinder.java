@@ -42,15 +42,6 @@ public class FunctionalPropertyFinder {
         return functionalProperties;
     }
 
-    private static boolean isFunctionalInModel(Property predicate, Model model) {
-        // SPARQL query to check if there is only one object associated with each subject-predicate combination
-        String queryString = "ASK WHERE { ?subject <" + predicate.getURI() + "> ?object1 . ?subject <" + predicate.getURI() + "> ?object2 . FILTER (?object1 != ?object2) }";
-
-        try (QueryExecution queryExecution = QueryExecutionFactory.create(queryString, model)) {
-            return !queryExecution.execAsk();
-        }
-    }
-
     private static int countFunctionalOccurrences(Property predicate, Model model) {
         // SPARQL query to count the total number of times the predicate occurs in a functional manner
         String queryString = "SELECT (COUNT(*) AS ?functionalCount) WHERE { ?subject <" + predicate.getURI() + "> ?object1 . FILTER NOT EXISTS { ?subject <" + predicate.getURI() + "> ?object2 . FILTER (?object1 != ?object2) } }";
@@ -64,10 +55,23 @@ public class FunctionalPropertyFinder {
             return 0;
         }
     }
+
+
 }
 
 
 //Old!
+    /*private static boolean isFunctionalInModel(Property predicate, Model model) {
+        // SPARQL query to check if there is only one object associated with each subject-predicate combination
+        String queryString = "ASK WHERE { ?subject <" + predicate.getURI() + "> ?object1 . ?subject <" + predicate.getURI() + "> ?object2 . FILTER (?object1 != ?object2) }";
+
+        try (QueryExecution queryExecution = QueryExecutionFactory.create(queryString, model)) {
+            return !queryExecution.execAsk();
+        }
+    }*/
+
+
+
         /*List<Property> functionalProperties = new ArrayList<>();
 
         // Iterate over each model
