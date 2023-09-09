@@ -101,6 +101,9 @@ public class Merger {
             }
         }
 
+        System.out.println("No Conflict: " + subject + predicate + firstObject);
+        // All objects are the same, return that object
+        return firstObject;
     }
 
     /*
