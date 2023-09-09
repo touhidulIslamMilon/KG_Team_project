@@ -8,23 +8,24 @@ import org.apache.jena.rdf.model.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static FinalPackage.Merging.FunctionalPropertyDetector.getFunctionalPredicates;
+import static FinalPackage.Merging.FunctionalPropertyDetector.getFunctionalProperties;
 
 public class Main {
 
     public static void main(String[] args) {
 
+
         Model model1 = LoadRDF.getModel("starwars1.rdf");
-        //System.out.println("Graph 1");
-        //model1.write(System.out, "RDF/XML-ABBREV");
+        System.out.println("Graph 1");
+        model1.write(System.out, "RDF/XML-ABBREV");
 
         Model model2 = LoadRDF.getModel("starwars2.rdf");
-        //System.out.println("Graph 2");
-        //model2.write(System.out, "RDF/XML-ABBREV");
+        System.out.println("Graph 2");
+        model2.write(System.out, "RDF/XML-ABBREV");
 
         Model model3 = LoadRDF.getModel("starwars3.rdf");
-        //System.out.println("Graph 3");
-        //model3.write(System.out, "RDF/XML-ABBREV");
+        System.out.println("Graph 3");
+        model3.write(System.out, "RDF/XML-ABBREV");
 
 
         //Model model4 = LoadRDF.getModel("swtor.rdf");

@@ -8,6 +8,7 @@ import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
+import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
 import java.util.regex.Matcher;
@@ -15,15 +16,56 @@ import java.util.regex.Pattern;
 import org.apache.jena.riot.RDFDataMgr;
 
 import java.io.InputStream;
+import java.time.DateTimeException;
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 public class fusionStrategy {
 
-     public void fuseResources(Resource resource1, Resource resource2) {
+    public RDFNode fusion(Set<RDFNode> allObjects, Resource subject, Property predicate) {
         
-    }
+       if(allObjects.size()>2){
+            return majorityVote(allObjects);
+        }else{
+            //iterate over all objects and check if they are literals
+            Iterator  allObjectsiterate=  allObjects.iterator();
+            StringBuilder fusedValue = new StringBuilder();
 
+            for (RDFNode node : allObjects) {
+                
+                fusedValue.append(node);
+            }
+            return null;
+        }
+	}
+    public static RDFNode majorityVote(Set<RDFNode> nodes) {
+        Map<String, Integer> countMap = new HashMap<>();
+
+        // Count occurrences of each RDFNode (considering them as strings)
+        for (RDFNode node : nodes) {
+            String nodeValue = node.toString(); // Convert the RDFNode to a string value
+            countMap.put(nodeValue, countMap.getOrDefault(nodeValue, 0) + 1);
+        }
+
+        // Find the RDFNode with the highest count (majority vote)
+        int maxCount = 0;
+        String majorityNodeValue = null;
+        for (Map.Entry<String, Integer> entry : countMap.entrySet()) {
+            if (entry.getValue() > maxCount) {
+                maxCount = entry.getValue();
+                majorityNodeValue = entry.getKey();
+            }
+        }
+
+        // Return the majority vote as an RDFNode
+        return nodes.iterator().next().getModel().createTypedLiteral(majorityNodeValue);
+    }
+    
     public Literal fuseLiteral(Literal literal1, Literal literal2) {
         String type1 = literal1.getDatatypeURI();
         String type2 = literal2.getDatatypeURI();
@@ -149,13 +191,6 @@ public class fusionStrategy {
 
     }
 
-    public void fuseResourceLiteral(Resource resource, Literal literal) {
-        //TODO - This is where the new literal is created
-        // we will return literal as a resource
-        //return resource.addLiteral(null, literal);
-        
-
-    }
 
     public static Literal findLongestString(Literal stringLiteral1, Literal stringLiteral2) {
         String value1 = stringLiteral1.getString();
@@ -168,21 +203,7 @@ public class fusionStrategy {
         }
     }
 
-    public RDFNode resolvePredicateConflict(RDFNode object, RDFNode object2) {
-        //check if object is string or not
-        String type = objectType(object);
-        String type2 = objectType(object2);
-        if(type=="date" || type2=="date"){
-            return recentDate(object, object2);
-        }else if(type=="number" || type2=="number"){
-            return average_num(Double.parseDouble(object.toString()), Double.parseDouble(object2.toString()));
-        }else if(type=="uri" || type2=="uri"){
-            return object;
-        }else if(type=="unknown" || type2=="unknown"){
-            return longestString(object.toString(), object2.toString());
-        }
-        return concatinateString(object, object);
-    }
+   
 
     public static boolean containsDate(String inputString) {
         String[] dateFormats = {
@@ -228,21 +249,80 @@ public class fusionStrategy {
    
     
     private String objectType(RDFNode object) {
-        
-        if (object.isURIResource()) {
+        if(object.isLiteral()){
+            Literal literal = object.asLiteral();
+            String datatypeURI = literal.getDatatypeURI();
+            if (datatypeURI == null) {
+            return detectStringType(object.toString());
+            } else if (datatypeURI.equals("http://www.w3.org/2001/XMLSchema#string")) {
+                return detectStringType(object.toString());
+            } else if (datatypeURI.equals("http://www.w3.org/2001/XMLSchema#decimal")) {
+                return "decimal";
+            } else if (datatypeURI.equals("http://www.w3.org/2001/XMLSchema#integer")) {
+                return "integer";
+            } else if (datatypeURI.equals("http://www.w3.org/2001/XMLSchema#boolean")) {
+                return "boolean";
+            } else if (datatypeURI.equals("http://www.w3.org/2001/XMLSchema#date")) {
+                return "date";
+            } else if (datatypeURI.equals("http://www.w3.org/2001/XMLSchema#dateTime")) {
+                return "dateTime";
+            } else {
+                return detectStringType(object.toString());
+            }
+        }else if(object.isURIResource()){
             return "uri";
-        } else if (containsDate(object.toString())) {
-            return "date";
-            //cheak if a object contain number or not
-        } else if (object.toString().matches("-?\\d+(\\.\\d+)?")) {
-            return "number";
-        } else if (object.isLiteral()) {
-            return "string";
-
-        } else {
+        }else if(object.isResource()){
+            return "resource";
+        }else{
             return "unknown";
         }
     }
+
+    //get a string and return type of text, number, decimal, date, uri, unknown
+    public static String detectStringType(String input) {
+        // Regular expressions for pattern matching
+        String uriRegex = "^(http|https|ftp)://[\\w\\p{Punct}]+$";
+        String decimalRegex = "^[+-]?\\d*\\.\\d+$";
+        String integerRegex = "^[+-]?\\d+$";
+        String dateRegex = "^\\d{4}-\\d{2}-\\d{2}$";
+
+        // Pattern objects for matching
+        Pattern uriPattern = Pattern.compile(uriRegex);
+        Pattern decimalPattern = Pattern.compile(decimalRegex);
+        Pattern integerPattern = Pattern.compile(integerRegex);
+        Pattern datePattern = Pattern.compile(dateRegex);
+
+        // Text detection
+        if (!input.isEmpty() && !input.matches(uriRegex) &&
+            !input.matches(decimalRegex) && !input.matches(integerRegex) &&
+            !input.matches(dateRegex)) {
+            return "string";
+        }
+
+        // URI detection
+        if (uriPattern.matcher(input).matches()) {
+            return "uri";
+        }
+
+        // Decimal detection
+        if (decimalPattern.matcher(input).matches()) {
+            return "decimal";
+        }
+
+        // Integer detection
+        if (integerPattern.matcher(input).matches()) {
+            return "number";
+        }
+        // Date detection
+        try {
+            LocalDate.parse(input, DateTimeFormatter.ISO_LOCAL_DATE);
+            return "date";
+        } catch (DateTimeException e) {
+            return "string";
+        }
+
+    }
+    
     public static String getLiteralType(Literal literal) {
         String datatypeURI = literal.getDatatypeURI();
 
@@ -264,6 +344,7 @@ public class fusionStrategy {
             return "unknown";
         }
     }
+
     //take two literal and return the concatination of them
     public static Literal concatenateLiterals(Literal literal1, Literal literal2) {
             String concatenatedValue = literal1.getString() + literal2.getString();
@@ -424,9 +505,6 @@ public class fusionStrategy {
     public void fuseLiterals(Literal literal1, Literal literal2) {
     }
 
-
-   
-
-    
+	
     
 }
