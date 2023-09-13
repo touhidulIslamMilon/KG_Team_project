@@ -93,6 +93,14 @@ public class Merger {
                         RDFNode resolved Object = ...Method(allObjects, subject, predicate)
 
                 */
+
+               fusionStrategy fusionStrategy = new fusionStrategy();
+
+               //I am returning a set of RDF node instead of one because some subject and predicate may have a list of object
+               // like movies or children. 
+               Set<RDFNode> resolveNodes = fusionStrategy.fusion(allObjects, subject, predicate);
+
+
                 System.out.println("Conflict: " + subject + predicate);
                 for (RDFNode object1 : allObjects) {
                     System.out.println(object1.toString());
@@ -100,6 +108,7 @@ public class Merger {
                 return firstObject;
             }
         }
+        return firstObject;
 
     }
 
