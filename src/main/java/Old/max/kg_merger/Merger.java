@@ -10,6 +10,7 @@ import java.util.Set;
 import static FinalPackage.Merging.FunctionalPropertyDetector.isFunctionalProperty;
 
 public class Merger {
+/*
 
         public static Model mergeGraphs(Model model1, Model model2){
         Model targetModel = ModelFactory.createDefaultModel();
@@ -94,6 +95,7 @@ public class Merger {
 
         // You can modify this method to suit your specific conflict resolution requirements.
     }
+*/
 
 
 }
