@@ -99,7 +99,8 @@ public class Merger {
 
                //I am returning a set of RDF node instead of one because some subject and predicate may have a list of object
                // like movies or children. 
-               Set<RDFNode> resolveNodes = fusionStrategy.fusion(allObjects, subject, predicate);
+               Set<RDFNode> allNodes = new HashSet<>(allObjects);
+               Set<RDFNode> resolveNodes = fusionStrategy.fusion(allNodes, subject, predicate);
 
 
                 System.out.println("Conflict: " + subject + predicate);
@@ -109,7 +110,6 @@ public class Merger {
                 return firstObject;
             }
         }
-        return firstObject;
 
         System.out.println("No Conflict: " + subject + predicate + firstObject);
         // All objects are the same, return that object

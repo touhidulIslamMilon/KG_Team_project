@@ -31,7 +31,7 @@ public class fusionStrategy {
     
         // It get through all the object and return only the unique ones
         //
-        //Set<RDFNode> allObjects= allObjects.keySet();
+        //Set<RDFNode> allNode= allObjects.keySet();
 
         String[]  MultiplePredicateString = {"Sibling", "Parents", "Friends", "Examples"};
         List<String> MultiplePredicate = new ArrayList<>();
