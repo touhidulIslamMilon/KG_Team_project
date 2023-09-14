@@ -6,7 +6,9 @@ import FinalPackage.Merging.LoadRDF;
 import org.apache.jena.rdf.model.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static FinalPackage.Merging.FunctionalPropertyDetector.getFunctionalProperties;
 
@@ -34,8 +36,31 @@ public class Main {
         System.out.println("Read");
 
 
+        /*
+            Test 4: Merge more than two graphs
+        */
+        List<Model> models = new ArrayList<>();
+        models.add(model1);
+        models.add(model2);
+        models.add(model3);
+
+        Map<Model, Integer> modelPriorities = new HashMap<>();
+        modelPriorities.put(model1, 1);
+        modelPriorities.put(model2, 2);
+        modelPriorities.put(model3, 3);
+        Model mergedModel1 = Merger.mergeGraphs(modelPriorities);
+        System.out.println("Merged1");
+        mergedModel1.write(System.out, "RDF/XML-ABBREV");
+
+        Model mergedModel = Merger.mergeGraphs(models);
+        System.out.println("Merged");
+        mergedModel.write(System.out, "RDF/XML-ABBREV");
 
 
+    }
+}
+
+//Old
 
         /*
             Test 2: Functional Properties
@@ -119,33 +144,3 @@ public class Main {
         System.out.println("All pairs: " + count);
         System.out.println("Functional pairs: " + functional);
         */
-
-
-        /*
-            Test 4: Merge more than two graphs
-        */
-        List<Model> models = new ArrayList<>();
-        models.add(model1);
-        models.add(model2);
-        models.add(model3);
-
-
-        Model mergedModel = Merger.mergeGraphs(models);
-        System.out.println("Merged");
-        mergedModel.write(System.out, "RDF/XML-ABBREV");
-
-        /*
-        List<Model> models = new ArrayList<>();
-        models.add(model6);
-        List<Property> functionalProperties = getFunctionalPredicates(models);
-        System.out.println("Functional Properties");
-        int count = 0;
-        for (Property property : functionalProperties) {
-            count++;
-            System.out.println(property.getURI());
-        }
-        System.out.println(count);
-        */
-
-    }
-}

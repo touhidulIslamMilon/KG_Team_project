@@ -2,12 +2,17 @@ package tests;
 
 import FinalPackage.Merging.Merger;
 import FinalPackage.Merging.LoadRDF;
-import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.*;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class MergerTest {
     @Test
@@ -32,4 +37,5 @@ public class MergerTest {
         // Assert that the mergedModel is equal to the expectedModel
         Assert.assertTrue("Merged graph does not match the expected result.", mergedModel.isIsomorphicWith(expectedModel));
     }
+
 }
