@@ -81,8 +81,6 @@ public class ConflictResolution {
     }
 
 
-
-
     public static RDFNode getResolvedObjectValue(Map<Model, Integer> modelPriorities, Resource subject, Property predicate) {
         Map<RDFNode, Integer> objectPriorityMap = new HashMap<>();
 
@@ -117,6 +115,7 @@ public class ConflictResolution {
         // If no conflicts or after resolving conflicts, return the first object
         return objectPriorityMap.keySet().iterator().next();
     }
+
 
     public static boolean hasConflicts(Map<RDFNode, Integer> objectPriorityMap) {
         // Check if there are conflicts (more than one object with different priorities)
