@@ -2,10 +2,7 @@ package FinalPackage.Merging;
 
 import org.apache.jena.rdf.model.*;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static FinalPackage.Merging.FunctionalPropertyDetector.isFunctionalProperty;
 
@@ -57,11 +54,11 @@ public class Merger {
                         if (functionalProperties.contains(predicate)) {
                             System.out.println("Functional: " + subject + predicate);
                             // Call a method to find the resolved value and add it to the targetModel
-                            RDFNode resolvedObject = getResolvedObjectValue(models, subject, predicate);
+                            RDFNode resolvedObject = ConflictResolution.getResolvedObjectValue(models, subject, predicate);
                             targetModel.add(subject, predicate, resolvedObject);
                             resolvedModel.add(stmt);
                         } else {
-                            Model allStatements = getDistinctStatements(models, subject, predicate);
+                            Model allStatements = ConflictResolution.getDistinctStatements(models, subject, predicate);
                             targetModel.add(allStatements);
                             resolvedModel.add(stmt);
                             System.out.println("Not Functional: " + subject + predicate);
@@ -75,75 +72,56 @@ public class Merger {
         return targetModel;
     }
 
-    /*
-        Method to find the resolved value for a subject-predicate combination from multiple models
-                list all objects: If all are the same -> return
-                if not resolveConflict
-    */
 
-    public static RDFNode getResolvedObjectValue(List<Model> models, Resource subject, Property predicate) {
-        List<RDFNode> allObjects = getAllObjects(models, subject, predicate);
+    public static Model mergeGraphs(Map<Model, Integer> modelPriorities) {
+        Model targetModel = ModelFactory.createDefaultModel();
+        Model resolvedModel = ModelFactory.createDefaultModel();
+        List<Property> functionalProperties = FunctionalPropertyFinder.findFunctionalProperties(new ArrayList<>(modelPriorities.keySet()));
 
-        RDFNode firstObject = allObjects.iterator().next();
-        for (RDFNode object : allObjects) {
-            if (!firstObject.equals(object)) {
-                // Not all objects are the same, return the first object as a simple conflict resolution
-                /*
-                        TODO:
-                        Resolve from set of objects for subject/predicate to just one object
-                        RDFNode resolved Object = ...Method(allObjects, subject, predicate)
+        for (Property property : functionalProperties) {
+            System.out.println("Functional Property: " + property.getURI());
+        }
 
-                */
-                System.out.println("Conflict: " + subject + predicate);
-                for (RDFNode object1 : allObjects) {
-                    System.out.println(object1.toString());
+        for (Model model : modelPriorities.keySet()) {
+            StmtIterator iter = model.listStatements();
+
+            while (iter.hasNext()) {
+                Statement stmt = iter.nextStatement();
+                Resource subject = stmt.getSubject();
+                Property predicate = stmt.getPredicate();
+
+                if (!resolvedModel.contains(subject, predicate)) {
+                    if (!targetModel.contains(subject, predicate)) {
+                        targetModel.add(stmt);
+                        System.out.println("Added: " + subject + predicate);
+                    } else {
+                        targetModel.removeAll(subject, predicate, null);
+                        if (functionalProperties.contains(predicate)) {
+                            System.out.println("Functional: " + subject + predicate);
+                            // Call a method to find the resolved value and add it to the targetModel
+                            RDFNode resolvedObject = ConflictResolution.getResolvedObjectValue(modelPriorities, subject, predicate);
+                            targetModel.add(subject, predicate, resolvedObject);
+                            resolvedModel.add(stmt);
+                        } else {
+                            Model allStatements = ConflictResolution.getDistinctStatements(new ArrayList<>(modelPriorities.keySet()), subject, predicate);
+                            targetModel.add(allStatements);
+                            resolvedModel.add(stmt);
+                            System.out.println("Not Functional: " + subject + predicate);
+                        }
+                    }
                 }
-                return firstObject;
             }
         }
-
-        System.out.println("No Conflict: " + subject + predicate + firstObject);
-        // All objects are the same, return that object
-        return firstObject;
+        return targetModel;
     }
 
-    /*
-        Get a Model which contains all distinct statements from all the models with a given subject and predicate
-     */
-    public static Model getDistinctStatements(List<Model> models, Resource subject, Property predicate) {
-        Model distinctStatements = ModelFactory.createDefaultModel();
-
-        for (Model model : models) {
-            StmtIterator iter = model.listStatements(subject, predicate, (RDFNode) null);
-            while (iter.hasNext()) {
-                Statement stmt = iter.nextStatement();
-                distinctStatements.add(stmt);
-            }
-        }
-
-        return distinctStatements;
-    }
+}
 
 
-    /*
-        Get a set of all objects in a list of models which appear in a property with a given subject and predicate
-     */
-    public static List<RDFNode> getAllObjects(List<Model> models, Resource subject, Property predicate) {
-        List<RDFNode> objects = new ArrayList<>();
 
-        for (Model model : models) {
-            StmtIterator iter = model.listStatements(subject, predicate, (RDFNode) null);
-            while (iter.hasNext()) {
-                Statement stmt = iter.nextStatement();
-                objects.add(stmt.getObject());
-            }
-        }
+//Old
 
-        return objects;
-    }
-
-
-        /*
+   /*
                 Method to find the resolved value for a subject-predicate combination from multiple models
                 for loop: go through statements with given subject-predicate combination
                     -> if it is the first, assigned it to commonObject
@@ -183,5 +161,3 @@ public class Merger {
         //return conflict ? resolvedObject : commonObject;
     }
     */
-
-}
