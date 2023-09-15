@@ -18,26 +18,11 @@ public class ObjectResolution {
         RDFNode firstObject = allObjects.iterator().next();
         for (RDFNode object : allObjects) {
             if (!firstObject.equals(object)) {
-                createObjectMap(allObjects);
-                // Not all objects are the same, return the first object as a simple conflict resolution
-                /*
-                        TODO:
-                        Resolve from set of objects for subject/predicate to just one object
-                        RDFNode resolved Object = ...Method(allObjects, subject, predicate)
+                Map<RDFNode, Integer> objectsWithPrio = createObjectMap(allObjects);
+                RDFNode resolvedObject = ConflictResolution.resolveConflict(objectsWithPrio, subject, predicate);
 
-                        fusionStrategy fusionStrategy = new fusionStrategy();
-
-               //I am returning a set of RDF node instead of one because some subject and predicate may have a list of object
-               // like movies or children.
-               //Set<RDFNode> resolveNodes = fusionStrategy.fusion(allObjects, subject, predicate);
-
-                */
-
-                System.out.println("Conflict: " + subject + predicate);
-                for (RDFNode object1 : allObjects) {
-                    System.out.println(object1.toString());
-                }
-                return firstObject;
+                System.out.println("Conflict: " + subject + predicate + resolvedObject);
+                return resolvedObject;
             }
         }
         System.out.println("No Conflict: " + subject + predicate + firstObject);
