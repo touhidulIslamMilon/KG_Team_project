@@ -96,16 +96,10 @@ public class ObjectResolution {
 
         // Check for conflicts
         if (!objectPriorityMap.isEmpty() && hasConflicts(objectPriorityMap)) {
-            // Call the fuse method with objects and their priorities
-            /*
-                TODO: fuse(objectPriorityMap);
-             */
-            System.out.println("Conflict: " + subject + predicate);
-            for (Map.Entry<RDFNode, Integer> entry : objectPriorityMap.entrySet()) {
-                RDFNode object = entry.getKey();
-                System.out.println(object.toString());
-            }
-            return objectPriorityMap.keySet().iterator().next();
+            RDFNode resolvedObject = ConflictResolution.resolveConflict(objectPriorityMap, subject, predicate);
+
+            System.out.println("Conflict: " + subject + predicate + resolvedObject);
+            return resolvedObject;
         }
 
         // If no conflicts or after resolving conflicts, return the first object
