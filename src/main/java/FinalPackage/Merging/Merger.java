@@ -4,8 +4,6 @@ import org.apache.jena.rdf.model.*;
 
 import java.util.*;
 
-import static FinalPackage.Merging.FunctionalPropertyDetector.isFunctionalProperty;
-
 public class Merger {
 
     /*

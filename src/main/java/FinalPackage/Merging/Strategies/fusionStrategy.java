@@ -1,7 +1,7 @@
 
 //the is a fusion strategy class with multiple method take two object and return one
 //boilerplate code for class
-package FinalPackage.Merging;
+package FinalPackage.Merging.Strategies;
 
 import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.rdf.model.Literal;

@@ -1,13 +1,6 @@
 package Old.max.kg_merger;
 
-import FinalPackage.Merging.fusionStrategy;
-import org.apache.jena.rdf.model.*;
-
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import static FinalPackage.Merging.FunctionalPropertyDetector.isFunctionalProperty;
+import static FinalPackage.Old.FunctionalPropertyDetector.isFunctionalProperty;
 
 public class Merger {
 /*

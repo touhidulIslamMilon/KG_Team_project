@@ -1,13 +1,12 @@
 package FinalPackage.analyzeGraph;
 
-import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.rdf.model.*;
 
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static FinalPackage.Merging.FunctionalPropertyDetector.isFunctionalProperty;
+import static FinalPackage.Old.FunctionalPropertyDetector.isFunctionalProperty;
 
 
 public class analyzeGraph {

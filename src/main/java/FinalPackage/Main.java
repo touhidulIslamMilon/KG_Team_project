@@ -1,6 +1,5 @@
 package FinalPackage;
 
-import FinalPackage.Merging.FunctionalPropertyDetector;
 import FinalPackage.Merging.Merger;
 import FinalPackage.Merging.LoadRDF;
 import org.apache.jena.rdf.model.*;
@@ -9,8 +8,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static FinalPackage.Merging.FunctionalPropertyDetector.getFunctionalProperties;
 
 public class Main {
 

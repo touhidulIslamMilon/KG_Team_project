@@ -1,4 +1,4 @@
-package FinalPackage.Merging;
+package FinalPackage.Old;
 
 import org.apache.jena.ontology.*;
 import org.apache.jena.query.*;
