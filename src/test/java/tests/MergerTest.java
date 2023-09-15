@@ -1,15 +1,13 @@
 package tests;
 
 import FinalPackage.Merging.Merger;
-import FinalPackage.Merging.LoadRDF;
+import FinalPackage.LoadRDF;
 import org.apache.jena.rdf.model.*;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;

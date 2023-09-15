@@ -1,7 +1,6 @@
 package FinalPackage;
 
 import FinalPackage.Merging.Merger;
-import FinalPackage.Merging.LoadRDF;
 import org.apache.jena.rdf.model.*;
 
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package FinalPackage.Merging;
+package FinalPackage;
 
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
