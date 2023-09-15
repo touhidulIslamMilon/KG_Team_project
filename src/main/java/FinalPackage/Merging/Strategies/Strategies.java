@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class Strategies {
 
-    private Strategy strategy;
+    private final Strategy strategy;
 
     public Strategies(Strategy strategy) {
         this.strategy = strategy;

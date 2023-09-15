@@ -24,7 +24,8 @@ public class ManualReviewResolutionTest {
         ManualReviewResolutionStrategy strategy = new ManualReviewResolutionStrategy();
 
         // Simulate user input for manual review (choose object2)
-        System.out.println("Simulating user input for manual review:");
+        System.out.println("Please choose an object for following subject and predicate:");
+        System.out.println(subject + " " + predicate);
         RDFNode resolvedObject = strategy.resolveConflict(objects, subject, predicate);
 
         System.out.println("ResolvedObject: " + resolvedObject.toString());
