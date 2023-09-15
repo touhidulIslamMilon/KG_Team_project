@@ -18,6 +18,7 @@ public class ConflictResolution {
         RDFNode firstObject = allObjects.iterator().next();
         for (RDFNode object : allObjects) {
             if (!firstObject.equals(object)) {
+                createObjectMap(allObjects);
                 // Not all objects are the same, return the first object as a simple conflict resolution
                 /*
                         TODO:
@@ -78,6 +79,16 @@ public class ConflictResolution {
         }
 
         return objects;
+    }
+
+    public static Map<RDFNode, Integer> createObjectMap(List<RDFNode> allObjects) {
+        Map<RDFNode, Integer> objectMap = new HashMap<>();
+
+        for (RDFNode object : allObjects) {
+            objectMap.put(object, 1);
+        }
+
+        return objectMap;
     }
 
 
