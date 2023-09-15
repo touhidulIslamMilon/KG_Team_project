@@ -54,11 +54,11 @@ public class Merger {
                         if (functionalProperties.contains(predicate)) {
                             System.out.println("Functional: " + subject + predicate);
                             // Call a method to find the resolved value and add it to the targetModel
-                            RDFNode resolvedObject = ConflictResolution.getResolvedObjectValue(models, subject, predicate);
+                            RDFNode resolvedObject = ObjectResolution.getResolvedObjectValue(models, subject, predicate);
                             targetModel.add(subject, predicate, resolvedObject);
                             resolvedModel.add(stmt);
                         } else {
-                            Model allStatements = ConflictResolution.getDistinctStatements(models, subject, predicate);
+                            Model allStatements = ObjectResolution.getDistinctStatements(models, subject, predicate);
                             targetModel.add(allStatements);
                             resolvedModel.add(stmt);
                             System.out.println("Not Functional: " + subject + predicate);
@@ -99,11 +99,11 @@ public class Merger {
                         if (functionalProperties.contains(predicate)) {
                             System.out.println("Functional: " + subject + predicate);
                             // Call a method to find the resolved value and add it to the targetModel
-                            RDFNode resolvedObject = ConflictResolution.getResolvedObjectValue(modelPriorities, subject, predicate);
+                            RDFNode resolvedObject = ObjectResolution.getResolvedObjectValue(modelPriorities, subject, predicate);
                             targetModel.add(subject, predicate, resolvedObject);
                             resolvedModel.add(stmt);
                         } else {
-                            Model allStatements = ConflictResolution.getDistinctStatements(new ArrayList<>(modelPriorities.keySet()), subject, predicate);
+                            Model allStatements = ObjectResolution.getDistinctStatements(new ArrayList<>(modelPriorities.keySet()), subject, predicate);
                             targetModel.add(allStatements);
                             resolvedModel.add(stmt);
                             System.out.println("Not Functional: " + subject + predicate);

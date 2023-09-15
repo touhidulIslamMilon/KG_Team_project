@@ -1,7 +1,6 @@
 package tests;
 
-import FinalPackage.Merging.ConflictResolution;
-import FinalPackage.Merging.Merger;
+import FinalPackage.Merging.ObjectResolution;
 import org.apache.jena.rdf.model.*;
 import org.junit.Assert;
 import org.junit.Test;
@@ -9,7 +8,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConflictTest {
+public class ObjectResolutionTest {
 
     // Helper method to create a sample model
     private static Model createSampleModel(Resource subject, Property predicate, String objectValue) {
@@ -33,11 +32,11 @@ public class ConflictTest {
         models.add(createSampleModel(subject, ageProperty, "12"));
 
         // Test the subject-predicate combination with a conflict
-        RDFNode resolvedObject1 = ConflictResolution.getResolvedObjectValue(models, subject, genderProperty);
+        RDFNode resolvedObject1 = ObjectResolution.getResolvedObjectValue(models, subject, genderProperty);
         Assert.assertEquals("NonBinary", resolvedObject1.toString()); // Expecting "NonBinary" as it was the last object
 
         // Test the subject-predicate combination with no conflict
-        RDFNode resolvedObject2 = ConflictResolution.getResolvedObjectValue(models, subject, ageProperty);
+        RDFNode resolvedObject2 = ObjectResolution.getResolvedObjectValue(models, subject, ageProperty);
         Assert.assertEquals("12", resolvedObject2.toString());
 
     }

@@ -4,7 +4,7 @@ import org.apache.jena.rdf.model.*;
 
 import java.util.*;
 
-public class ConflictResolution {
+public class ObjectResolution {
 
     /*
         Method to find the resolved value for a subject-predicate combination from multiple models
