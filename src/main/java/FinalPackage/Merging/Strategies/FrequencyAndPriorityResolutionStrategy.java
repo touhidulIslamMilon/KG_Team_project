@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class FrequencyAndPriorityResolutionStrategy implements Strategy {
+public class FrequencyAndPriorityBaseStrategy implements Strategy {
     @Override
     public RDFNode resolveConflict(Map<RDFNode, Integer> objects, Resource subject, Property predicate) {
         

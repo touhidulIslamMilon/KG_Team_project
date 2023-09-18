@@ -61,7 +61,8 @@ public class CustomResolutionStrategy implements Strategy{
         }
         return resolvedObject;
     }
- 
+
+    
     private RDFNode getOldestDateForProperty(Map<RDFNode, Integer> objects) {
 
         //This Function the node that have the minimum value for the RDFNode

@@ -7,7 +7,11 @@ import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
 
-public class MostRecentResolusionStrategy implements Strategy{
+<<<<<<< HEAD:src/main/java/FinalPackage/Merging/Strategies/MostRecentNode.java
+public class MostRecentNode implements Strategy{
+=======
+public class MostRecentResolutionStrategy implements Strategy{
+>>>>>>> 30a9b52094080c8be82a38a269bca19cfc54c10c:src/main/java/FinalPackage/Merging/Strategies/MostRecentResolutionStrategy.java
 
     @Override
     public RDFNode resolveConflict(Map<RDFNode, Integer> objects, Resource subject, Property predicate) {
