@@ -8,22 +8,24 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class MostFrequentResolutionStrategy implements Strategy {
+public class FrequencyAndPriorityResolutionStrategy implements Strategy {
     @Override
     public RDFNode resolveConflict(Map<RDFNode, Integer> objects, Resource subject, Property predicate) {
-        Map<RDFNode, Integer> frequencyCount = new HashMap<>();
+        
+        Map<RDFNode, Double> weightedCounts = new HashMap<>();
 
         // Calculate the weighted count for each RDF node
         for (Map.Entry<RDFNode, Integer> entry : objects.entrySet()) {
             RDFNode node = entry.getKey();
-            frequencyCount.put(node,  countNodeFrequency(node, objects.keySet()));
+            double weight = entry.getValue();
+            weightedCounts.put(node, weight * countNodeFrequency(node, objects.keySet()));
         }
 
         // Find the node with the highest weighted count
         RDFNode highestWeightedNode = null;
         double highestWeight = Double.NEGATIVE_INFINITY;
 
-        for (Map.Entry<RDFNode, Integer> entry : frequencyCount.entrySet()) {
+        for (Map.Entry<RDFNode, Double> entry : weightedCounts.entrySet()) {
             RDFNode node = entry.getKey();
             double weightedCount = entry.getValue();
             if (weightedCount > highestWeight) {
@@ -33,6 +35,7 @@ public class MostFrequentResolutionStrategy implements Strategy {
         }
 
         return highestWeightedNode;
+
     }
     public static int countNodeFrequency(RDFNode node, Set<RDFNode> nodeSet) {
         int frequency = 0;

@@ -53,7 +53,7 @@ public class fusionStrategy {
 
 
                 //return one node which have height frequency
-                majorityVote(allObjects);
+                //majorityVote(allObjects);
             
                  //return one node which have height weight
                 //heigestWeight(allObjects);
@@ -126,103 +126,9 @@ public class fusionStrategy {
 	    }
 	    return false;
 	}
-    public static RDFNode heigestWeight(Map<RDFNode, Double> nodeWeights) {
-        if (nodeWeights == null || nodeWeights.isEmpty()) {
-            return null;
-        }
+  
 
-        RDFNode highestWeightNode = null;
-        double highestWeight = Double.NEGATIVE_INFINITY;
-
-        for (Entry<RDFNode, Double> entry : nodeWeights.entrySet()) {
-            RDFNode node = entry.getKey();
-            double weight = entry.getValue();
-
-            if (weight > highestWeight) {
-                highestWeight = weight;
-                highestWeightNode = node;
-            }
-        }
-
-        return highestWeightNode;
-    }
-    public static RDFNode findMostRecentNode(Map<RDFNode, Double> nodes) {
-        RDFNode mostRecentNode = null;
-        Date mostRecentDate = null;
-        Map<RDFNode, Date> nodeCreationMap = convertMapToDates(nodes);
-
-        for (Map.Entry<RDFNode, Date> entry : nodeCreationMap.entrySet()) {
-            Date currentDate = entry.getValue();
-
-            if (mostRecentDate == null || currentDate.after(mostRecentDate)) {
-                mostRecentDate = currentDate;
-                mostRecentNode = entry.getKey();
-            }
-        }
-
-        return mostRecentNode;
-    }
-
-    public static RDFNode findNodeWithHighestWeight(Map<RDFNode, Double> nodeWeights) {
-        Map<RDFNode, Double> weightedCounts = new HashMap<>();
-
-        // Calculate the weighted count for each RDF node
-        for (Map.Entry<RDFNode, Double> entry : nodeWeights.entrySet()) {
-            RDFNode node = entry.getKey();
-            double weight = entry.getValue();
-            weightedCounts.put(node, weight * countNodeFrequency(node, nodeWeights.keySet()));
-        }
-
-        // Find the node with the highest weighted count
-        RDFNode highestWeightedNode = null;
-        double highestWeight = Double.NEGATIVE_INFINITY;
-
-        for (Map.Entry<RDFNode, Double> entry : weightedCounts.entrySet()) {
-            RDFNode node = entry.getKey();
-            double weightedCount = entry.getValue();
-            if (weightedCount > highestWeight) {
-                highestWeight = weightedCount;
-                highestWeightedNode = node;
-            }
-        }
-
-        return highestWeightedNode;
-    }
-
-    public static int countNodeFrequency(RDFNode node, Set<RDFNode> nodeSet) {
-        int frequency = 0;
-        for (RDFNode n : nodeSet) {
-            if (n.equals(node)) {
-                frequency++;
-            }
-        }
-        return frequency;
-    }
-
-    public static RDFNode majorityVote(Set<RDFNode> nodes) {
-        Map<RDFNode, Integer> frequencyMap = new HashMap<>();
-        
-        // Count the frequency of each RDFNode
-        for (RDFNode node : nodes) {
-            frequencyMap.put(node, frequencyMap.getOrDefault(node, 0) + 1);
-        }
-        
-        // Find the node with the highest frequency
-        RDFNode highestFrequencyNode = null;
-        int highestFrequency = 0;
-
-        for (Map.Entry<RDFNode, Integer> entry : frequencyMap.entrySet()) {
-            RDFNode node = entry.getKey();
-            int frequency = entry.getValue();
-            
-            if (frequency > highestFrequency) {
-                highestFrequency = frequency;
-                highestFrequencyNode = node;
-            }
-        }
-        
-        return highestFrequencyNode;
-    }
+ 
     
     public RDFNode fusenode(RDFNode node1, RDFNode node2) {
         String type1 = objectTypeType(node1);
@@ -649,21 +555,7 @@ public class fusionStrategy {
             return num2;
         }
     }
-    public static Map<RDFNode, Date> convertMapToDates(Map<RDFNode, Double> nodeDoubleMap) {
-        Map<RDFNode, Date> nodeDateMap = new HashMap<>();
 
-        for (Map.Entry<RDFNode, Double> entry : nodeDoubleMap.entrySet()) {
-            RDFNode node = entry.getKey();
-            Double doubleValue = entry.getValue();
-
-            // Convert the Double value to a Date assuming it represents milliseconds since epoch
-            Date dateValue = new Date(doubleValue.longValue());
-            
-            nodeDateMap.put(node, dateValue);
-        }
-
-        return nodeDateMap;
-    }
    
 	public static Set<String> tokenize(String text) {
         // Split the text into words (tokens) using whitespace as the delimiter
