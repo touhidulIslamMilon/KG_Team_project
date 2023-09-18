@@ -16,6 +16,7 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.RDFNode;
 
 public class HelperFunction {
+    
     public String objectType(RDFNode object) {
         if(object.isLiteral()){
             Literal literal = object.asLiteral();
