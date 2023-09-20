@@ -2,15 +2,9 @@ package FinalPackage;
 
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.util.FileManager;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.FileVisitOption;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
 
@@ -22,7 +16,7 @@ public class LoadRDF {
         return model;
     }
 
-    public static Map<Model, Date> getModelDate(String filename) {
+    public static Map<Model, Date> getModelDateMap(String filename) {
         Map<Model, Date> modelDateMap = new HashMap<>();
 
         // Create an empty Jena Model
@@ -40,6 +34,49 @@ public class LoadRDF {
         return modelDateMap;
     }
 
+    public static Date getFileCreationDate(String filePath) {
+        try {
+            Path path = FileSystems.getDefault().getPath(filePath);
+            BasicFileAttributes attributes = Files.readAttributes(path, BasicFileAttributes.class);
+
+            // Get the creation time attribute
+            long creationTimeMillis = attributes.creationTime().toMillis();
+
+            // Convert the creation time to a Date object
+            Date creationDate = new Date(creationTimeMillis);
+
+            //System.out.println("File Creation Date: " + creationDate);
+            return creationDate;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static Map<Model, Integer> assignPriorityToLatest(Map<Model, Date> modelDateMap) {
+        Map<Model, Integer> modelPriorityMap = new HashMap<>();
+
+        // Create a list of entries from the input map, sorted by date in descending order
+        List<Map.Entry<Model, Date>> sortedEntries = new ArrayList<>(modelDateMap.entrySet());
+        sortedEntries.sort(Comparator.comparing(Map.Entry::getValue));
+
+        // Assign priorities (integers) to models based on their order in the sorted list
+        int priority = 1;
+        for (Map.Entry<Model, Date> entry : sortedEntries) {
+            modelPriorityMap.put(entry.getKey(), priority);
+            priority++;
+        }
+
+        return modelPriorityMap;
+    }
+
+
+
+
+}
+
+
+/* //Use for Resource Folder
     public static Date getFileCreationDate(String filename) {
         // Use the ClassLoader to load the file as a resource
         InputStream inputStream = Main.class.getClassLoader().getResourceAsStream(filename);
@@ -76,26 +113,4 @@ public class LoadRDF {
 
         return null;
     }
-
-
-    public static Map<Model, Integer> assignPriorityToLatest(Map<Model, Date> modelDateMap) {
-        Map<Model, Integer> modelPriorityMap = new HashMap<>();
-
-        // Create a list of entries from the input map, sorted by date in descending order
-        List<Map.Entry<Model, Date>> sortedEntries = new ArrayList<>(modelDateMap.entrySet());
-        sortedEntries.sort(Comparator.comparing(Map.Entry::getValue));
-
-        // Assign priorities (integers) to models based on their order in the sorted list
-        int priority = 1;
-        for (Map.Entry<Model, Date> entry : sortedEntries) {
-            modelPriorityMap.put(entry.getKey(), priority);
-            priority++;
-        }
-
-        return modelPriorityMap;
-    }
-
-
-
-
-}
+*/
