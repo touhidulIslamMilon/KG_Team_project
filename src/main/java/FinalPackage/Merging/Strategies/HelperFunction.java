@@ -8,12 +8,15 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Matcher;
+import java.text.ParseException;
 import java.util.regex.Pattern;
 
 import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.RDFNode;
+
+import com.ibm.icu.text.SimpleDateFormat;
 
 public class HelperFunction {
     
@@ -233,8 +236,22 @@ public class HelperFunction {
             return stringLiteral2;
         }
     }
+    public  Date intToDate(int timestampInSeconds) {
+        long timestampInMillis = (long) timestampInSeconds * 1000;
+        return new Date(timestampInMillis);
+    }
    
-
+    public  int dateToInt(String dateString)  {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date date=null;
+        try {
+            date = sdf.parse(dateString);
+        } catch (ParseException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return (int) (date.getTime() / 1000); // Convert milliseconds to seconds
+    }
 
     //take two literal and return the concatination of them
     public  Literal concatenateLiterals(RDFNode node1, RDFNode node2) {

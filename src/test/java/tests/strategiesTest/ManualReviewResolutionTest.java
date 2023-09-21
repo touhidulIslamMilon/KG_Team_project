@@ -1,4 +1,4 @@
-package tests;
+package tests.strategiesTest;
 
 import FinalPackage.Merging.Strategies.ManualReviewResolutionStrategy;
 

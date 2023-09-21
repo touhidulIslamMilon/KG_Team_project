@@ -9,24 +9,23 @@ import org.apache.jena.rdf.model.Resource;
 
 import com.google.common.collect.ListMultimap;
 
-public class MostRecentResolusionStrategy implements Strategy{
-
+public class MostOldestResolutionStrategy  implements Strategy{
     @Override
     public RDFNode resolveConflict(ListMultimap<RDFNode, Integer> objects, Resource subject, Property predicate) {
-        RDFNode mostRecentNode = null;
-        Date mostRecentDate = null;
+        RDFNode mostoldestNode = null;
+        Date mostOldestDate = null;
         Map<RDFNode, Date> nodeCreationMap = convertMapToDates(objects);
 
         for (Map.Entry<RDFNode, Date> entry : nodeCreationMap.entrySet()) {
             Date currentDate = entry.getValue();
 
-            if (mostRecentDate == null || currentDate.after(mostRecentDate)) {
-                mostRecentDate = currentDate;
-                mostRecentNode = entry.getKey();
+            if (mostOldestDate == null || currentDate.before(mostOldestDate)) {
+                mostOldestDate = currentDate;
+                mostoldestNode = entry.getKey();
             }
         }
 
-        return mostRecentNode;
+        return mostoldestNode;
     }
 
     public static Map<RDFNode, Date> convertMapToDates(ListMultimap<RDFNode, Integer> objects) {
@@ -42,5 +41,4 @@ public class MostRecentResolusionStrategy implements Strategy{
 
         return nodeCreationMap;
     }
-    
 }
