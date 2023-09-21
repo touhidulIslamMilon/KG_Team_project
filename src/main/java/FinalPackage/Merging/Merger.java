@@ -91,7 +91,7 @@ public class Merger {
                 if (!resolvedModel.contains(subject, predicate)) {
                     if (!targetModel.contains(subject, predicate)) {
                         targetModel.add(stmt);
-                        System.out.println("Added: " + subject + predicate);
+                        //System.out.println("Added: " + subject + predicate);
                     } else {
                         targetModel.removeAll(subject, predicate, null);
                         if (functionalProperties.contains(predicate)) {
