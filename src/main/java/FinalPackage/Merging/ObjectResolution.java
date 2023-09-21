@@ -1,5 +1,7 @@
 package FinalPackage.Merging;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.ListMultimap;
 import org.apache.jena.rdf.model.*;
 
 import java.util.*;
@@ -18,7 +20,7 @@ public class ObjectResolution {
         RDFNode firstObject = allObjects.iterator().next();
         for (RDFNode object : allObjects) {
             if (!firstObject.equals(object)) {
-                Map<RDFNode, Integer> objectsWithPrio = createObjectMap(allObjects);
+                ListMultimap<RDFNode, Integer> objectsWithPrio = createObjectMap(allObjects);
                 RDFNode resolvedObject = ConflictResolution.resolveConflict(objectsWithPrio, subject, predicate);
 
                 System.out.println("Conflict: " + subject + predicate + resolvedObject);
@@ -66,8 +68,8 @@ public class ObjectResolution {
         return objects;
     }
 
-    public static Map<RDFNode, Integer> createObjectMap(List<RDFNode> allObjects) {
-        Map<RDFNode, Integer> objectMap = new HashMap<>();
+    public static ListMultimap<RDFNode, Integer> createObjectMap(List<RDFNode> allObjects) {
+        ListMultimap<RDFNode, Integer> objectMap = ArrayListMultimap.create();
 
         for (RDFNode object : allObjects) {
             objectMap.put(object, 1);
@@ -78,7 +80,7 @@ public class ObjectResolution {
 
 
     public static RDFNode getResolvedObjectValue(Map<Model, Integer> modelPriorities, Resource subject, Property predicate) {
-        Map<RDFNode, Integer> objectPriorityMap = new HashMap<>();
+        ListMultimap<RDFNode, Integer> objectPriorityMap = ArrayListMultimap.create();
 
         // Collect objects and their associated priorities
         for (Map.Entry<Model, Integer> entry : modelPriorities.entrySet()) {
@@ -111,5 +113,14 @@ public class ObjectResolution {
         // Check if there are conflicts (more than one object with different priorities)
         Set<Integer> prioritySet = new HashSet<>(objectPriorityMap.values());
         return prioritySet.size() > 1;
+    }
+
+    public static boolean hasConflicts(ListMultimap<RDFNode, Integer> multimap) {
+        for (RDFNode key : multimap.keySet()) {
+            if (multimap.get(key).size() > 1) {
+                return true; // Found a conflict
+            }
+        }
+        return false; // No conflicts found
     }
 }

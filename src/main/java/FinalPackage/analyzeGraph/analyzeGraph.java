@@ -6,7 +6,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static FinalPackage.Old.FunctionalPropertyDetector.isFunctionalProperty;
+import static FinalPackage.Merging.FunctionalPropertyFinder.isFunctionalProperty;
 
 
 public class analyzeGraph {

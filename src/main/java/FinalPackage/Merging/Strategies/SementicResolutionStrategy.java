@@ -1,29 +1,29 @@
 package FinalPackage.Merging.Strategies;
 
-import java.util.Map;
-
+import com.google.common.collect.ListMultimap;
 import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
-import com.google.common.collect.ListMultimap;
 
 public class SementicResolutionStrategy implements Strategy{
 
     @Override
     public RDFNode resolveConflict(ListMultimap<RDFNode, Integer> objects, Resource subject, Property predicate) {
-        Double jacabDis= 0.8;
+        Double jacabDis = 0.8;
         RDFNode bestNode = null;
-        for (Map.Entry<RDFNode, Integer> entry : objects.entries()) {
-            RDFNode node = entry.getKey();
-            HelperFunction helperFunction = new HelperFunction();
-            if(helperFunction.calculateJaccardDistance(node.toString(),bestNode.toString())<jacabDis){
-                bestNode = fusenode(node, bestNode);
-            }else{
-                // TODO 
-                // chose one of the node if jacab distance is more then specified
+        for (RDFNode key : objects.keySet()) {
+            for (Integer value : objects.get(key)) {
+                RDFNode node = key;
+                HelperFunction helperFunction = new HelperFunction();
+                if (helperFunction.calculateJaccardDistance(node.toString(), bestNode.toString()) < jacabDis) {
+                    bestNode = fusenode(node, bestNode);
+                } else {
+                    // TODO
+                    // chose one of the node if jacab distance is more then specified
+                }
             }
         }
         return bestNode;

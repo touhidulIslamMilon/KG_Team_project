@@ -1,5 +1,6 @@
 package FinalPackage.Merging.Strategies;
 
+import com.google.common.collect.ListMultimap;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
@@ -14,7 +15,7 @@ public class Strategies {
         this.strategy = strategy;
     }
 
-    public RDFNode mergeObjects(Map<RDFNode, Integer> objects, Resource subject, Property predicate) {
+    public RDFNode mergeObjects(ListMultimap<RDFNode, Integer> objects, Resource subject, Property predicate) {
         return null;
         //strategy.resolveConflict(objects, subject, predicate);
     }
