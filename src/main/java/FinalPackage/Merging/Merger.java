@@ -52,11 +52,6 @@ public class Merger {
                         if (functionalProperties.contains(predicate)) {
                             System.out.println("Functional: " + subject + predicate);
                             // Call a method to find the resolved value and add it to the targetModel
-
-
-
-
-                            
                             RDFNode resolvedObject = ObjectResolution.getResolvedObjectValue(models, subject, predicate);
                             targetModel.add(subject, predicate, resolvedObject);
                             resolvedModel.add(stmt);
