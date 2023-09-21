@@ -1,9 +1,10 @@
 package FinalPackage.Merging.Strategies;
 
+import com.google.common.collect.ListMultimap;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
-import com.google.common.collect.ListMultimap;
+
 import java.util.Map;
 
 public class PriorityBasedResolutionStrategy implements Strategy {
@@ -14,18 +15,14 @@ public class PriorityBasedResolutionStrategy implements Strategy {
         RDFNode result = null;
         int highestPriority = Integer.MIN_VALUE;
 
-        for (Map.Entry<RDFNode, Integer> entry : objects.entries()) {
-            RDFNode object = entry.getKey();
-            int priority = entry.getValue();
+        for (RDFNode key : objects.keySet()) {
+            for (Integer value : objects.get(key)) {
+                int priority = value;
 
-            if (priority > highestPriority) {
-                result = object;
-                highestPriority = priority;
-            }else if(priority == highestPriority){
-                // If the priority is the same, then we will use the manual review strategy
-                // to resolve the conflict
-                ManualReviewResolutionStrategy manualReviewStrategy = new ManualReviewResolutionStrategy();
-                result = manualReviewStrategy.resolveConflict(objects, subject, predicate);
+                if (priority > highestPriority) {
+                    result = key;
+                    highestPriority = priority;
+                }
             }
         }
 
