@@ -7,10 +7,12 @@ import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
 
+import com.google.common.collect.ListMultimap;
+
 public class MostRecentResolusionStrategy implements Strategy{
 
     @Override
-    public RDFNode resolveConflict(Map<RDFNode, Integer> objects, Resource subject, Property predicate) {
+    public RDFNode resolveConflict(ListMultimap<RDFNode, Integer> objects, Resource subject, Property predicate) {
         RDFNode mostRecentNode = null;
         Date mostRecentDate = null;
         Map<RDFNode, Date> nodeCreationMap = convertMapToDates(objects);
@@ -27,10 +29,10 @@ public class MostRecentResolusionStrategy implements Strategy{
         return mostRecentNode;
     }
 
-    public static Map<RDFNode, Date> convertMapToDates(Map<RDFNode, Integer> objects) {
+    public static Map<RDFNode, Date> convertMapToDates(ListMultimap<RDFNode, Integer> objects) {
         Map<RDFNode, Date> nodeCreationMap = new java.util.HashMap<>();
 
-        for (Map.Entry<RDFNode, Integer> entry : objects.entrySet()) {
+        for (Map.Entry<RDFNode, Integer> entry : objects.entries()) {
             RDFNode node = entry.getKey();
             int creationTime = entry.getValue();
             Date date = new Date(creationTime);

@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-
+import com.google.common.collect.ListMultimap;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Property;
@@ -18,6 +18,7 @@ import org.apache.jena.rdf.model.impl.PropertyImpl;
 import org.apache.jena.rdf.model.impl.ResourceImpl;
 import org.apache.jena.rdf.model.impl.StatementImpl;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
+
 import org.apache.jena.rdf.model.impl.LiteralImpl;
 
 public class CustomResolutionStrategy implements Strategy{
@@ -40,7 +41,7 @@ public class CustomResolutionStrategy implements Strategy{
     }
 
     @Override
-    public RDFNode resolveConflict(Map<RDFNode, Integer> objects, Resource subject, Property predicate) {
+    public RDFNode resolveConflict(ListMultimap<RDFNode, Integer> objects, Resource subject, Property predicate) {
         RDFNode resolvedObject = null;
         ResolutionStrategy strategy = strategyMap.get(predicate);
         if (strategy == ResolutionStrategy.MAX_VALUE) {
@@ -63,7 +64,7 @@ public class CustomResolutionStrategy implements Strategy{
     }
 
     
-    private RDFNode getOldestDateForProperty(Map<RDFNode, Integer> objects) {
+    private RDFNode getOldestDateForProperty(ListMultimap<RDFNode, Integer> objects) {
 
         //This Function the node that have the minimum value for the RDFNode
         if (objects == null || objects.isEmpty()) {
@@ -74,7 +75,7 @@ public class CustomResolutionStrategy implements Strategy{
         RDFNode oldestNode = null;
         LocalDate OldestDate;
 
-        for (Map.Entry<RDFNode, Integer> entry : objects.entrySet()) {
+        for (Map.Entry<RDFNode, Integer> entry : objects.entries()) {
             RDFNode node = entry.getKey();
             HelperFunction helper = new HelperFunction();
             String type= helper.objectType(node);
@@ -95,7 +96,7 @@ public class CustomResolutionStrategy implements Strategy{
         return oldestNode;
     }
 
-    private RDFNode getRecentDateForProperty(Map<RDFNode, Integer> objects) {
+    private RDFNode getRecentDateForProperty(ListMultimap<RDFNode, Integer> objects) {
         //This Function the node that have the minimum value for the RDFNode
         if (objects == null || objects.isEmpty()) {
             throw new IllegalArgumentException("Input map is null or empty");
@@ -105,7 +106,7 @@ public class CustomResolutionStrategy implements Strategy{
         RDFNode recendNode = null;
         LocalDate recentDate;
 
-        for (Map.Entry<RDFNode, Integer> entry : objects.entrySet()) {
+        for (Map.Entry<RDFNode, Integer> entry : objects.entries()) {
             RDFNode node = entry.getKey();
             HelperFunction helper = new HelperFunction();
             String type= helper.objectType(node);
@@ -137,7 +138,7 @@ public class CustomResolutionStrategy implements Strategy{
 
     // Define other custom resolution strategies as needed
 
-    private RDFNode getLongestValueForPropertyy(Map<RDFNode, Integer> objects) {
+    private RDFNode getLongestValueForPropertyy(ListMultimap<RDFNode, Integer> objects) {
 
         if (objects == null || objects.isEmpty()) {
             throw new IllegalArgumentException("Input map is null or empty");
@@ -146,7 +147,7 @@ public class CustomResolutionStrategy implements Strategy{
         RDFNode longestNode = null;
         int longestString = Integer.MIN_VALUE;
 
-        for (Map.Entry<RDFNode, Integer> entry : objects.entrySet()) {
+        for (Map.Entry<RDFNode, Integer> entry : objects.entries()) {
             RDFNode node = entry.getKey();
 
             if (node.toString().length() > longestString) {
@@ -156,7 +157,7 @@ public class CustomResolutionStrategy implements Strategy{
 
         return longestNode;
     }
-    private RDFNode getShortestValueForPropertyy(Map<RDFNode, Integer> objects) {
+    private RDFNode getShortestValueForPropertyy(ListMultimap<RDFNode, Integer> objects) {
 
         if (objects == null || objects.isEmpty()) {
             throw new IllegalArgumentException("Input map is null or empty");
@@ -165,7 +166,7 @@ public class CustomResolutionStrategy implements Strategy{
         RDFNode longestNode = null;
         int longestString = Integer.MIN_VALUE;
 
-        for (Map.Entry<RDFNode, Integer> entry : objects.entrySet()) {
+        for (Map.Entry<RDFNode, Integer> entry : objects.entries()) {
             RDFNode node = entry.getKey();
 
             if (node.toString().length() > longestString) {
@@ -175,16 +176,16 @@ public class CustomResolutionStrategy implements Strategy{
 
         return longestNode;
     }
-    private static RDFNode getMinValueForProperty(Map<RDFNode, Integer> values) {
+    private static RDFNode getMinValueForProperty(ListMultimap<RDFNode, Integer> objects) {
         //This Function the node that have the minimum value for the RDFNode
-        if (values == null || values.isEmpty()) {
+        if (objects == null || objects.isEmpty()) {
             throw new IllegalArgumentException("Input map is null or empty");
         }
 
         RDFNode minNode = null;
         int minValue = Integer.MIN_VALUE;
 
-        for (Map.Entry<RDFNode, Integer> entry : values.entrySet()) {
+        for (Map.Entry<RDFNode, Integer> entry : objects.entries()) {
             RDFNode node = entry.getKey();
             int value = entry.getValue();
 
@@ -198,16 +199,16 @@ public class CustomResolutionStrategy implements Strategy{
         
     }
 
-    private static RDFNode getMaxValueForProperty(Map<RDFNode, Integer> values) {
+    private static RDFNode getMaxValueForProperty(ListMultimap<RDFNode, Integer> objects) {
         //This Function the node that have the minimum value for the RDFNode
-        if (values == null || values.isEmpty()) {
+        if (objects == null || objects.isEmpty()) {
             throw new IllegalArgumentException("Input map is null or empty");
         }
 
         RDFNode maxNode = null;
         int maxValue = Integer.MIN_VALUE;
 
-        for (Map.Entry<RDFNode, Integer> entry : values.entrySet()) {
+        for (Map.Entry<RDFNode, Integer> entry : objects.entries()) {
             RDFNode node = entry.getKey();
             int value = entry.getValue();
 

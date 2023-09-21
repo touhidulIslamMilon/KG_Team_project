@@ -8,14 +8,15 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
+import com.google.common.collect.ListMultimap;
 
 public class SementicResolutionStrategy implements Strategy{
 
     @Override
-    public RDFNode resolveConflict(Map<RDFNode, Integer> objects, Resource subject, Property predicate) {
+    public RDFNode resolveConflict(ListMultimap<RDFNode, Integer> objects, Resource subject, Property predicate) {
         Double jacabDis= 0.8;
         RDFNode bestNode = null;
-        for (Map.Entry<RDFNode, Integer> entry : objects.entrySet()) {
+        for (Map.Entry<RDFNode, Integer> entry : objects.entries()) {
             RDFNode node = entry.getKey();
             HelperFunction helperFunction = new HelperFunction();
             if(helperFunction.calculateJaccardDistance(node.toString(),bestNode.toString())<jacabDis){

@@ -1,4 +1,9 @@
-package FinalPackage.Merging.Strategies;
+package tests.strategiesTest;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
 
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
@@ -6,17 +11,16 @@ import org.apache.jena.rdf.model.Resource;
 
 import com.google.common.collect.ListMultimap;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import FinalPackage.Merging.Strategies.ManualReviewResolutionStrategy;
 
-public class MostFrequentResolutionStrategy implements Strategy {
-    @Override
+public class StrategyText {
+
     public RDFNode resolveConflict(ListMultimap<RDFNode, Integer> objects, Resource subject, Property predicate) {
         Map<RDFNode, Integer> frequencyCount = new HashMap<>();
 
         // Calculate the weighted count for each RDF node
         for(RDFNode key : objects.keySet()){
+            System.out.println(key + " " + objects.get(key).size());
             frequencyCount.put(key,objects.get(key).size());
         }
 
@@ -30,15 +34,10 @@ public class MostFrequentResolutionStrategy implements Strategy {
             if (weightedCount > highestWeight) {
                 highestWeight = weightedCount;
                 highestWeightedNode = node;
-            }else if(weightedCount == highestWeight){
-                // If the priority is the same, then we will use the manual review strategy
-                // to resolve the conflict
-                ManualReviewResolutionStrategy manualReviewStrategy = new ManualReviewResolutionStrategy();
-                highestWeightedNode = manualReviewStrategy.resolveConflict(objects, subject, predicate);
             }
         }
 
         return highestWeightedNode;
     }
-   
+    
 }

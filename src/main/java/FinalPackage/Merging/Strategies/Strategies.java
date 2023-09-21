@@ -15,6 +15,7 @@ public class Strategies {
     }
 
     public RDFNode mergeObjects(Map<RDFNode, Integer> objects, Resource subject, Property predicate) {
-        return strategy.resolveConflict(objects, subject, predicate);
+        return null;
+        //strategy.resolveConflict(objects, subject, predicate);
     }
 }
