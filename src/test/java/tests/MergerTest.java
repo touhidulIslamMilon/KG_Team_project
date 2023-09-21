@@ -6,7 +6,9 @@ import org.apache.jena.rdf.model.ModelFactory;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MergerTest {
 
@@ -21,17 +23,28 @@ public class MergerTest {
         Model model3 = ModelFactory.createDefaultModel();
         model3.read("src/test/testResources/starwars3Test.rdf");
 
-        // Create a list of RDF models
+        /*
+            Test: Merge more than two graphs
+        */
         List<Model> models = new ArrayList<>();
         models.add(model1);
         models.add(model2);
         models.add(model3);
 
-        // Merge the RDF models using the mergeGraphs method
-        Model mergedModel = Merger.mergeGraphs(models);
 
-        // Print the merged model
-        mergedModel.write(System.out, "RDF/XML");
+        //Use With Priorities
+        Map<Model, Integer> modelPriorities = new HashMap<>();
+        modelPriorities.put(model1, 1);
+        modelPriorities.put(model2, 2);
+        modelPriorities.put(model3, 3);
+        Model mergedModel1 = Merger.mergeGraphs(modelPriorities);
+        System.out.println("Merged1");
+        mergedModel1.write(System.out, "RDF/XML-ABBREV");
+
+        //Use Without Priorities
+        Model mergedModel = Merger.mergeGraphs(models);
+        System.out.println("Merged");
+        mergedModel.write(System.out, "RDF/XML-ABBREV");
 
     }
 }
