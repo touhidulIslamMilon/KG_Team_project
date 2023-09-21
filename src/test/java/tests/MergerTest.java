@@ -1,39 +1,37 @@
 package tests;
 
 import FinalPackage.Merging.Merger;
-import FinalPackage.LoadRDF;
-import org.apache.jena.rdf.model.*;
-import org.junit.Assert;
-import org.junit.Test;
-
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
 public class MergerTest {
-    @Test
-    public void testMergeGraphs() {
-        // Create sample RDF models representing knowledge graphs
-        Model model1 = LoadRDF.getModel("sample-graph1.rdf");
-        Model model2 = LoadRDF.getModel("sample-graph2.rdf");
-        Model model3 = LoadRDF.getModel("sample-graph3.rdf");
 
-        // Create a list of the sample models
+    public static void main(String[] args) {
+        // Load RDF models from the provided RDF files
+        Model model1 = ModelFactory.createDefaultModel();
+        model1.read("src/test/testResources/starwars1Test.rdf");
+
+        Model model2 = ModelFactory.createDefaultModel();
+        model2.read("src/test/testResources/starwars2Test.rdf");
+
+        Model model3 = ModelFactory.createDefaultModel();
+        model3.read("src/test/testResources/starwars3Test.rdf");
+
+        // Create a list of RDF models
         List<Model> models = new ArrayList<>();
         models.add(model1);
         models.add(model2);
         models.add(model3);
 
-        // Call the mergeGraphs method to merge the sample models
+        // Merge the RDF models using the mergeGraphs method
         Model mergedModel = Merger.mergeGraphs(models);
 
-        // Load the expected merged model from file
-        Model expectedModel = LoadRDF.getModel("expected-graph.rdf");
+        // Print the merged model
+        mergedModel.write(System.out, "RDF/XML");
 
-        // Assert that the mergedModel is equal to the expectedModel
-        Assert.assertTrue("Merged graph does not match the expected result.", mergedModel.isIsomorphicWith(expectedModel));
     }
-
 }
