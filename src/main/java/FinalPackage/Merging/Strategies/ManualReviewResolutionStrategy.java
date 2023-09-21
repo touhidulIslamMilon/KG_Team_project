@@ -14,6 +14,7 @@ public class ManualReviewResolutionStrategy implements Strategy {
     public RDFNode resolveConflict(ListMultimap<RDFNode, Integer> objects, Resource subject, Property predicate) {
         // Print the objects for manual review
         System.out.println("Conflict Resolution - Manual Review:");
+        System.out.println("Subject: " + subject + "\nPredicate: " + predicate);
         int index = 0;
         for (RDFNode object : objects.keySet()) {
             index++;

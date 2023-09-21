@@ -22,6 +22,11 @@ public class PriorityBasedResolutionStrategy implements Strategy {
                 if (priority > highestPriority) {
                     result = key;
                     highestPriority = priority;
+                } else if (priority == highestPriority) {
+                    // If the priority is the same, then we will use the manual review strategy
+                    // to resolve the conflict
+                    ManualReviewResolutionStrategy manualReviewStrategy = new ManualReviewResolutionStrategy();
+                    result = manualReviewStrategy.resolveConflict(objects, subject, predicate);
                 }
             }
         }

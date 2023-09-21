@@ -16,7 +16,6 @@ public class Strategies {
     }
 
     public RDFNode mergeObjects(ListMultimap<RDFNode, Integer> objects, Resource subject, Property predicate) {
-        return null;
-        //strategy.resolveConflict(objects, subject, predicate);
+        return strategy.resolveConflict(objects, subject, predicate);
     }
 }

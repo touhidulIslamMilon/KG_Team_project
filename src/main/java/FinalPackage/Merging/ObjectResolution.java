@@ -95,7 +95,6 @@ public class ObjectResolution {
                 }
             }
         }
-
         // Check for conflicts
         if (!objectPriorityMap.isEmpty() && hasConflicts(objectPriorityMap)) {
             RDFNode resolvedObject = ConflictResolution.resolveConflict(objectPriorityMap, subject, predicate);
@@ -105,7 +104,7 @@ public class ObjectResolution {
         }
 
         // If no conflicts or after resolving conflicts, return the first object
-        return objectPriorityMap.keySet().iterator().next();
+        return objectPriorityMap.keys().iterator().next();
     }
 
 

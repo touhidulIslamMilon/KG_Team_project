@@ -12,7 +12,7 @@ import org.apache.jena.rdf.model.Resource;
 import com.google.common.collect.ListMultimap;
 
 public class MostRecentResolusionStrategy implements Strategy {
-/*
+
     @Override
     public RDFNode resolveConflict(ListMultimap<RDFNode, Integer> objects, Resource subject, Property predicate) {
         RDFNode mostRecentNode = null;
@@ -44,5 +44,5 @@ public class MostRecentResolusionStrategy implements Strategy {
 
         return nodeCreationMap;
     }
-    */
+
 }
