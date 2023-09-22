@@ -35,7 +35,7 @@ public class FunctionalPropertyFinderTest {
         for (Property property : functionalProperties) {
             System.out.println(property);
         }
-        if (FunctionalPropertyFinder.getThresholdPercentage() < (double)2/9){
+        if (FunctionalPropertyFinder.getThresholdPercentage() < (double) 2 / 9) {
             // Define the URIs for the properties
             String nameURI = "http://example.org/starwars/name";
             String speciesURI = "http://example.org/starwars/species";
