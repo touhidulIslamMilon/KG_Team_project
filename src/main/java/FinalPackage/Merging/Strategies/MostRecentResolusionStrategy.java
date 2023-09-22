@@ -1,9 +1,8 @@
-package FinalPackage.Merging.Strategies.Excluded;
+package FinalPackage.Merging.Strategies;
 
 import java.util.Date;
 import java.util.Map;
 
-import FinalPackage.Merging.Strategies.Strategy;
 import com.google.common.collect.ListMultimap;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;

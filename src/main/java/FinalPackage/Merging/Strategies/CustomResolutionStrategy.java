@@ -4,7 +4,8 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.Map;
 import com.google.common.collect.ListMultimap;
-import org.apache.jena.rdf.model.Model;
+import java.util.Map.Entry;
+
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
