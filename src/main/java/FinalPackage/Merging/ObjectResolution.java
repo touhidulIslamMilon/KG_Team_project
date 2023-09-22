@@ -115,11 +115,9 @@ public class ObjectResolution {
     }
 
     public static boolean hasConflicts(ListMultimap<RDFNode, Integer> multimap) {
-        for (RDFNode key : multimap.keySet()) {
-            if (multimap.get(key).size() > 1) {
-                return true; // Found a conflict
-            }
-        }
-        return false; // No conflicts found
+
+        Set<RDFNode> uniqueObjects = new HashSet<>(multimap.keySet());
+
+        return uniqueObjects.size() > 1; // Return true if there is more than one distinct object
     }
 }

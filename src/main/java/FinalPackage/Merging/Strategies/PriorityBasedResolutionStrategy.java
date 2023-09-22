@@ -10,25 +10,38 @@ import java.util.Map;
 public class PriorityBasedResolutionStrategy implements Strategy {
     @Override
     public RDFNode resolveConflict(ListMultimap<RDFNode, Integer> objects, Resource subject, Property predicate) {
-        // Implement conflict resolution logic based on priority
-        // You can iterate through the map and choose the object with the highest priority
-        RDFNode result = null;
+        // Determine the highest priority
         int highestPriority = Integer.MIN_VALUE;
 
-        for (RDFNode key : objects.keySet()) {
-            for (Integer value : objects.get(key)) {
-                int priority = value;
-
-                if (priority > highestPriority) {
-                    result = key;
-                    highestPriority = priority;
-                } else if (priority == highestPriority) {
-                    // If the priority is the same, then we will use the manual review strategy
-                    // to resolve the conflict
-                    ManualReviewResolutionStrategy manualReviewStrategy = new ManualReviewResolutionStrategy();
-                    result = manualReviewStrategy.resolveConflict(objects, subject, predicate);
-                }
+        for (Integer priority : objects.values()) {
+            if (priority > highestPriority) {
+                highestPriority = priority;
             }
+        }
+
+        RDFNode result = null;
+        boolean manualReviewRequired = false;
+
+        for (Map.Entry<RDFNode, Integer> entry : objects.entries()) {
+            RDFNode key = entry.getKey();
+            int priority = entry.getValue();
+
+            if (priority == highestPriority) {
+                // If the priority is the same as the highest priority, add to manual review list
+                manualReviewRequired = true;
+            }
+
+            if (result == null || priority > highestPriority) {
+                result = key;
+                highestPriority = priority;
+                manualReviewRequired = false; // Reset manual review flag if a new highest priority is found
+            }
+        }
+
+        // If manual review is required for objects with the same highest priority, call it
+        if (manualReviewRequired) {
+            ManualReviewResolutionStrategy manualReviewStrategy = new ManualReviewResolutionStrategy();
+            result = manualReviewStrategy.resolveConflict(objects, subject, predicate);
         }
 
         return result;
