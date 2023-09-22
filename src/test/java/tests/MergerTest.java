@@ -3,8 +3,7 @@ package tests;
 import FinalPackage.Merging.Merger;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -39,7 +38,7 @@ public class MergerTest {
         Model mergedModel1 = Merger.mergeGraphs(modelPriorities);
         Model expectedModel1 = ModelFactory.createDefaultModel();
         expectedModel1.read("src/test/testResources/starwarsMerged1.rdf");
-        System.out.println("Was Merge successfull? " + mergedModel1.isIsomorphicWith(expectedModel1));
+        System.out.println("Was Merge successful? " + mergedModel1.isIsomorphicWith(expectedModel1));
 
         //Use Without Priorities
         System.out.println("Merged2");
@@ -47,7 +46,7 @@ public class MergerTest {
         Model mergedModel2 = Merger.mergeGraphs(models);
         Model expectedModel2 = ModelFactory.createDefaultModel();
         expectedModel2.read("src/test/testResources/starwarsMerged2.rdf");
-        System.out.println("Was Merge successfull? " + mergedModel2.isIsomorphicWith(expectedModel2));
+        System.out.println("Was Merge successful? " + mergedModel2.isIsomorphicWith(expectedModel2));
 
 
 
