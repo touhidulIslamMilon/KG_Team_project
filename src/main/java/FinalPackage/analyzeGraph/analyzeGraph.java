@@ -1,15 +1,12 @@
 package FinalPackage.analyzeGraph;
 
-import org.apache.jena.datatypes.xsd.XSDDatatype;
+import FinalPackage.Merging.FunctionalPropertyFinder;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.vocabulary.RDF;
 
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static FinalPackage.Merging.FunctionalPropertyDetector.getFunctionalProperties;
-import static FinalPackage.Merging.FunctionalPropertyDetector.isFunctionalProperty;
 
 
 public class analyzeGraph {
@@ -248,7 +245,7 @@ public class analyzeGraph {
 
     public static List<Property> getFunctionalPropertiesInDescOrder(List<Model> models) {
         // Get the functional properties using the original function
-        List<Property> functionalProperties = getFunctionalProperties(models);
+        List<Property> functionalProperties = FunctionalPropertyFinder.findFunctionalProperties(models);
 
         // Sort the list in descending alphabetical order based on their local names
         Collections.sort(functionalProperties, new Comparator<Property>() {

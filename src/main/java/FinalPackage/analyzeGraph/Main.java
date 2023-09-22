@@ -1,15 +1,15 @@
 package FinalPackage.analyzeGraph;
-import FinalPackage.Merging.Merger;
-import FinalPackage.Merging.LoadRDF;
-import org.apache.jena.rdf.model.*;
-import scala.sys.Prop;
 
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import static FinalPackage.analyzeGraph.analyzeGraph.*;
+import FinalPackage.LoadRDF;
+import org.apache.jena.rdf.model.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
 import static FinalPackage.analyzeGraph.SophisticatedAnalysis.*;
-import static FinalPackage.normalisation.normlaisationFunctions.normalizeModel;
+import static FinalPackage.analyzeGraph.analyzeGraph.*;
 
 public class Main {
     public static void main(String[] args) {
