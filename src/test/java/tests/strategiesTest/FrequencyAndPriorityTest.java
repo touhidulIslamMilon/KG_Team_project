@@ -1,18 +1,12 @@
 package tests.strategiesTest;
 
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.ListMultimap;
-
 import FinalPackage.Merging.Strategies.FrequencyAndPriorityBaseStrategy;
-import FinalPackage.Merging.Strategies.MostFrequentResolutionStrategy;
-import FinalPackage.Merging.Strategies.Strategies;
-
-import org.apache.jena.rdf.model.*;
-import java.util.HashMap;
-import java.util.Map;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
-import FinalPackage.Merging.Strategies.MostFrequentResolutionStrategy;
+import org.apache.jena.rdf.model.Property;
+import org.apache.jena.rdf.model.RDFNode;
+import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.ResourceFactory;
 
 public class FrequencyAndPriorityTest {
     public static void main(String[] args) {

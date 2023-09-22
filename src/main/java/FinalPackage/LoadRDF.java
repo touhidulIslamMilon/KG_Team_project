@@ -7,10 +7,12 @@ import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class LoadRDF {
 
-    public static Model getModel(String filename){
+    public static Model getModel(String filename) {
         Model model = ModelFactory.createDefaultModel();
         model.read(filename);
         return model;
@@ -43,12 +45,13 @@ public class LoadRDF {
             long creationTimeMillis = attributes.creationTime().toMillis();
 
             // Convert the creation time to a Date object
-            Date creationDate = new Date(creationTimeMillis);
 
             //System.out.println("File Creation Date: " + creationDate);
-            return creationDate;
+            return new Date(creationTimeMillis);
         } catch (IOException e) {
-            e.printStackTrace();
+            // Log the error instead of printing the stack trace
+            Logger logger = Logger.getLogger(LoadRDF.class.getName());
+            logger.log(Level.SEVERE, "An error occurred while getting file creation date", e);
         }
         return null;
     }
@@ -58,7 +61,7 @@ public class LoadRDF {
 
         // Create a list of entries from the input map, sorted by date in descending order
         List<Map.Entry<Model, Date>> sortedEntries = new ArrayList<>(modelDateMap.entrySet());
-        sortedEntries.sort(Comparator.comparing(Map.Entry::getValue));
+        sortedEntries.sort(Map.Entry.comparingByValue());
 
         // Assign priorities (integers) to models based on their order in the sorted list
         int priority = 1;
@@ -69,8 +72,6 @@ public class LoadRDF {
 
         return modelPriorityMap;
     }
-
-
 
 
 }

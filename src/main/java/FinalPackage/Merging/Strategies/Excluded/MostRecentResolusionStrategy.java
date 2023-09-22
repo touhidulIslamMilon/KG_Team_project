@@ -1,15 +1,17 @@
-package FinalPackage.Merging.Strategies;
+package FinalPackage.Merging.Strategies.Excluded;
 
 import java.util.Date;
 import java.util.Map;
 
+import FinalPackage.Merging.Strategies.Strategy;
+import com.google.common.collect.ListMultimap;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
 
 import com.google.common.collect.ListMultimap;
 
-public class MostRecentResolusionStrategy implements Strategy{
+public class MostRecentResolusionStrategy implements Strategy {
 
     @Override
     public RDFNode resolveConflict(ListMultimap<RDFNode, Integer> objects, Resource subject, Property predicate) {
@@ -50,5 +52,5 @@ public class MostRecentResolusionStrategy implements Strategy{
 
         return nodeCreationMap;
     }
-    
+
 }

@@ -27,7 +27,7 @@ public class Merger {
     public static Model mergeGraphs(List<Model> models) {
         Model targetModel = ModelFactory.createDefaultModel();
         Model resolvedModel = ModelFactory.createDefaultModel();
-        boolean functionalProperty = true;
+        //boolean functionalProperty = true;
         List<Property> functionalProperties = FunctionalPropertyFinder.findFunctionalProperties(models);
         //List<Property> functionalProperties = FunctionalPropertyDetector.getFunctionalProperties(models);
         System.out.println("Functional Properties");
@@ -91,7 +91,7 @@ public class Merger {
                 if (!resolvedModel.contains(subject, predicate)) {
                     if (!targetModel.contains(subject, predicate)) {
                         targetModel.add(stmt);
-                        System.out.println("Added: " + subject + predicate);
+                        //System.out.println("Added: " + subject + predicate);
                     } else {
                         targetModel.removeAll(subject, predicate, null);
                         if (functionalProperties.contains(predicate)) {
@@ -114,7 +114,6 @@ public class Merger {
     }
 
 }
-
 
 
 //Old
