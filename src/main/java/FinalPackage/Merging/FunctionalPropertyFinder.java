@@ -8,6 +8,10 @@ public class FunctionalPropertyFinder {
     // Define the threshold percentage (e.g., 90%)
     private static final double THRESHOLD_PERCENTAGE = 0.25;
 
+    public static double getThresholdPercentage(){
+        return THRESHOLD_PERCENTAGE;
+    }
+
     public static List<Property> findFunctionalProperties(List<Model> models) {
         // Count the occurrences of each predicate in all the combined models
         Map<Property, Integer> predicateCounts = new HashMap<>();

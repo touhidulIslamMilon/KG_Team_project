@@ -23,9 +23,6 @@ public class MergerTest {
         Model model3 = ModelFactory.createDefaultModel();
         model3.read("src/test/testResources/starwars3Test.rdf");
 
-        /*
-            Test: Merge more than two graphs
-        */
         List<Model> models = new ArrayList<>();
         models.add(model1);
         models.add(model2);
