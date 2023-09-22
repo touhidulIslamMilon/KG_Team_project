@@ -1,0 +1,46 @@
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:j.0="http://example.org/starwars/">
+  <rdf:Description rdf:about="http://example.org/starwars/character/yoda">
+    <j.0:name>Yoda</j.0:name>
+    <j.0:gender>Male</j.0:gender>
+    <j.0:species>Yoda's species</j.0:species>
+    <j.0:lightsaber_color>Green</j.0:lightsaber_color>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/starwars/character/obi_wan_kenobi">
+    <j.0:name>Obi-Wan Kenobi</j.0:name>
+    <j.0:gender>Male</j.0:gender>
+    <j.0:species>Human</j.0:species>
+    <j.0:lightsaber_color>Blue</j.0:lightsaber_color>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/starwars/character/leia_organa">
+    <j.0:name>Leia Organa</j.0:name>
+    <j.0:gender>Female</j.0:gender>
+    <j.0:species>Human</j.0:species>
+    <j.0:lightsaber_color>None</j.0:lightsaber_color>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/starwars/character/luke_skywalker">
+    <j.0:name>Luke Skywalker</j.0:name>
+    <j.0:species>Humanoid</j.0:species>
+    <j.0:lightsaber_color>Green</j.0:lightsaber_color>
+    <j.0:gender>Male</j.0:gender>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/starwars/character/darth_vader">
+    <j.0:name>Darth Vader</j.0:name>
+    <j.0:gender>Male</j.0:gender>
+    <j.0:species>Human</j.0:species>
+    <j.0:lightsaber_color>Red</j.0:lightsaber_color>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/starwars/character/palpatine">
+    <j.0:name>Palpatine</j.0:name>
+    <j.0:gender>Male</j.0:gender>
+    <j.0:species>Human</j.0:species>
+    <j.0:lightsaber_color>Red</j.0:lightsaber_color>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://example.org/starwars/character/han_solo">
+    <j.0:name>Han Solo</j.0:name>
+    <j.0:gender>Male</j.0:gender>
+    <j.0:species>Human</j.0:species>
+    <j.0:lightsaber_color>None</j.0:lightsaber_color>
+  </rdf:Description>
+</rdf:RDF>

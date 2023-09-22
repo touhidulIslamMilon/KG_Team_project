@@ -33,18 +33,27 @@ public class MergerTest {
 
 
         //Use With Priorities
+        System.out.println("Merged1");
+        System.out.println("Please select first Option");
         Map<Model, Integer> modelPriorities = new HashMap<>();
         modelPriorities.put(model1, 1);
         modelPriorities.put(model2, 2);
         modelPriorities.put(model3, 3);
         Model mergedModel1 = Merger.mergeGraphs(modelPriorities);
-        System.out.println("Merged1");
-        mergedModel1.write(System.out, "RDF/XML-ABBREV");
+        Model expectedModel1 = ModelFactory.createDefaultModel();
+        expectedModel1.read("src/test/testResources/starwarsMerged1.rdf");
+        System.out.println("Was Merge successfull? " + mergedModel1.isIsomorphicWith(expectedModel1));
 
         //Use Without Priorities
-        Model mergedModel = Merger.mergeGraphs(models);
-        System.out.println("Merged");
-        mergedModel.write(System.out, "RDF/XML-ABBREV");
+        System.out.println("Merged2");
+        System.out.println("Please select first Option");
+        Model mergedModel2 = Merger.mergeGraphs(models);
+        Model expectedModel2 = ModelFactory.createDefaultModel();
+        expectedModel2.read("src/test/testResources/starwarsMerged2.rdf");
+        System.out.println("Was Merge successfull? " + mergedModel2.isIsomorphicWith(expectedModel2));
+
+
+
 
     }
 }
