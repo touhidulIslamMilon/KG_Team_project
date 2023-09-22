@@ -94,7 +94,6 @@ public class graphComparison {
         return count;
     }
 
-    // comparing the size of two graphs
 
     // showing the same predicates with their types
 

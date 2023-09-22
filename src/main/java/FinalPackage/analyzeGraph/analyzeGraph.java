@@ -8,6 +8,7 @@ import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static FinalPackage.Merging.FunctionalPropertyDetector.getFunctionalProperties;
 import static FinalPackage.Merging.FunctionalPropertyDetector.isFunctionalProperty;
 
 
@@ -24,7 +25,6 @@ public class analyzeGraph {
             Statement stmt = stmtIterator.next();
             uniquePredicates.add(stmt.getPredicate());
         }
-
         // The size of the set is the number of unique predicates
         return uniquePredicates;
     }
@@ -62,32 +62,14 @@ public class analyzeGraph {
         return uniqueObjects;
     }
 
-    public static int countFunctionalProperties(Model model) {
-        // Create a set to store unique functional properties
-        Set<Property> uniqueFunctionalProperties = new HashSet<>();
-
-        // Create a StmtIterator to iterate over each statement in the model
-        StmtIterator stmtIterator = model.listStatements();
-
-        // For each statement, check if its predicate is functional and unique
-        while (stmtIterator.hasNext()) {
-            Property property = stmtIterator.next().getPredicate();
-
-            if (isFunctionalProperty(model, property) && !uniqueFunctionalProperties.contains(property)) {
-                uniqueFunctionalProperties.add(property);
-            }
-        }
-
-        // The size of the set is the number of unique functional properties
-        return uniqueFunctionalProperties.size();
-    }
 
     // counting the number of numeric predicates
-    public static Set<Property> countNumericObjects(Model model) {
+    public static Set<Property> countNumericPredicates(Model model) {
         Set<Property> numericPredicates = new HashSet<>();
         StmtIterator stmtIterator = model.listStatements();
-        // Regular expression to check if the object is a number
-        Pattern pattern = Pattern.compile("-?\\d+(\\.\\d+)?");
+
+        // Regular expression to check if the object is a number, including scientific notation
+        Pattern pattern = Pattern.compile("-?\\d+(\\.\\d+)?([eE][-+]?\\d+)?");
 
         while (stmtIterator.hasNext()) {
             Statement stmt = stmtIterator.nextStatement();
@@ -104,15 +86,15 @@ public class analyzeGraph {
     }
 
     // counting the number of literals
-
-
     public static Set<Property> countStringPredicates(Model model) {
         Set<Property> stringPredicates = new HashSet<>();
         StmtIterator stmtIterator = model.listStatements();
 
-        // Regular expression patterns to exclude numeric and normalized date literals
+        // Regular expression to match numbers
         Pattern numericPattern = Pattern.compile("-?\\d+(\\.\\d+)?");
-        Pattern datePattern = Pattern.compile("\\d{2}.\\d{2}.\\d{4}");  // This matches "yyyy-MM-dd"
+
+        // Regular expression to match a variety of date formats (not exhaustive)
+        Pattern datePattern = Pattern.compile("(\\d{4}-\\d{2}-\\d{2})|(\\d{2}/\\d{2}/\\d{4})|(\\d{2}-[a-zA-Z]{3}-\\d{4})|(\\d{2} [a-zA-Z]{3} \\d{4})");
 
         while (stmtIterator.hasNext()) {
             Statement stmt = stmtIterator.nextStatement();
@@ -120,20 +102,24 @@ public class analyzeGraph {
 
             if (object.isLiteral()) {
                 String literalString = object.asLiteral().getString();
+                Matcher numericMatcher = numericPattern.matcher(literalString);
+                Matcher dateMatcher = datePattern.matcher(literalString);
 
-                // Check if the literal is neither numeric nor a normalized date
-                if (!numericPattern.matcher(literalString).matches() &&
-                        !datePattern.matcher(literalString).matches()) {
+                // Check if the literal is neither numeric nor a date
+                if (!numericMatcher.matches() && !dateMatcher.matches()) {
                     stringPredicates.add(stmt.getPredicate());
                 }
-            } else if (object.isResource()) {
-                stringPredicates.add(stmt.getPredicate());
             }
         }
 
+        // Get the set of date predicates
+        Set<Property> datePredicates = getDatePredicates(model);
+
+        // Remove the date predicates from the set of string predicates
+        stringPredicates.removeAll(datePredicates);
+
         return stringPredicates;
     }
-
 
     // function which counts the number of subjects that have a resource as an object
 
@@ -144,6 +130,12 @@ public class analyzeGraph {
         while (stmtIterator.hasNext()) {
             Statement stmt = stmtIterator.nextStatement();
             RDFNode object = stmt.getObject();
+            Property predicate = stmt.getPredicate();
+
+            // Skip if the predicate is rdf:type
+            if (predicate.equals(RDF.type)) {
+                continue;
+            }
 
             if (object.isResource()) {
                 subjectsWithResourceObjects.add(stmt.getSubject());
@@ -152,7 +144,15 @@ public class analyzeGraph {
         return subjectsWithResourceObjects;
     }
 
-    private static final Pattern DATE_PATTERN = Pattern.compile("\\d{2}.\\d{2}.\\d{4}");
+
+    private static final Pattern DATE_PATTERN = Pattern.compile(
+            "(\\d{4}-\\d{2}-\\d{2})|" +  // yyyy-MM-dd
+                    "(\\d{2}/\\d{2}/\\d{4})|" +  // dd/MM/yyyy
+                    "(\\d{2}-[a-zA-Z]{3}-\\d{4})|" +  // dd-MMM-yyyy
+                    "(\\d{2} [a-zA-Z]{3} \\d{4})|" +  // dd MMM yyyy
+                    "(\\d{2}\\.[0]{1}\\d{1}\\.[0-9]{4})|" +  // dd.mm.yyyy
+                    "(\\d{2}\\.[0-9]{2}\\.[0-9]{2})"  // dd.mm.yy
+    );
 
     public static Set<Property> getDatePredicates(Model model) {
         Set<Property> datePredicates = new HashSet<>();
@@ -162,55 +162,16 @@ public class analyzeGraph {
             Statement stmt = stmtIterator.nextStatement();
             RDFNode object = stmt.getObject();
 
-            if (object.isLiteral() && DATE_PATTERN.matcher(object.asLiteral().getString()).matches()) {
-                datePredicates.add(stmt.getPredicate());
-            }
-        }
+            if (object.isLiteral()) {
+                String literalString = object.asLiteral().getString();
+                Matcher dateMatcher = DATE_PATTERN.matcher(literalString);
 
-        return datePredicates;
-    }
-
-    // number of predicates per subject
-    public static Map<Resource, Integer> countPredicatesPerSubject(Model model) {
-        Map<Resource, Integer> predicateCountPerSubject = new HashMap<>();
-
-        StmtIterator stmtIterator = model.listStatements();
-        while (stmtIterator.hasNext()) {
-            Statement stmt = stmtIterator.nextStatement();
-            Resource subject = stmt.getSubject();
-            predicateCountPerSubject.put(subject, predicateCountPerSubject.getOrDefault(subject, 0) + 1);
-        }
-
-        // Create a sorted map from the original one
-        Map<Resource, Integer> sortedMap = new LinkedHashMap<>();
-        predicateCountPerSubject.entrySet().stream()
-                .sorted(Map.Entry.<Resource, Integer>comparingByValue().reversed())
-                .forEachOrdered(entry -> sortedMap.put(entry.getKey(), entry.getValue()));
-
-        return sortedMap;
-    }
-
-    //Distribution of types of the nodes (How many statements do we have with “Person”, “Animal” types
-    // (from the most to the least frequent types))
-    public static Map<Resource, Integer> countTypes(Model model) {
-        Map<Resource, Integer> typeCount = new HashMap<>();
-        StmtIterator stmtIterator = model.listStatements();
-
-        while (stmtIterator.hasNext()) {
-            Statement stmt = stmtIterator.nextStatement();
-
-            if (stmt.getPredicate().equals(RDF.type)) {
-                Resource type = stmt.getObject().asResource();
-
-                if (typeCount.containsKey(type)) {
-                    typeCount.put(type, typeCount.get(type) + 1);
-                } else {
-                    typeCount.put(type, 1);
+                if (dateMatcher.matches()) {
+                    datePredicates.add(stmt.getPredicate());
                 }
             }
         }
-
-        return typeCount;
+        return datePredicates;
     }
 
     //number of connected nodes
@@ -283,38 +244,46 @@ public class analyzeGraph {
         return predicateFrequencies;
     }
 
-    // the frequency of subjects
-    public static Map<Resource, Integer> countSubjectFrequencies(Model model) {
-        Map<Resource, Integer> subjectFrequencies = new HashMap<>();
-        StmtIterator statements = model.listStatements();
+    // display functional properties
 
-        while (statements.hasNext()) {
-            Resource subject = statements.nextStatement().getSubject();
-            subjectFrequencies.put(subject, subjectFrequencies.getOrDefault(subject, 0) + 1);
-        }
+    public static List<Property> getFunctionalPropertiesInDescOrder(List<Model> models) {
+        // Get the functional properties using the original function
+        List<Property> functionalProperties = getFunctionalProperties(models);
 
-        return subjectFrequencies;
+        // Sort the list in descending alphabetical order based on their local names
+        Collections.sort(functionalProperties, new Comparator<Property>() {
+            public int compare(Property p1, Property p2) {
+                return p2.getLocalName().compareTo(p1.getLocalName());
+            }
+        });
+
+        return functionalProperties;
     }
 
-    //counting the most frequent objects for the most frequent predicates
-    public static Map<RDFNode, Integer> countObjectFrequencies(Model model, Property predicate) {
-        Map<RDFNode, Integer> objectFrequencies = new HashMap<>();
-        StmtIterator statements = model.listStatements(null, predicate, (RDFNode) null);
+    // return predicates that have resource as object
 
-        while (statements.hasNext()) {
-            RDFNode object = statements.nextStatement().getObject();
-            objectFrequencies.put(object, objectFrequencies.getOrDefault(object, 0) + 1);
+    public static Set<Property> countPredicatesWithResourceObjects(Model model) {
+        Set<Property> predicatesWithResourceObjects = new HashSet<>();
+        StmtIterator stmtIterator = model.listStatements();
+
+        while (stmtIterator.hasNext()) {
+            Statement stmt = stmtIterator.nextStatement();
+            RDFNode object = stmt.getObject();
+            Property predicate = stmt.getPredicate();
+
+            // Skip if the predicate is rdf:type
+            if (predicate.equals(RDF.type)) {
+                continue;
+            }
+
+            if (object.isResource()) {
+                predicatesWithResourceObjects.add(predicate);
+            }
         }
-
-        return objectFrequencies;
+        return predicatesWithResourceObjects;
     }
 
-    // print out the functional properties !!!
 
-
-
-    // whether the object/subject  is literal or resource
-    // whether we have data type properties and how many
 }
 
 
