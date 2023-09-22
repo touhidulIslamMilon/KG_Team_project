@@ -108,12 +108,6 @@ public class ObjectResolution {
     }
 
 
-    public static boolean hasConflicts(Map<RDFNode, Integer> objectPriorityMap) {
-        // Check if there are conflicts (more than one object with different priorities)
-        Set<Integer> prioritySet = new HashSet<>(objectPriorityMap.values());
-        return prioritySet.size() > 1;
-    }
-
     public static boolean hasConflicts(ListMultimap<RDFNode, Integer> multimap) {
 
         Set<RDFNode> uniqueObjects = new HashSet<>(multimap.keySet());
@@ -121,3 +115,11 @@ public class ObjectResolution {
         return uniqueObjects.size() > 1; // Return true if there is more than one distinct object
     }
 }
+
+
+//Old
+/*public static boolean hasConflicts(Map<RDFNode, Integer> objectPriorityMap) {
+        // Check if there are conflicts (more than one object with different priorities)
+        Set<Integer> prioritySet = new HashSet<>(objectPriorityMap.values());
+        return prioritySet.size() > 1;
+    }*/
