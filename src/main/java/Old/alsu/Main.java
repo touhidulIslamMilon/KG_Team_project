@@ -5,7 +5,7 @@ import org.apache.jena.rdf.model.*;
 import java.util.*;
 
 import static FinalPackage.analyzeGraph.analyzeGraph.*;
-import static FinalPackage.normalisation.normlaisationFunctions.normalizeModel;
+import static FinalPackage.Old.normlaisationFunctions.normalizeModel;
 import static FinalPackage.graphComparison.graphComparison.*;
 
 public class Main {

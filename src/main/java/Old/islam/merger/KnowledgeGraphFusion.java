@@ -1,5 +1,5 @@
 package Old.islam.merger;
-import FinalPackage.Merging.fusionStrategy;
+import FinalPackage.Merging.Strategies.fusionStrategy;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
 import org.apache.jena.rdf.model.Model;
@@ -10,7 +10,7 @@ import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.rdf.model.StmtIterator;
 
-import FinalPackage.normalisation.normlaisationFunctions;
+import FinalPackage.Old.normlaisationFunctions;
 
 
 public class KnowledgeGraphFusion {

@@ -5,7 +5,7 @@ import org.apache.jena.rdf.model.*;
 
 import java.util.List;
 
-import static FinalPackage.Merging.FunctionalPropertyDetector.isFunctionalProperty;
+import static FinalPackage.Old.FunctionalPropertyDetector.isFunctionalProperty;
 
 public class WeightedFusion {
 

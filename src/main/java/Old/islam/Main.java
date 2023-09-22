@@ -3,7 +3,7 @@ package Old.islam;
 import Old.islam.merger.ConflictManagement;
 import Old.islam.merger.InOu;
 import Old.islam.merger.KnowledgeGraphFusion;
-import FinalPackage.Merging.LoadRDF;
+import FinalPackage.LoadRDF;
 
 import java.util.*;
 
