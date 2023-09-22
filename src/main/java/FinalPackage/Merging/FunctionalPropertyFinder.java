@@ -2,13 +2,14 @@ package FinalPackage.Merging;
 
 import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.*;
+
 import java.util.*;
 
 public class FunctionalPropertyFinder {
     // Define the threshold percentage (e.g., 90%)
     private static final double THRESHOLD_PERCENTAGE = 0.25;
 
-    public static double getThresholdPercentage(){
+    public static double getThresholdPercentage() {
         return THRESHOLD_PERCENTAGE;
     }
 
@@ -60,7 +61,12 @@ public class FunctionalPropertyFinder {
         }
     }
 
-    public static boolean isFunctionalProperty(Model model, Property property) {
+
+}
+
+
+//Old!
+/* public static boolean isFunctionalProperty(Model model, Property property) {
         // Iterate over all subjects in the model.
         ResIterator subjects = model.listSubjects();
         while (subjects.hasNext()) {
@@ -83,12 +89,13 @@ public class FunctionalPropertyFinder {
         // If no subject is linked to more than one object by the property, it is functional.
         return true;
     }
+*/
 
 
-}
 
 
-//Old!
+
+
     /*private static boolean isFunctionalInModel(Property predicate, Model model) {
         // SPARQL query to check if there is only one object associated with each subject-predicate combination
         String queryString = "ASK WHERE { ?subject <" + predicate.getURI() + "> ?object1 . ?subject <" + predicate.getURI() + "> ?object2 . FILTER (?object1 != ?object2) }";
