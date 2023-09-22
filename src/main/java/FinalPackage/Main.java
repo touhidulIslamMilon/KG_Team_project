@@ -15,7 +15,6 @@ public class Main {
         model1.write(System.out, "RDF/XML-ABBREV");
 
 
-
         Model model2 = LoadRDF.getModel("starwars2.rdf");
         System.out.println("Graph 2");
         model2.write(System.out, "RDF/XML-ABBREV");

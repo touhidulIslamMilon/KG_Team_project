@@ -27,7 +27,7 @@ public class Merger {
     public static Model mergeGraphs(List<Model> models) {
         Model targetModel = ModelFactory.createDefaultModel();
         Model resolvedModel = ModelFactory.createDefaultModel();
-        boolean functionalProperty = true;
+        //boolean functionalProperty = true;
         List<Property> functionalProperties = FunctionalPropertyFinder.findFunctionalProperties(models);
         //List<Property> functionalProperties = FunctionalPropertyDetector.getFunctionalProperties(models);
         System.out.println("Functional Properties");
@@ -114,7 +114,6 @@ public class Merger {
     }
 
 }
-
 
 
 //Old

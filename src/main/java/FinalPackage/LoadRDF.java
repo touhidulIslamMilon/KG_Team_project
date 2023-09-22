@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 
 public class LoadRDF {
 
-    public static Model getModel(String filename){
+    public static Model getModel(String filename) {
         Model model = ModelFactory.createDefaultModel();
         model.read(filename);
         return model;
@@ -72,8 +72,6 @@ public class LoadRDF {
 
         return modelPriorityMap;
     }
-
-
 
 
 }
