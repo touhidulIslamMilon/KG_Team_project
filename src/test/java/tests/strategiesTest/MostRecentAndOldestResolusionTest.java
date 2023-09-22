@@ -6,6 +6,8 @@ import FinalPackage.Merging.Strategies.MostRecentResolusionStrategy;
 import FinalPackage.Merging.Strategies.Strategies;
 
 import org.apache.jena.rdf.model.*;
+
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 import com.google.common.collect.ArrayListMultimap;
@@ -25,11 +27,17 @@ public class MostRecentAndOldestResolusionTest {
         RDFNode object4 = ResourceFactory.createResource("http://example.org/object2");
         RDFNode object5 = ResourceFactory.createResource("http://example.org/object1");
         HelperFunction helper = new HelperFunction();
-        objects.put(object1, helper.dateToInt("1997-04-16"));
-        objects.put(object2,  helper.dateToInt("1998-04-16"));
-        objects.put(object3,  helper.dateToInt("1999-04-16"));
-        objects.put(object4,  helper.dateToInt("2000-04-16"));
-        objects.put(object5,  helper.dateToInt("1996-04-16"));
+        try {
+            objects.put(object1, helper.dateToInt("1997-04-16"));
+            objects.put(object2,  helper.dateToInt("1998-04-16"));
+            objects.put(object3,  helper.dateToInt("1999-04-16"));
+            objects.put(object4,  helper.dateToInt("2000-04-16"));
+            objects.put(object5,  helper.dateToInt("1996-04-16"));
+        } catch (ParseException e) {
+           
+            e.printStackTrace();
+        }
+        
    
         // Create an instance of PriorityBasedResolutionStrategy
         MostRecentResolusionStrategy strategy = new MostRecentResolusionStrategy();

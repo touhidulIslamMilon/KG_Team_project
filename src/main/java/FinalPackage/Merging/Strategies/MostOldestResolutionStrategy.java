@@ -14,7 +14,15 @@ public class MostOldestResolutionStrategy  implements Strategy{
     public RDFNode resolveConflict(ListMultimap<RDFNode, Integer> objects, Resource subject, Property predicate) {
         RDFNode mostoldestNode = null;
         Date mostOldestDate = null;
-        Map<RDFNode, Date> nodeCreationMap = convertMapToDates(objects);
+        Map<RDFNode, Date> nodeCreationMap;
+        try {
+            nodeCreationMap = convertMapToDates(objects);
+        } catch (Exception e) {
+
+            //if conversion to date fails, use manual review
+            ManualReviewResolutionStrategy manualReview = new ManualReviewResolutionStrategy();
+            return manualReview.resolveConflict(objects, subject, predicate);
+        }
 
         for (Map.Entry<RDFNode, Date> entry : nodeCreationMap.entrySet()) {
             Date currentDate = entry.getValue();
@@ -28,7 +36,7 @@ public class MostOldestResolutionStrategy  implements Strategy{
         return mostoldestNode;
     }
 
-    public static Map<RDFNode, Date> convertMapToDates(ListMultimap<RDFNode, Integer> objects) {
+    public static Map<RDFNode, Date> convertMapToDates(ListMultimap<RDFNode, Integer> objects) throws Exception{
         Map<RDFNode, Date> nodeCreationMap = new java.util.HashMap<>();
         HelperFunction helper = new HelperFunction();
 

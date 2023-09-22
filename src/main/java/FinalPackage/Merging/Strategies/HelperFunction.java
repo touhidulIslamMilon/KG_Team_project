@@ -236,20 +236,15 @@ public class HelperFunction {
             return stringLiteral2;
         }
     }
-    public  Date intToDate(int timestampInSeconds) {
+    public  Date intToDate(int timestampInSeconds) throws ParseException {
         long timestampInMillis = (long) timestampInSeconds * 1000;
         return new Date(timestampInMillis);
     }
    
-    public  int dateToInt(String dateString)  {
+    public  int dateToInt(String dateString) throws ParseException {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date date=null;
-        try {
-            date = sdf.parse(dateString);
-        } catch (ParseException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        date = sdf.parse(dateString);
         return (int) (date.getTime() / 1000); // Convert milliseconds to seconds
     }
 
