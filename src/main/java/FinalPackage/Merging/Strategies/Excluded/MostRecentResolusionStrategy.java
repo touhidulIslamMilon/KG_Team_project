@@ -3,6 +3,7 @@ package FinalPackage.Merging.Strategies.Excluded;
 import java.util.Date;
 import java.util.Map;
 
+import com.google.common.collect.ListMultimap;
 import FinalPackage.Merging.Strategies.Strategy;
 import com.google.common.collect.ListMultimap;
 import org.apache.jena.rdf.model.Property;
@@ -11,13 +12,21 @@ import org.apache.jena.rdf.model.Resource;
 
 import com.google.common.collect.ListMultimap;
 
-public class MostRecentResolusionStrategy implements Strategy {
+public class MostRecentResolusionStrategy implements Strategy{
 
     @Override
     public RDFNode resolveConflict(ListMultimap<RDFNode, Integer> objects, Resource subject, Property predicate) {
         RDFNode mostRecentNode = null;
         Date mostRecentDate = null;
-        Map<RDFNode, Date> nodeCreationMap = convertMapToDates(objects);
+        Map<RDFNode, Date> nodeCreationMap;
+        try {
+            nodeCreationMap = convertMapToDates(objects);
+        } catch (Exception e) {
+                
+                //if conversion to date fails, use manual review
+                ManualReviewResolutionStrategy manualReview = new ManualReviewResolutionStrategy();
+                return manualReview.resolveConflict(objects, subject, predicate);
+        }
 
         for (Map.Entry<RDFNode, Date> entry : nodeCreationMap.entrySet()) {
             Date currentDate = entry.getValue();
@@ -31,7 +40,7 @@ public class MostRecentResolusionStrategy implements Strategy {
         return mostRecentNode;
     }
 
-    public static Map<RDFNode, Date> convertMapToDates(ListMultimap<RDFNode, Integer> objects) {
+    public static Map<RDFNode, Date> convertMapToDates(ListMultimap<RDFNode, Integer> objects) throws Exception{
         Map<RDFNode, Date> nodeCreationMap = new java.util.HashMap<>();
         HelperFunction helper = new HelperFunction();
 
