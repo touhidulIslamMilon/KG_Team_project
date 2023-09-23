@@ -3,19 +3,21 @@ package FinalPackage.Merging.Strategies;
 import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
+
+import org.apache.jena.rdf.model.*;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.text.ParseException;
 import java.util.regex.Pattern;
-
 import org.apache.jena.datatypes.xsd.XSDDatatype;
-import org.apache.jena.rdf.model.Literal;
-import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.rdf.model.RDFNode;
 
+import com.google.common.collect.ListMultimap;
 import com.ibm.icu.text.SimpleDateFormat;
 
 public class HelperFunction {
@@ -156,16 +158,7 @@ public class HelperFunction {
             return num2;
         }
     }
-    public  RDFNode findMostRecentDate(RDFNode dateLiteral1, RDFNode dateLiteral2) {
-        LocalDate date1 = LocalDate.parse(dateLiteral1.toString());
-        LocalDate date2 = LocalDate.parse(dateLiteral2.toString());
-
-        if (date1.isAfter(date2)) {
-            return dateLiteral1;
-        } else {
-            return dateLiteral2;
-        }
-    }
+    
     public  Double findMinDouble(Double num1, Double num2) {
         if (num1 < num2) {
             return num1;
@@ -198,33 +191,41 @@ public class HelperFunction {
 
 
     public  double calculateJaccardDistance(String str1, String str2) {
-        // Convert the input strings to sets of characters
-        Set<Character> set1 = new HashSet<>();
-        Set<Character> set2 = new HashSet<>();
-        
-        for (char c : str1.toCharArray()) {
-            set1.add(c);
-        }
-        
-        for (char c : str2.toCharArray()) {
-            set2.add(c);
-        }
-        
-        // Calculate the intersection size
-        Set<Character> intersection = new HashSet<>(set1);
+        // Tokenize the strings into sets of words
+        // Tokenize the strings into sets of words
+        Set<String> set1 = tokenize(str1);
+        Set<String> set2 = tokenize(str2);
+
+        // Calculate the Jaccard similarity coefficient
+        Set<String> intersection = new HashSet<>(set1);
         intersection.retainAll(set2);
-        
-        // Calculate the union size
-        Set<Character> union = new HashSet<>(set1);
+
+        Set<String> union = new HashSet<>(set1);
         union.addAll(set2);
-        
-        // Calculate the Jaccard similarity
+
+        if (union.size() == 0) {
+            // Handle the case where both sets are empty
+            return 0.0;
+        }
+
+        // Calculate the Jaccard distance
         double jaccardSimilarity = (double) intersection.size() / union.size();
-        
-        // Calculate the Jaccard distance (complement of similarity)
-        double jaccardDistance = 1 - jaccardSimilarity;
-        
+        double jaccardDistance = 1.0 - jaccardSimilarity;
+        System.out.println("Jaccard distance: " + jaccardDistance);
         return jaccardDistance;
+    }
+    private static Set<String> tokenize(String str) {
+        String[] tokens = str.split("\\s+"); // Tokenize by whitespace
+        Set<String> set = new HashSet<>();
+        for (String token : tokens) {
+            set.add(token);
+        }
+        return set;
+    }
+    private static double calculateIntersectionSize(Set<String> set1, Set<String> set2) {
+        Set<String> intersection = new HashSet<>(set1);
+        intersection.retainAll(set2);
+        return intersection.size();
     }
     public  RDFNode findLongestString(RDFNode stringLiteral1, RDFNode stringLiteral2) {
         String value1 = stringLiteral1.toString();
@@ -253,5 +254,84 @@ public class HelperFunction {
             String concatenatedValue = node1.toString() + node2.toString();
             return ModelFactory.createDefaultModel().createTypedLiteral(concatenatedValue,  XSDDatatype.XSDstring);
        
+    }
+    public char[] min_num(Double var1, Double var2) {
+        if (var1 < var2) {
+            return var1.toString().toCharArray();
+        } else {
+            return var2.toString().toCharArray();
+        }
+    }
+    public RDFNode getMedianValue(ListMultimap<RDFNode, Integer> objects, Resource subject, Property predicate) {
+         if (objects == null || objects.isEmpty()) {
+            System.out.println("Input map is null or empty");
+            throw new IllegalArgumentException("Input map is null or empty");
+        }
+        Model model = ModelFactory.createDefaultModel();
+        List<String> allValues = new ArrayList<>();
+
+        // Combine all values from the ListMultimap into a single list
+        for (RDFNode value : objects.keys()) {
+            try {
+                allValues.add(value.toString());
+            } catch (Exception e) {
+                System.out.println("The value is not Integer");
+                ManualReviewResolutionStrategy strategy1 = new ManualReviewResolutionStrategy();
+
+                return strategy1.resolveConflict(objects, subject, predicate);
+            }
+        }
+        // Sort the list in ascending order
+        Collections.sort(allValues);
+        int size = objects.size();
+        if (size % 2 == 1) {
+            return model.createTypedLiteral(allValues.get(size / 2),  XSDDatatype.XSDstring);
+        } else {
+            String middle1 = allValues.get(size / 2 - 1);
+            String middle2 = allValues.get(size / 2);
+            try {
+                Double middle3 =  Double.parseDouble(middle1);
+                 Double middle4 = Double.parseDouble(middle2);
+                return model.createTypedLiteral(String.valueOf( (Double)(middle3 + middle4) / 2),  XSDDatatype.XSDlong);
+            } catch (Exception e) {
+                System.out.println("The value is not Integer");
+                return model.createTypedLiteral(allValues.get(size / 2),  XSDDatatype.XSDstring);
+            }
+            
+        }
+    }
+    public RDFNode findShortestString(RDFNode first, RDFNode second) {
+        String value1 = first.toString();
+        String value2 = second.toString();
+        if (value1.length() < value2.length()) {
+            return first;
+        } else {
+            return second;
+        }   
+    }
+    public RDFNode findMostOldDate(RDFNode first, RDFNode second) throws ParseException{
+        LocalDate date1 = LocalDate.parse(first.toString());
+        LocalDate date2 = LocalDate.parse(second.toString());
+
+        if (date1.isBefore(date2)) {
+            return first;
+        } else {
+            return second;
+        }
+    }
+    public  RDFNode findMostRecentDate(RDFNode dateLiteral1, RDFNode dateLiteral2) throws ParseException{
+        
+        LocalDate date1 = LocalDate.parse(dateLiteral1.toString());
+        LocalDate date2 = LocalDate.parse(dateLiteral2.toString());
+
+        if (date1.isAfter(date2)) {
+            return dateLiteral1;
+        } else {
+            return dateLiteral2;
+        }
+    }
+    public RDFNode findMean(RDFNode first, RDFNode second) throws ParseException {
+        double mean = (Double.parseDouble(first.toString()) + Double.parseDouble(second.toString())) / 2;
+        return ModelFactory.createDefaultModel().createTypedLiteral(mean,  XSDDatatype.XSDdouble);
     }
 }

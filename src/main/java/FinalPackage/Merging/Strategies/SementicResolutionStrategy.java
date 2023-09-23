@@ -1,159 +1,164 @@
 package FinalPackage.Merging.Strategies;
 
+import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
+
+import java.text.ParseException;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.jena.datatypes.xsd.XSDDatatype;
-import org.apache.jena.rdf.model.Literal;
-import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.rdf.model.Property;
-import org.apache.jena.rdf.model.RDFNode;
-import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.*;
+import org.eclipse.rdf4j.model.vocabulary.XMLSchema;
 
 public class SementicResolutionStrategy implements Strategy{
-
+    static Map<String, ResolutionStrategy> strategyMap = new HashMap<>();
+    Model model = ModelFactory.createDefaultModel();
+    static {
+        strategyMap.put("string", ResolutionStrategy.LONG_VALUE);
+        strategyMap.put("date", ResolutionStrategy.RECENT_DATE);
+        strategyMap.put("integer", ResolutionStrategy.MEAN);
+        strategyMap.put("decimal", ResolutionStrategy.MEDIAN);
+        strategyMap.put("boolean", ResolutionStrategy.MAX_VALUE);
+        strategyMap.put("dateTime", ResolutionStrategy.RECENT_DATE);
+        strategyMap.put("text", ResolutionStrategy.LONG_VALUE);
+        strategyMap.put("number", ResolutionStrategy.MEAN);
+        //strategyMap.put("uri", ResolutionStrategy.LONG_VALUE);
+    }
     @Override
     public RDFNode resolveConflict(ListMultimap<RDFNode, Integer> objects, Resource subject, Property predicate) {
         Double jacabDis = 0.8;
-        RDFNode bestNode = null;
+        RDFNode bestNode = ResourceFactory.createResource("");
         for (RDFNode key : objects.keySet()) {
-            for (Integer value : objects.get(key)) {
-                RDFNode node = key;
-                HelperFunction helperFunction = new HelperFunction();
-                if (helperFunction.calculateJaccardDistance(node.toString(), bestNode.toString()) < jacabDis) {
-                    bestNode = fusenode(node, bestNode);
-                } else {
-                    // TODO
-                    // chose one of the node if jacab distance is more then specified
-                }
+            RDFNode node = key;
+            HelperFunction helperFunction = new HelperFunction();
+            if (helperFunction.calculateJaccardDistance(node.toString(), bestNode.toString()) > jacabDis) {
+                bestNode = fusenode(node, bestNode, predicate, subject);
+            } else {
+                //If the jacabDis is greater than 0.8, it could mean it is just a spelling mistake. we will use the manual review strategy
+                ListMultimap<RDFNode, Integer> objectForReview = ArrayListMultimap.create();  
+                objectForReview.put(node, 1);
+                objectForReview.put(bestNode, 1);  
+                ManualReviewResolutionStrategy manualReviewStrategy = new ManualReviewResolutionStrategy();
+                System.out.println("Both object have slightly different value.It could be spelling mistake Please select the correct value");
+                bestNode = manualReviewStrategy.resolveConflict(objectForReview, subject, predicate);
             }
         }
         return bestNode;
     }
-    public RDFNode fusenode(RDFNode node1, RDFNode node2) {
+    public RDFNode fusenode(RDFNode node1, RDFNode node2, Property Predicate, Resource subject) {
         HelperFunction helperFunction = new HelperFunction();
         String type1 = helperFunction.objectType(node1);
         String type2 = helperFunction.objectType(node1);
 
         if(type1 == type2){
-                switch (type1) {
-                case "string":
-                        //TODO - This is where the new literal is created
-                        // return concatination of two literals
-                        //return longest literal
-                        RDFNode longest = helperFunction.findLongestString(node1, node2);
-                        //return the literal with the most capital letters
-                        return helperFunction.concatenateLiterals(node1, node2);
-                case "number":
-                     try{
-                        //if both are number the return the average
-                        Double num1 =  Double.parseDouble(node1.toString());
-                        Double num2 = Double.parseDouble(node2.toString());
-                        Double average = (num1+num2)/2;
-                        Literal averageLiteral = ModelFactory.createDefaultModel().createTypedLiteral(average,  XSDDatatype.XSDdecimal);
-                        //TODO - This is where the new literal is created
-                        // we will return average as a literal
-                        return averageLiteral;
-                    }catch(Exception e){
-                        System.out.println("Not a number");
-                        //TODO - This is where the new literal is created
-                        helperFunction.concatenateLiterals(node1, node2);
-                        //return longest literal
-                        helperFunction.findLongestString(node1, node2);
-                        //return the literal with the most capital letters
-                        return helperFunction.concatenateLiterals(node1, node2);
-                    }
-                case "text":
-                    //TODO - This is where the new literal is created
-                        helperFunction.concatenateLiterals(node1, node2);
-                        //return longest literal
-                        helperFunction.findLongestString(node1, node2);
-                        //return the literal with the most capital letters
-                        return helperFunction.concatenateLiterals(node1, node2);
-                case "decimal":
-                    try{
-                        //if both literal are decimal then return the average
-                        Double num1 =  Double.parseDouble(node1.toString());
-                        Double num2 = Double.parseDouble(node2.toString());
-                        Double max= helperFunction.findMaxDouble(num1,num2);
-                        Double min=  helperFunction.findMinDouble(num1,num2);
-                        Double average = (num1+num2)/2;
-                        Literal averageLiteral = ModelFactory.createDefaultModel().createTypedLiteral(average,  XSDDatatype.XSDdecimal);
-                       
-                        return averageLiteral;
-                        
-                    }catch(Exception e){
-
-                        //TODO - This is where the new literal is created
-                        helperFunction.concatenateLiterals(node1, node2);
-                        //return longest literal
-                        helperFunction.findLongestString(node1, node2);
-                        //return the literal with the most capital letters
-                        return helperFunction.concatenateLiterals(node1, node2);
-                    }
-                    
-                case "integer":
-                    try{
-                        //if both literal are decimal then return the average
-                        int num1 = Integer.parseInt(node1.toString());
-                        int num2 = Integer.parseInt(node2.toString());
-
-                        Double average =  ((double) num1 + num2) / 2.0;
-                        int max = helperFunction.findMaxInt(num1,num2);
-                        int min=  helperFunction.findMinInt(num1,num2);
-                        RDFNode averageNode = ModelFactory.createDefaultModel().createTypedLiteral(average,  XSDDatatype.XSDint);
-                        return averageNode;
-                        
-                    }catch(Exception e){
-
-                        //TODO - This is where the new literal is created
-                       helperFunction.concatenateLiterals(node1, node2);
-                        //return longest literal
-                        helperFunction.findLongestString(node1, node2);
-                        //return the literal with the most capital letters
-                        return helperFunction.concatenateLiterals(node1, node2);
-                    }
-                case "boolean":
-                    //TODO - This is where the new literal is creat
-                    
-                    //return the literal with the most capital letter
-                    helperFunction.concatenateLiterals(node1, node2);
-                    return helperFunction.findLongestString(node1, node2);
-                
-                case "date":
-                    //if both are date then return the recent date
-                    if(helperFunction.containsDate(node1.toString()) && helperFunction.containsDate(node2.toString())){
-                        RDFNode recentDate = helperFunction.findMostRecentDate(node1, node2);
-                        //TODO - This is where the new literal is created
-                        // we will return recentDate as a literal
-                        return recentDate;
-                    }else{
-
-                        //TODO - This is where the new literal is creat
-                        
-                        //return the literal with the most capital letter
-                        helperFunction.concatenateLiterals(node1, node2);
-                        return helperFunction.findLongestString(node1, node2);
-                    }
-                case "dateTime":
-                    RDFNode recentDate = helperFunction.findMostRecentDate(node1,  node2);
-                    //TODO - This is where the new literal is created
-                        // we will return recentDate as a literal
-                    return recentDate;
-                default:
-                    //TODO - This is where the new literal is creat
-                    
-                    //return the literal with the most capital letter
-                    helperFunction.concatenateLiterals(node1, node2);
-                    return helperFunction.findLongestString(node1, node2);
-            }
+               return ResolveTwoObject(node1, node2 , Predicate, subject, type1);
         }else{
             System.out.println("Not same type");
-            //TODO - This is where the new literal is creat
-             // return concatination of two literals
             System.out.println("Unknown type");
             return helperFunction.concatenateLiterals(node1, node2);
         }
         
 
+    }
+    
+    //This is a methods that take two RDFNode and return the most recent one
+    public RDFNode ResolveTwoObject(RDFNode First, RDFNode Second, Property predicate, Resource subject, String type) {
+        System.out.println("Type: " + type);
+        RDFNode resolvedObject = null;
+        ResolutionStrategy Strategy = strategyMap.get(type);
+        ResolutionStrategy strategy = strategyMap.get(predicate);
+        HelperFunction helperFunction = new HelperFunction();
+        if (strategy == ResolutionStrategy.MAX_VALUE) {
+            try{
+                Double var1 = Double.parseDouble(First.toString());
+                Double var2 = Double.parseDouble(Second.toString());
+                resolvedObject = model.createTypedLiteral(String.valueOf( helperFunction.max_num(var1, var2)),  XSDDatatype.XSDlong);   
+            }catch(Exception e){
+                //If the jacabDis is greater than 0.8, it could mean it is just a spelling mistake. we will use the manual review strategy
+                ListMultimap<RDFNode, Integer> objectForReview = ArrayListMultimap.create();  
+                objectForReview.put(First, 1);
+                objectForReview.put(Second, 1);  
+                ManualReviewResolutionStrategy manualReviewStrategy = new ManualReviewResolutionStrategy();
+                System.out.println("One of the value is not number.Please select the correct value");
+                resolvedObject = manualReviewStrategy.resolveConflict(objectForReview, subject, predicate);
+            }
+        } else if (strategy == ResolutionStrategy.MIN_VALUE) {
+            try{
+                Double var1 = Double.parseDouble(First.toString());
+                Double var2 = Double.parseDouble(Second.toString());
+                resolvedObject =  model.createTypedLiteral(String.valueOf(helperFunction.min_num(var1, var2)),  XSDDatatype.XSDlong);   
+            }catch(Exception e){
+                //If the jacabDis is greater than 0.8, it could mean it is just a spelling mistake. we will use the manual review strategy
+                ListMultimap<RDFNode, Integer> objectForReview = ArrayListMultimap.create();  
+                objectForReview.put(First, 1);
+                objectForReview.put(Second, 1);  
+                ManualReviewResolutionStrategy manualReviewStrategy = new ManualReviewResolutionStrategy();
+                System.out.println("One of the value is not number.Please select the correct value");
+                resolvedObject = manualReviewStrategy.resolveConflict(objectForReview, subject, predicate);
+            }
+        } else if(strategy == ResolutionStrategy.LONG_VALUE){
+            resolvedObject = helperFunction.findLongestString(First, Second);
+        } else if(strategy == ResolutionStrategy.SHORT_VALUE){
+            resolvedObject = helperFunction.findShortestString(First, Second);
+        }else if(strategy == ResolutionStrategy.RECENT_DATE){
+            try{
+                resolvedObject = model.createTypedLiteral(String.valueOf(helperFunction.findMostRecentDate(First, Second)),  XSDDatatype.XSDdateTime);   
+            }catch(Exception e){
+                //If there is a error in Conversion then we will use the manual review strategy
+                ListMultimap<RDFNode, Integer> objectForReview = ArrayListMultimap.create();  
+                objectForReview.put(First, 1);
+                objectForReview.put(Second, 1);  
+                ManualReviewResolutionStrategy manualReviewStrategy = new ManualReviewResolutionStrategy();
+                System.out.println("One of the value is not Date.Please select the correct value");
+                resolvedObject = manualReviewStrategy.resolveConflict(objectForReview, subject, predicate);
+            }
+        }else if(strategy == ResolutionStrategy.OLDEST_DATE){
+            try{
+                resolvedObject = model.createTypedLiteral(String.valueOf(helperFunction.findMostOldDate(First, Second)),  XSDDatatype.XSDdateTime);   
+            }catch(Exception e){
+                //If there is a error in Conversion then we will use the manual review strategy
+                ListMultimap<RDFNode, Integer> objectForReview = ArrayListMultimap.create();  
+                objectForReview.put(First, 1);
+                objectForReview.put(Second, 1);  
+                ManualReviewResolutionStrategy manualReviewStrategy = new ManualReviewResolutionStrategy();
+                System.out.println("One of the value is not Date.Please select the correct value");
+                resolvedObject = manualReviewStrategy.resolveConflict(objectForReview, subject, predicate);
+            }
+        }else if(strategy == ResolutionStrategy.MANUAL_REVIEW){
+            ListMultimap<RDFNode, Integer> objectForReview = ArrayListMultimap.create();  
+                objectForReview.put(First, 1);
+                objectForReview.put(Second, 1);  
+                ManualReviewResolutionStrategy manualReviewStrategy = new ManualReviewResolutionStrategy();
+                System.out.println("Parsing problem. Please select the correct value");
+                resolvedObject = manualReviewStrategy.resolveConflict(objectForReview, subject, predicate);
+        }else if(strategy == ResolutionStrategy.MEAN){
+            try {
+                resolvedObject = helperFunction.findMean(First, Second);
+            } catch (ParseException e) {
+                ListMultimap<RDFNode, Integer> objectForReview = ArrayListMultimap.create();  
+                objectForReview.put(First, 1);
+                objectForReview.put(Second, 1);  
+                ManualReviewResolutionStrategy manualReviewStrategy = new ManualReviewResolutionStrategy();
+                System.out.println("Parsing problem. Please select the correct value");
+                resolvedObject = manualReviewStrategy.resolveConflict(objectForReview, subject, predicate);
+            }
+        }else if(strategy == ResolutionStrategy.MEDIAN){
+            ListMultimap<RDFNode, Integer> objectForReview = ArrayListMultimap.create();  
+            objectForReview.put(First, 1);
+            objectForReview.put(Second, 1);  
+            resolvedObject = helperFunction.getMedianValue(objectForReview, subject, predicate);
+            
+            
+        }else {
+           ListMultimap<RDFNode, Integer> objectForReview = ArrayListMultimap.create();  
+            objectForReview.put(First, 1);
+            objectForReview.put(Second, 1);  
+            ManualReviewResolutionStrategy manualReviewStrategy = new ManualReviewResolutionStrategy();
+            System.out.println("No Strategy Have been Speciried .Please select the correct value");
+            resolvedObject = manualReviewStrategy.resolveConflict(objectForReview, subject, predicate);
+        }
+        return resolvedObject;
     }
     
 }

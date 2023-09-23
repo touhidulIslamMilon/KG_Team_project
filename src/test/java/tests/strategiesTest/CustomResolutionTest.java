@@ -34,6 +34,8 @@ public class CustomResolutionTest {
         //Property predicate =ResourceFactory.createProperty("http://www.w3.org/2000/01/rdf-schema#subClassOf");  //,ResolutionStrategy.HIGHEST_PRIORITY);Cheaked
         //Property predicate =ResourceFactory.createProperty("http://www.w3.org/2000/01/rdf-schema#subPropertyOf");  //,ResolutionStrategy.PRIORITY_AND_FREQUENCY);Cheaked
         // Property predicate =ResourceFactory.createProperty("http://www.w3.org/2000/01/rdf-schema#domain");  //,ResolutionStrategy.MOST_FREQUENT); Cheaked
+        // Property predicate =ResourceFactory.createProperty("http://www.w3.org/2000/01/rdf-schema#range");  //,ResolutionStrategy.MEAN);
+        // Property predicate =ResourceFactory.createProperty("http://www.w3.org/2000/01/rdf-schema#subPropert");  //,ResolutionStrategy.MEDIAN);
 
 
         HelperFunction helper = new HelperFunction();

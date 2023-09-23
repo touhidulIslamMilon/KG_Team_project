@@ -1,19 +1,22 @@
 package FinalPackage.Merging.Strategies;
 
 import java.time.LocalDate;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import com.google.common.collect.ListMultimap;
+
 import java.util.Map.Entry;
 
-import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.rdf.model.Property;
-import org.apache.jena.rdf.model.RDFNode;
-import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.*;
 import org.apache.jena.rdf.model.impl.PropertyImpl;
 import org.apache.jena.rdf.model.impl.ResourceImpl;
 import org.apache.jena.rdf.model.impl.StatementImpl;
 import org.eclipse.rdf4j.model.vocabulary.RDF;
+import com.google.common.collect.ListMultimap;
+
+import java.util.ArrayList;
 
 import org.apache.jena.rdf.model.impl.LiteralImpl;
 
@@ -31,6 +34,8 @@ public class CustomResolutionStrategy implements Strategy{
         strategyMap.put(new PropertyImpl("http://www.w3.org/2000/01/rdf-schema#subClassOf"),ResolutionStrategy.HIGHEST_PRIORITY);
         strategyMap.put(new PropertyImpl("http://www.w3.org/2000/01/rdf-schema#subPropertyOf"),ResolutionStrategy.PRIORITY_AND_FREQUENCY);
         strategyMap.put(new PropertyImpl("http://www.w3.org/2000/01/rdf-schema#domain"),ResolutionStrategy.MOST_FREQUENT);
+        strategyMap.put(new PropertyImpl("http://www.w3.org/2000/01/rdf-schema#range"),ResolutionStrategy.MEAN);
+        strategyMap.put(new PropertyImpl("http://www.w3.org/2000/01/rdf-schema#subPropert"),ResolutionStrategy.MEDIAN);
 
     }
 
@@ -39,13 +44,13 @@ public class CustomResolutionStrategy implements Strategy{
         RDFNode resolvedObject = null;
         ResolutionStrategy strategy = strategyMap.get(predicate);
         if (strategy == ResolutionStrategy.MAX_VALUE) {
-            resolvedObject = getMaxValueForProperty(objects);
+            resolvedObject = getMaxValueForProperty(objects, subject, predicate);
         } else if (strategy == ResolutionStrategy.MIN_VALUE) {
-            resolvedObject= getMinValueForProperty(objects);
+            resolvedObject= getMinValueForProperty(objects, subject, predicate);
         } else if(strategy == ResolutionStrategy.LONG_VALUE){
-            resolvedObject = getLongestValueForPropertyy(objects);
+            resolvedObject = getLongestValueForPropertyy(objects, subject, predicate);
         } else if(strategy == ResolutionStrategy.SHORT_VALUE){
-            resolvedObject = getShortestValueForPropertyy(objects);
+            resolvedObject = getShortestValueForPropertyy(objects, subject, predicate);
         }else if(strategy == ResolutionStrategy.RECENT_DATE){
             MostRecentResolusionStrategy strategy1 = new MostRecentResolusionStrategy();
             resolvedObject = strategy1.resolveConflict(objects, subject, predicate);
@@ -64,6 +69,13 @@ public class CustomResolutionStrategy implements Strategy{
         }else if(strategy == ResolutionStrategy.MANUAL_REVIEW){
             ManualReviewResolutionStrategy strategy1 = new ManualReviewResolutionStrategy();
             resolvedObject = strategy1.resolveConflict(objects, subject, predicate);
+        }else if(strategy == ResolutionStrategy.MEAN){
+            resolvedObject = getMeamValue(objects, subject, predicate);
+        }else if(strategy == ResolutionStrategy.MEDIAN){
+            HelperFunction helper = new HelperFunction();
+            
+            resolvedObject =helper.getMedianValue(objects, subject, predicate);
+
         }else {
             ManualReviewResolutionStrategy strategy1 = new ManualReviewResolutionStrategy();
             resolvedObject = strategy1.resolveConflict(objects, subject, predicate);
@@ -71,27 +83,39 @@ public class CustomResolutionStrategy implements Strategy{
         return resolvedObject;
     }
 
-    
-   
-    //Type of resolution strategies
-    enum ResolutionStrategy {
-        MAX_VALUE,
-        MIN_VALUE,
-        LONG_VALUE,
-        SHORT_VALUE,
-        RECENT_DATE,
-        OLDEST_DATE,
-        MOST_FREQUENT,
-        HIGHEST_PRIORITY,
-        PRIORITY_AND_FREQUENCY,
-        MANUAL_REVIEW,
+
+    private RDFNode getMeamValue(ListMultimap<RDFNode, Integer> objects, Resource subject, Property predicate) {
+         if (objects == null || objects.isEmpty()) {
+            System.out.println("Input map is null or empty");
+            throw new IllegalArgumentException("Input map is null or empty");
+        }
+        Double MeanValue = 0.0;
+        for (Map.Entry<RDFNode, Integer> entry : objects.entries()) {
+            RDFNode node = entry.getKey();
+            try {
+                MeanValue += Double.parseDouble(node.toString());
+            } catch (Exception e) {
+                System.out.println("The value is not Integer");
+                ManualReviewResolutionStrategy strategy1 = new ManualReviewResolutionStrategy();
+                return strategy1.resolveConflict(objects, subject, predicate);
+            }
+               
+        }
+        RDFNode MeanNode = ResourceFactory.createResource(String.valueOf(MeanValue/objects.size()));
+        return MeanNode;
     }
+
+
+
+    //Type of resolution strategies
+    
 
     // Define other custom resolution strategies as needed
 
-    private RDFNode getLongestValueForPropertyy(ListMultimap<RDFNode, Integer> objects) {
+    private RDFNode getLongestValueForPropertyy(ListMultimap<RDFNode, Integer> objects, Resource subject, Property predicate) {
 
         if (objects == null || objects.isEmpty()) {
+            System.out.println("Input map is null or empty");
             throw new IllegalArgumentException("Input map is null or empty");
         }
 
@@ -104,16 +128,20 @@ public class CustomResolutionStrategy implements Strategy{
             if (node.toString().length() > longestString) {
                 longestNode = node;
                 longestString = node.toString().length();
-            } 
+            } else if(node.toString().length() == longestString){
+                ManualReviewResolutionStrategy manualReview = new ManualReviewResolutionStrategy();
+                return manualReview.resolveConflict(objects, subject, predicate);
+            }
         }
 
         return longestNode;
     }
 
-    private RDFNode getShortestValueForPropertyy(ListMultimap<RDFNode, Integer> objects) {
+    private RDFNode getShortestValueForPropertyy(ListMultimap<RDFNode, Integer> objects,Resource subject, Property predicate) {
 
        if (objects == null || objects.isEmpty()) {
-            throw new IllegalArgumentException("Input map is null or empty");
+            System.out.println("Input map is null or empty");
+             throw new IllegalArgumentException("Input map is null or empty");
         }
 
         RDFNode longestNode = null;
@@ -125,15 +153,19 @@ public class CustomResolutionStrategy implements Strategy{
             if (node.toString().length() < longestString) {
                 longestNode = node;
                 longestString = node.toString().length();
-            } 
+            } else if(node.toString().length() == longestString){
+                ManualReviewResolutionStrategy manualReview = new ManualReviewResolutionStrategy();
+                return manualReview.resolveConflict(objects, subject, predicate);
+            }
         }
 
         return longestNode;
     }
     
-    private static RDFNode getMinValueForProperty(ListMultimap<RDFNode, Integer> objects) {
+    private static RDFNode getMinValueForProperty(ListMultimap<RDFNode, Integer> objects, Resource subject, Property predicate) {
         //This Function the node that have the minimum value for the RDFNode
         if (objects == null || objects.isEmpty()) {
+            System.out.println("Input map is null or empty");
             throw new IllegalArgumentException("Input map is null or empty");
         }
 
@@ -147,6 +179,9 @@ public class CustomResolutionStrategy implements Strategy{
             if (value < minValue) {
                 minValue = value;
                 minNode = node;
+            }else if(value == minValue){
+                ManualReviewResolutionStrategy manualReview = new ManualReviewResolutionStrategy();
+                return manualReview.resolveConflict(objects, subject, predicate);
             }
         }
 
@@ -154,10 +189,11 @@ public class CustomResolutionStrategy implements Strategy{
         
     }
 
-    private static RDFNode getMaxValueForProperty(ListMultimap<RDFNode, Integer> objects) {
+    private static RDFNode getMaxValueForProperty(ListMultimap<RDFNode, Integer> objects, Resource subject, Property predicate) {
         //This Function the node that have the minimum value for the RDFNode
         if (objects == null || objects.isEmpty()) {
-            throw new IllegalArgumentException("Input map is null or empty");
+            System.out.println("Input map is null or empty");
+             throw new IllegalArgumentException("Input map is null or empty");
         }
 
         RDFNode maxNode = null;
@@ -170,6 +206,9 @@ public class CustomResolutionStrategy implements Strategy{
             if (value > maxValue) {
                 maxValue = value;
                 maxNode = node;
+            }else if(value == maxValue){
+                ManualReviewResolutionStrategy manualReview = new ManualReviewResolutionStrategy();
+                return manualReview.resolveConflict(objects, subject, predicate);
             }
         }
 
