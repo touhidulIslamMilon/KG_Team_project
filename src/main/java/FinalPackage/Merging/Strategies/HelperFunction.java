@@ -40,11 +40,13 @@ public class HelperFunction {
                 return "date";
             } else if (datatypeURI.equals("http://www.w3.org/2001/XMLSchema#dateTime")) {
                 return "dateTime";
+            } else if (datatypeURI.equals("http://www.w3.org/2001/XMLSchema#time")) {
+                return "time";
             } else {
                 return detectStringType(object.toString());
             }
         }else if(object.isURIResource()){
-            return "uri";
+            return detectStringType(object.toString());
         }else if(object.isResource()){
             return detectStringType(object.toString());
         }else{
@@ -105,8 +107,8 @@ public class HelperFunction {
     }
      //this method take two string and return the longest one
     public RDFNode longestString(String a, String b) {
-        RDFNode rdfNodea = ModelFactory.createDefaultModel().createLiteral(a);
-        RDFNode rdfNodeb = ModelFactory.createDefaultModel().createLiteral(b);
+        RDFNode rdfNodea =ResourceFactory.createResource(a);
+        RDFNode rdfNodeb = ResourceFactory.createResource(b);
         if (a.length() > b.length()) {
             return rdfNodea;
         } else {
@@ -132,7 +134,7 @@ public class HelperFunction {
     public RDFNode average_num(double a, double b) {
         Number r= (a + b) / 2;
         //convert r to rdfnode
-        RDFNode rdfNode = ModelFactory.createDefaultModel().createTypedLiteral(r);
+        RDFNode rdfNode = ResourceFactory.createResource(String.valueOf(r));
         return rdfNode;
     }
 
@@ -191,29 +193,39 @@ public class HelperFunction {
 
 
     public  double calculateJaccardDistance(String str1, String str2) {
-        // Tokenize the strings into sets of words
-        // Tokenize the strings into sets of words
-        Set<String> set1 = tokenize(str1);
-        Set<String> set2 = tokenize(str2);
+        // Convert the input strings into sets of characters
+        HashSet<Character> set1 = new HashSet<>();
+        HashSet<Character> set2 = new HashSet<>();
 
-        // Calculate the Jaccard similarity coefficient
-        Set<String> intersection = new HashSet<>(set1);
-        intersection.retainAll(set2);
-
-        Set<String> union = new HashSet<>(set1);
-        union.addAll(set2);
-
-        if (union.size() == 0) {
-            // Handle the case where both sets are empty
-            return 0.0;
+        for (char c : str1.toCharArray()) {
+            set1.add(c);
         }
 
+        for (char c : str2.toCharArray()) {
+            set2.add(c);
+        }
+
+        // Calculate the intersection of the sets
+        HashSet<Character> intersection = new HashSet<>(set1);
+        intersection.retainAll(set2);
+
+        // Calculate the union of the sets
+        HashSet<Character> union = new HashSet<>(set1);
+        union.addAll(set2);
+
         // Calculate the Jaccard distance
-        double jaccardSimilarity = (double) intersection.size() / union.size();
-        double jaccardDistance = 1.0 - jaccardSimilarity;
-        System.out.println("Jaccard distance: " + jaccardDistance);
-        return jaccardDistance;
+        if (union.size() == 0) {
+            // Handle the case where both sets are empty
+            return 1.0;
+        } else {
+            return 1.0 - (double) intersection.size() / union.size();
+        }
     }
+    //create a function that take two sting and return jaccard distance
+
+
+
+
     private static Set<String> tokenize(String str) {
         String[] tokens = str.split("\\s+"); // Tokenize by whitespace
         Set<String> set = new HashSet<>();
@@ -237,6 +249,16 @@ public class HelperFunction {
             return stringLiteral2;
         }
     }
+     public RDFNode findShortestString(RDFNode first, RDFNode second) {
+        String value1 = first.toString();
+        String value2 = second.toString();
+        
+        if (value1.length() < value2.length()) {
+            return first;
+        } else {
+            return second;
+        }   
+    }
     public  Date intToDate(int timestampInSeconds) throws ParseException {
         long timestampInMillis = (long) timestampInSeconds * 1000;
         return new Date(timestampInMillis);
@@ -252,7 +274,7 @@ public class HelperFunction {
     //take two literal and return the concatination of them
     public  Literal concatenateLiterals(RDFNode node1, RDFNode node2) {
             String concatenatedValue = node1.toString() + node2.toString();
-            return ModelFactory.createDefaultModel().createTypedLiteral(concatenatedValue,  XSDDatatype.XSDstring);
+            return ModelFactory.createDefaultModel().createTypedLiteral(concatenatedValue);
        
     }
     public char[] min_num(Double var1, Double var2) {
@@ -268,52 +290,44 @@ public class HelperFunction {
             throw new IllegalArgumentException("Input map is null or empty");
         }
         Model model = ModelFactory.createDefaultModel();
-        List<String> allValues = new ArrayList<>();
+        List<Double> allValues = new ArrayList<>();
 
         // Combine all values from the ListMultimap into a single list
         for (RDFNode value : objects.keys()) {
             try {
-                allValues.add(value.toString());
+                allValues.add(Double.parseDouble(value.toString()) );
             } catch (Exception e) {
-                System.out.println("The value is not Integer");
                 ManualReviewResolutionStrategy strategy1 = new ManualReviewResolutionStrategy();
-
+                System.out.println("The value is not Number");
                 return strategy1.resolveConflict(objects, subject, predicate);
             }
         }
         // Sort the list in ascending order
         Collections.sort(allValues);
+        System.out.println(allValues.toString());
         int size = objects.size();
+        System.out.println("size: "+size);
         if (size % 2 == 1) {
-            return model.createTypedLiteral(allValues.get(size / 2),  XSDDatatype.XSDstring);
+            return ResourceFactory.createResource(String.valueOf(allValues.get(size / 2)));
         } else {
-            String middle1 = allValues.get(size / 2 - 1);
-            String middle2 = allValues.get(size / 2);
+            Double middle1 = allValues.get(size / 2 - 1);
+            Double middle2 = allValues.get(size / 2);
             try {
-                Double middle3 =  Double.parseDouble(middle1);
-                 Double middle4 = Double.parseDouble(middle2);
-                return model.createTypedLiteral(String.valueOf( (Double)(middle3 + middle4) / 2),  XSDDatatype.XSDlong);
+                return ResourceFactory.createResource(String.valueOf( (Double)(middle1 + middle2) / 2));
             } catch (Exception e) {
                 System.out.println("The value is not Integer");
-                return model.createTypedLiteral(allValues.get(size / 2),  XSDDatatype.XSDstring);
+                return ResourceFactory.createResource(String.valueOf(allValues.get(size / 2)));
             }
-            
         }
     }
-    public RDFNode findShortestString(RDFNode first, RDFNode second) {
-        String value1 = first.toString();
-        String value2 = second.toString();
-        if (value1.length() < value2.length()) {
-            return first;
-        } else {
-            return second;
-        }   
-    }
+   
     public RDFNode findMostOldDate(RDFNode first, RDFNode second) throws ParseException{
         LocalDate date1 = LocalDate.parse(first.toString());
         LocalDate date2 = LocalDate.parse(second.toString());
-
+        System.out.println(date2.toString());
+        System.out.println(date1.toString());
         if (date1.isBefore(date2)) {
+            
             return first;
         } else {
             return second;
@@ -332,6 +346,6 @@ public class HelperFunction {
     }
     public RDFNode findMean(RDFNode first, RDFNode second) throws ParseException {
         double mean = (Double.parseDouble(first.toString()) + Double.parseDouble(second.toString())) / 2;
-        return ModelFactory.createDefaultModel().createTypedLiteral(mean,  XSDDatatype.XSDdouble);
+        return ResourceFactory.createResource(String.valueOf(mean));
     }
 }

@@ -1,5 +1,7 @@
 package tests.strategiesTest;
 
+import java.text.ParseException;
+
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
@@ -18,11 +20,29 @@ public class SementicResolutionTest {
 
         Resource subject = ResourceFactory.createResource("http://example.org/subject");
         Property predicate = ResourceFactory.createProperty("http://example.org/predicate");
+
+        //Test for uri (Longest and shortest)
         RDFNode object1 = ResourceFactory.createResource("http://example.org/object1");
-        RDFNode object2 = ResourceFactory.createResource("http://example.org/object2");
+        RDFNode object2 = ResourceFactory.createResource("httprg/object2s");
         RDFNode object3 = ResourceFactory.createResource("http://example.org/object3");
         RDFNode object4 = ResourceFactory.createResource("http://example.org/object2");
-        RDFNode object5 = ResourceFactory.createResource("http://example.org/object1");
+        RDFNode object5 = ResourceFactory.createResource("http://example.org/object4");
+
+        //Test for number (Mean ,Max ,Min and Median)
+        // RDFNode object1 = ResourceFactory.createResource("1");
+        // RDFNode object2 = ResourceFactory.createResource("2");
+        // RDFNode object3 = ResourceFactory.createResource("3");
+        // RDFNode object4 = ResourceFactory.createResource("4");
+        // RDFNode object5 = ResourceFactory.createResource("20");
+        
+
+        //Test for Date (Recent and old) 
+        // RDFNode object1 = ResourceFactory.createResource("1997-04-16");
+        // RDFNode object2 = ResourceFactory.createResource("1998-04-16");
+        // RDFNode object3 = ResourceFactory.createResource("1999-04-16");
+        // RDFNode object4 = ResourceFactory.createResource("2000-04-16");
+        // RDFNode object5 = ResourceFactory.createResource("1996-04-16");
+
         
         objects.put(object1, 1);
         objects.put(object2, 2);
