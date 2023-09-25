@@ -34,24 +34,6 @@ public class ObjectResolution {
 
 
     /*
-        Get a Model which contains all distinct statements from all the models with a given subject and predicate
-     */
-    public static Model getDistinctStatements(List<Model> models, Resource subject, Property predicate) {
-        Model distinctStatements = ModelFactory.createDefaultModel();
-
-        for (Model model : models) {
-            StmtIterator iter = model.listStatements(subject, predicate, (RDFNode) null);
-            while (iter.hasNext()) {
-                Statement stmt = iter.nextStatement();
-                distinctStatements.add(stmt);
-            }
-        }
-
-        return distinctStatements;
-    }
-
-
-    /*
         Get a set of all objects in a list of models which appear in a property with a given subject and predicate
      */
     public static List<RDFNode> getAllObjects(List<Model> models, Resource subject, Property predicate) {
@@ -114,6 +96,25 @@ public class ObjectResolution {
 
         return uniqueObjects.size() > 1; // Return true if there is more than one distinct object
     }
+
+
+    /*
+        Get a Model which contains all distinct statements from all the models with a given subject and predicate
+     */
+    public static Model getDistinctStatements(List<Model> models, Resource subject, Property predicate) {
+        Model distinctStatements = ModelFactory.createDefaultModel();
+
+        for (Model model : models) {
+            StmtIterator iter = model.listStatements(subject, predicate, (RDFNode) null);
+            while (iter.hasNext()) {
+                Statement stmt = iter.nextStatement();
+                distinctStatements.add(stmt);
+            }
+        }
+
+        return distinctStatements;
+    }
+
 }
 
 
