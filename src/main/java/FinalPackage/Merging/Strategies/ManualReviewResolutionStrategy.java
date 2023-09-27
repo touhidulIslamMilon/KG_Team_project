@@ -18,6 +18,7 @@ public class ManualReviewResolutionStrategy implements Strategy {
         System.out.println("Conflict Resolution - Manual Review:");
         System.out.println("Subject: " + subject + "\nPredicate: " + predicate);
         int index = 0;
+        
         for (RDFNode object : objects.keySet()) {
             index++;
             System.out.println(index + ". Object: " + object);

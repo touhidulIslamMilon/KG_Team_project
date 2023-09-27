@@ -11,12 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.hadoop.yarn.webapp.hamlet.Hamlet.P;
-import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.rdf.model.*;
-import org.eclipse.rdf4j.model.vocabulary.RDF;
-import org.eclipse.rdf4j.model.vocabulary.XMLSchema;
-import org.gradoop.common.model.impl.properties.PropertyValueUtils.Boolean;
 
 public class SementicResolutionStrategy implements Strategy{
     static Map<String, ResolutionStrategy> strategyMap = new HashMap<>();
@@ -28,7 +23,7 @@ public class SementicResolutionStrategy implements Strategy{
         strategyMap.put("text", ResolutionStrategy.LONG_VALUE);
 
         //integer, number, boolean and decimal only support mean, median, max_value and min_value
-        strategyMap.put("integer", ResolutionStrategy.MEDIAN);
+        strategyMap.put("integer", ResolutionStrategy.MEAN);
         strategyMap.put("number", ResolutionStrategy.MEDIAN);
         strategyMap.put("boolean", ResolutionStrategy.MAX_VALUE);
         strategyMap.put("decimal", ResolutionStrategy.MEAN);
@@ -64,6 +59,7 @@ public class SementicResolutionStrategy implements Strategy{
                 isMean = false;
                 break;
             }
+
             if(Strategy != ResolutionStrategy.MEDIAN ){
                 isMedian = false;
                 break;
