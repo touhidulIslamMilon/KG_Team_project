@@ -1,5 +1,7 @@
 package FinalPackage;
 
+import de.uni_mannheim.informatik.dws.melt.matching_data.TrackRepository;
+import org.apache.jena.ontology.OntModel;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 
@@ -71,6 +73,31 @@ public class LoadRDF {
         }
 
         return modelPriorityMap;
+    }
+
+    public List<Model> readAllTestCases() {
+        List<Model> testModels = new ArrayList<>();
+
+        Model swtorKG = TrackRepository.Knowledgegraph.V4.getTestCase("starwars-swtor").getTargetOntology(OntModel.class);
+        testModels.add(swtorKG);
+
+        Model swgKG = TrackRepository.Knowledgegraph.V4.getTestCase("starwars-swg").getTargetOntology(OntModel.class);
+        testModels.add(swgKG);
+
+        Model marvelKG = TrackRepository.Knowledgegraph.V4.getTestCase("marvelcinematicuniverse-marvel").getTargetOntology(OntModel.class);
+        testModels.add(marvelKG);
+
+        Model mbetaKG = TrackRepository.Knowledgegraph.V4.getTestCase("memoryalpha-memorybeta").getTargetOntology(OntModel.class);
+        testModels.add(mbetaKG);
+
+        Model stexpandedKG = TrackRepository.Knowledgegraph.V4.getTestCase("memoryalpha-stexpanded").getTargetOntology(OntModel.class);
+        testModels.add(stexpandedKG);
+
+        return testModels;
+    }
+
+    public Model readTestCase(String filename) {
+        return TrackRepository.Knowledgegraph.V4.getTestCase(filename).getTargetOntology(OntModel.class);
     }
 
 
