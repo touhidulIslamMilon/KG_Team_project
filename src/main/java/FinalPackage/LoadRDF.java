@@ -75,7 +75,7 @@ public class LoadRDF {
         return modelPriorityMap;
     }
 
-    public List<Model> readAllTestCases() {
+    public static List<Model> readAllTestCases() {
         List<Model> testModels = new ArrayList<>();
 
         Model swtorKG = TrackRepository.Knowledgegraph.V4.getTestCase("starwars-swtor").getTargetOntology(OntModel.class);
@@ -96,7 +96,7 @@ public class LoadRDF {
         return testModels;
     }
 
-    public Model readTestCase(String filename) {
+    public static Model readTestCase(String filename) {
         return TrackRepository.Knowledgegraph.V4.getTestCase(filename).getTargetOntology(OntModel.class);
     }
 
