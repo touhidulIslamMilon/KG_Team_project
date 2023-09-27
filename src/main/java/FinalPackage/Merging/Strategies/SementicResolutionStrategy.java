@@ -42,15 +42,19 @@ public class SementicResolutionStrategy implements Strategy{
     }
     @Override
     public RDFNode resolveConflict(ListMultimap<RDFNode, Integer> objects, Resource subject, Property predicate) {
+
+        //Define the jacabDis. If the jacabDis is lower than 0.2, it could mean it is just a spelling mistake. we will use the manual review strategy
         Double jacabDis = 0.2;
         RDFNode bestNode = ResourceFactory.createResource("");
         boolean isMean = true;
         HelperFunction helperFunction = new HelperFunction();
         boolean isMedian = true;
+
+        // iterate through the objects and check if the type of all the nodes are the same and if the type is mean or median
         for(RDFNode node : objects.keySet()){
             String type = new HelperFunction().objectType(node);
-            // System.out.println("Type: " + type);
             ResolutionStrategy Strategy = strategyMap.get(type);
+
             if(Strategy !=ResolutionStrategy.MEAN && Strategy !=ResolutionStrategy.MEDIAN){
                 isMean = false;
                 isMedian = false;
@@ -65,6 +69,8 @@ public class SementicResolutionStrategy implements Strategy{
                 break;
             }
         }
+
+        // if the type of all the nodes are the same, then  the strategy is mean 
         if(isMean){
             // System.out.println("Mean True");
             try {
@@ -76,34 +82,37 @@ public class SementicResolutionStrategy implements Strategy{
                 e.printStackTrace();
             }
         }
+
+        // if the type of all the nodes are the same, then  the strategy is median
         if(isMedian){
             // System.out.println("Median True");
             System.out.println("Strategy: " + ResolutionStrategy.MEDIAN);
             return helperFunction.getMedianValue(objects, subject, predicate);
             
         }
-        for(RDFNode node : objects.keySet()){
-            System.out.println("Node: " + node.toString()+" Type: "+helperFunction.objectType(node));
-        }
+    
+        // if the strategy is not mean or median, then we will use dwel comparison 
         for (RDFNode key : objects.keySet()) {
             RDFNode node = key;
+
             //if the node is empty, then we will skip it
             if(node.toString().equals("")|| node == null){
                 System.out.println("This node node is empty");
                 continue;
             }
-            //if the best node is empty, then we will use the second node
+
+            //if the best node is empty, then we will use the second node as the best node
             if(bestNode.toString().equals("")|| bestNode == null){
                 bestNode = node;
                 continue;
             }
+
+            // if the jacabDis is lower than 0.2, it could mean it is just a spelling mistake. we will use the manual review strategy
             if (helperFunction.calculateJaccardDistance(node.toString(), bestNode.toString()) > jacabDis) {
                 
-                if(node.isLiteral() && bestNode.isLiteral()|| node.isResource() && bestNode.isResource()){
-                    bestNode = fusenode(node, bestNode, predicate, subject);
-                }else{
-                    bestNode = fusenode(node, bestNode, predicate, subject);
-                }
+                //perform the duel comparison
+                bestNode = fusenode(node, bestNode, predicate, subject);
+                
 
             } else {
                 System.out.println("Jaccard Distance: " + helperFunction.calculateJaccardDistance(node.toString(), bestNode.toString()));
@@ -119,6 +128,28 @@ public class SementicResolutionStrategy implements Strategy{
         return bestNode;
     }
 
+    // This is a method that take two RDFNode and return the node that is more likely to be the correct one
+    public RDFNode fusenode(RDFNode node1, RDFNode node2, Property Predicate, Resource subject) {
+        HelperFunction helperFunction = new HelperFunction();
+        String type1 = helperFunction.objectType(node1);
+        String type2 = helperFunction.objectType(node2);
+        if(strategyMap.get(type1) == strategyMap.get(type2)){
+
+            //if two node have the same Strategy, then we will use the strategy that is specified in the strategyMap
+               return ResolveTwoObject(node1, node2 , Predicate, subject, type1);
+        }else{
+
+            // if two node have different Strategy, then we will use the manual review strategy
+            ListMultimap<RDFNode, Integer> objectForReview = ArrayListMultimap.create();  
+            objectForReview.put(node1, 1);
+            objectForReview.put(node2, 1);  
+            ManualReviewResolutionStrategy manualReviewStrategy = new ManualReviewResolutionStrategy();
+            System.out.println("One of the value is not number.Please select the correct value");
+            return manualReviewStrategy.resolveConflict(objectForReview, subject, Predicate);
+        }
+    }
+
+    // This is a method that calculate the mean value of List of RDFNode
     private RDFNode gerMeanVelue(ListMultimap<RDFNode, Integer> objects, Resource subject, Property predicate) throws ParseException {
         Double sum=0.0;
         for (RDFNode key : objects.keySet()) {
@@ -128,23 +159,9 @@ public class SementicResolutionStrategy implements Strategy{
         }
         return ResourceFactory.createResource(String.valueOf(sum/objects.size()));
     }
-    public RDFNode fusenode(RDFNode node1, RDFNode node2, Property Predicate, Resource subject) {
-        HelperFunction helperFunction = new HelperFunction();
-        String type1 = helperFunction.objectType(node1);
-        String type2 = helperFunction.objectType(node1);
-        if(type1 == type2){
-               return ResolveTwoObject(node1, node2 , Predicate, subject, type1);
-        }else{
-            ListMultimap<RDFNode, Integer> objectForReview = ArrayListMultimap.create();  
-            objectForReview.put(node1, 1);
-            objectForReview.put(node2, 1);  
-            ManualReviewResolutionStrategy manualReviewStrategy = new ManualReviewResolutionStrategy();
-            System.out.println("One of the value is not number.Please select the correct value");
-            return manualReviewStrategy.resolveConflict(objectForReview, subject, Predicate);
-        }
-    }
+   
     
-    //This is a methods that take two RDFNode and return the most recent one
+    //This is a methods that take two RDFNode and return the most likely one
     public RDFNode ResolveTwoObject(RDFNode First, RDFNode Second, Property predicate, Resource subject, String type) {
 
         RDFNode resolvedObject = null;
@@ -172,6 +189,7 @@ public class SementicResolutionStrategy implements Strategy{
                 Double var1 = Double.parseDouble(First.toString());
                 Double var2 = Double.parseDouble(Second.toString());
                 resolvedObject =  model.createTypedLiteral(String.valueOf(helperFunction.min_num(var1, var2)));   
+
             }catch(Exception e){
                 //If the jacabDis is greater than 0.8, it could mean it is just a spelling mistake. we will use the manual review strategy
                 ListMultimap<RDFNode, Integer> objectForReview = ArrayListMultimap.create();  
@@ -228,7 +246,7 @@ public class SementicResolutionStrategy implements Strategy{
             objectForReview.put(First, 1);
             objectForReview.put(Second, 1);  
             ManualReviewResolutionStrategy manualReviewStrategy = new ManualReviewResolutionStrategy();
-            System.out.println("No Strategy Have been Speciried .Please select the correct value");
+            System.out.println("No Strategy Have been Speciried for this value. Please select the correct value");
             resolvedObject = manualReviewStrategy.resolveConflict(objectForReview, subject, predicate);
         }
         return resolvedObject;
