@@ -1,5 +1,6 @@
 package tests;
 
+import FinalPackage.LoadRDF;
 import FinalPackage.analyzeGraph.ConflictFinder;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
