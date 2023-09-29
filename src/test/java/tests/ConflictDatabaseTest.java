@@ -1,22 +1,17 @@
 package tests;
 
 import FinalPackage.LoadRDF;
-import FinalPackage.analyzeGraph.ConflictFinder;
-import FinalPackage.analyzeGraph.ConflictMap;
+import FinalPackage.analyzeGraph.ConflictDatabase;
 import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ModelFactory;
-import org.apache.jena.rdf.model.RDFNode;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-public class ConflictMapTest {
+public class ConflictDatabaseTest {
     public static void main(String[] args) {
         // Create a list of models from RDF files (you can replace this with your own data loading logic)
         List<Model> models = LoadRDF.readAllTestCases();
 
-       /* Model model1 = ModelFactory.createDefaultModel();
+        /*Model model1 = ModelFactory.createDefaultModel();
         model1.read("src/test/testResources/starwars1Test.rdf");
 
         Model model2 = ModelFactory.createDefaultModel();
@@ -33,15 +28,14 @@ public class ConflictMapTest {
         System.out.println("Models loaded");
 
         // Find conflicting statements
-        ConflictMap map = new ConflictMap();
+        ConflictDatabase map = new ConflictDatabase();
         map.findConflicts(models);
-
+        map.printAllConflicts();
+        map.close();
         // Print the conflicts
+        //for (Map.Entry<ConflictFinder.SubjectPredicatePair, List<RDFNode>> entry : conflicts.entrySet()) {
 
 
-        for (Map.Entry<ConflictMap.SubjectPredicatePair, List<RDFNode>> entry : map.getConflicts().entrySet()) {
-            System.out.println("\nSubject: " + entry.getKey().getSubject() + "\nPredicate: " + entry.getKey().getPredicate() + "\nConflicting Objects: " + entry.getValue());
-        }
 
     }
 
