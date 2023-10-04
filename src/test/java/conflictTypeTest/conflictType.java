@@ -11,11 +11,13 @@ import static FinalPackage.analyzeGraph.ConflictFinder.identifyAndPrintConflicts
 
 public class conflictType {
     public static void main(String[] args) {
+
+
         Model model1 = ModelFactory.createDefaultModel();
-        model1.read("src/test/testResources/analysisTest.rdf");
+        model1.read("src/test/testResources/analysisTest11.rdf");
 
         Model model2 = ModelFactory.createDefaultModel();
-        model2.read("src/test/testResources/analysisTest2.rdf");
+        model2.read("src/test/testResources/analysisTest22.rdf");
 
         List<Model> models = new ArrayList<>();
         models.add(model1);

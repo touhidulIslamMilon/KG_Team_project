@@ -19,11 +19,8 @@ public class Main {
             Test for BIGDATA
          */
 
-
         List<Model> listOfModelsToAssess = readAllTestCases();
         Model model1 = listOfModelsToAssess.get(1);
-
-
 
         //Model model1 = LoadRDF.getModel("test1.rdf");
         //model1.write(System.out, "RDF/XML-ABBREV");
@@ -155,20 +152,6 @@ public class Main {
         System.out.println();
 
         //////////////////////////////////////////////////////////////////
-        /*
-        // count predicates per subject
-        System.out.println("Subjects with their respective number of predicates:");
-        Map<Resource, Integer> predicateCountPerSubject = countPredicatesPerSubject(model1);
-
-        // Show the subjects and their predicate count
-        predicateCountPerSubject.entrySet().stream()
-                .sorted(Map.Entry.<Resource, Integer>comparingByValue().reversed()).limit(25)
-                .forEach(entry -> System.out.println("Subject: " + entry.getKey() + ", Predicates count: " + entry.getValue()));
-
-        */
-        System.out.println();
-
-        //////////////////////////////////////////////////////////////////
 
         //number of connected nodes.(it is like clusters)
         List<Set<Resource>> connectedComponents = findConnectedComponents(model1);
@@ -219,39 +202,6 @@ public class Main {
 
         //////////////////////////////////////////////////////////////////
 
-        // counting most frequent objects for the most frequent predicates. UNNECESSARY
-        /*
-        System.out.println("FREQUENCY OF Objects for the most frequent predicates:");
-
-        Map<Property, Integer> predicateFrequencies1 = countPredicateFrequencies(model1);
-
-        // Convert the frequency map entries to a list
-        List<Map.Entry<Property, Integer>> entryList2 = new ArrayList<>(predicateFrequencies1.entrySet());
-
-        // Sort the list in descending order of the values (i.e., frequencies)
-        entryList2.sort(Map.Entry.<Property, Integer>comparingByValue().reversed());
-
-        // For the top three predicates, count and display the frequencies of their objects
-        for (int i = 0; i < Math.min(10, entryList2.size()); i++) {
-            Map.Entry<Property, Integer> entry = entryList2.get(i);
-            Property predicate = entry.getKey();
-            Map<RDFNode, Integer> objectFrequencies = countObjectFrequencies(model1, predicate);
-
-            List<Map.Entry<RDFNode, Integer>> objectList = new ArrayList<>(objectFrequencies.entrySet());
-            objectList.sort(Map.Entry.<RDFNode, Integer>comparingByValue().reversed());
-
-            System.out.println("Predicate: " + predicate);
-            for (int j = 0; j < Math.min(10, objectList.size()); j++) {
-                Map.Entry<RDFNode, Integer> objectEntry = objectList.get(j);
-                System.out.println("    Object: " + objectEntry.getKey() + ", Frequency: " + objectEntry.getValue());
-            }
-        }
-
-        System.out.println();
-
-        //////////////////////////////////////////////////////////////////
-         */
-
         // display functional properties and number of functional predicates
 
         // Adding the model to a list since the original function expects a List<Model>
@@ -277,7 +227,7 @@ public class Main {
 
         //////////////////////////////////////////////////////////////////
 
-        // print the node centrality. Is it useful? TODO: Show it in descending order?
+        // print the node centrality. Is it useful?
         int counter6 =0;
         Map<RDFNode, Integer> sortedCentralityMap = calculateNodeCentrality(model1);
 
