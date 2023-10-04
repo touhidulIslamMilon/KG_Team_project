@@ -241,7 +241,6 @@ public class Analysis {
         //////////////////////////////////////////////////////////////////
 
         // types of nodes and most frequent ones. Display objects of those types as well.
-        //TODO: check why is it not shown
 
         System.out.println("Types ");
         Map<RDFNode, Integer> typeCount4 = countTypesForFrequency(model);
