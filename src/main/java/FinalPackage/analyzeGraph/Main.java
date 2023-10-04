@@ -8,13 +8,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static FinalPackage.LoadRDF.readAllTestCases;
 import static FinalPackage.analyzeGraph.SophisticatedAnalysis.*;
 import static FinalPackage.analyzeGraph.analyzeGraph.*;
 
 public class Main {
     public static void main(String[] args) {
-        Model model1 = LoadRDF.getModel("swtor.rdf");
 
+        /*
+            Test for BIGDATA
+         */
+
+
+        List<Model> listOfModelsToAssess = readAllTestCases();
+        Model model1 = listOfModelsToAssess.get(1);
+
+
+
+        //Model model1 = LoadRDF.getModel("test1.rdf");
         //model1.write(System.out, "RDF/XML-ABBREV");
         //normalizeModel(model1);
 
@@ -268,14 +279,16 @@ public class Main {
 
         // print the node centrality. Is it useful? TODO: Show it in descending order?
         int counter6 =0;
-        Map<RDFNode, Integer> centralityMap = calculateNodeCentrality(model1);
-        System.out.println("Node centrality:");
-        for (Map.Entry<RDFNode, Integer> entry : centralityMap.entrySet()) {
-            if(counter6>=30){
-                break;
-            }
+        Map<RDFNode, Integer> sortedCentralityMap = calculateNodeCentrality(model1);
+
+        // Print the sorted map in a nice way
+        System.out.println("Node Centrality Scores: ");
+        for (Map.Entry<RDFNode, Integer> entry : sortedCentralityMap.entrySet()) {
             System.out.println(entry.getKey() + ": " + entry.getValue());
             counter6++;
+            if(counter6>10){
+                break;
+            }
         }
 
         System.out.println();
@@ -310,18 +323,6 @@ public class Main {
         System.out.println();
 
         //////////////////////////////////////////////////////////////////
-        System.out.println("Graph radius");
-        // Initialize your model here, for instance, read it from a file
-        Model model = ModelFactory.createDefaultModel();
-        // model.read("your_file.rdf");
-
-        // Assuming the functions computeDiameter and computeRadius are static methods in another class called GraphAnalysis
-        int diameter = SophisticatedAnalysis.computeDiameter(model);
-        int radius = SophisticatedAnalysis.computeRadius(model);
-
-        // Print or otherwise use the diameter and radius
-        System.out.println("The diameter of the graph is: " + diameter);
-        System.out.println("The radius of the graph is: " + radius);
 
     }
 }

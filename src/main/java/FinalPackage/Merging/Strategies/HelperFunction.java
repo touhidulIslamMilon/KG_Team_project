@@ -22,7 +22,7 @@ import com.ibm.icu.text.SimpleDateFormat;
 
 public class HelperFunction {
     
-    public String objectType(RDFNode object) {
+    public static String objectType1(RDFNode object) {
         if(object.isLiteral()){
             Literal literal = object.asLiteral();
             String datatypeURI = literal.getDatatypeURI();
@@ -85,7 +85,7 @@ public class HelperFunction {
 
         // Integer detection
         if (integerPattern.matcher(input).matches()) {
-            return "number";
+            return "integer";
         }
         // Date detection
         try {

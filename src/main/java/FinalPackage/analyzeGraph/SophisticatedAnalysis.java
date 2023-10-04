@@ -32,7 +32,15 @@ public class SophisticatedAnalysis {
             centralityMap.put(object, centralityMap.getOrDefault(object, 0) + 1);
         }
 
-        return centralityMap;
+        return centralityMap.entrySet()
+                .stream()
+                .sorted(Map.Entry.<RDFNode, Integer>comparingByValue().reversed())
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (e1, e2) -> e1,
+                        LinkedHashMap::new
+                ));
     }
 
     // get types of graph and display the most frequent ones
@@ -123,6 +131,7 @@ public class SophisticatedAnalysis {
     /////////////////////////////////////////////////////////////////////////////////
 
     //graph analysis
+    /*
     public static Map<Pair<Resource, Resource>, Integer> computeAllShortestPaths(Model model) {
         Map<Pair<Resource, Resource>, Integer> shortestPaths = new HashMap<>();
 
@@ -187,6 +196,8 @@ public class SophisticatedAnalysis {
 
         return radius;
     }
+
+     */
 
 
 

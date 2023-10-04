@@ -1,25 +1,30 @@
 package FinalPackage;
 
 import FinalPackage.Merging.Merger;
+import FinalPackage.analyzeGraph.ConflictFinder;
 import org.apache.jena.rdf.model.*;
 
 import java.util.*;
+
+import static FinalPackage.LoadRDF.readAllTestCases;
+import static FinalPackage.Merging.FunctionalPropertyFinder.findFunctionalProperties;
+import static FinalPackage.analyzeGraph.ConflictFinder.*;
 
 public class Main {
 
     public static void main(String[] args) {
 
-
-        Model model1 = LoadRDF.getModel("starwars1.rdf");
+        /*
+        Model model1 = LoadRDF.getModel("test1.rdf");
         System.out.println("Graph 1");
         model1.write(System.out, "RDF/XML-ABBREV");
 
 
-        Model model2 = LoadRDF.getModel("starwars2.rdf");
+        Model model2 = LoadRDF.getModel("test2.rdf");
         System.out.println("Graph 2");
         model2.write(System.out, "RDF/XML-ABBREV");
 
-        Model model3 = LoadRDF.getModel("starwars3.rdf");
+        Model model3 = LoadRDF.getModel("test3.rdf");
         System.out.println("Graph 3");
         model3.write(System.out, "RDF/XML-ABBREV");
 
@@ -33,11 +38,25 @@ public class Main {
         /*
             Test 4: Merge more than two graphs
         */
+        /*
         List<Model> models = new ArrayList<>();
+
+
         models.add(model1);
         models.add(model2);
         models.add(model3);
+        */
 
+        /*
+            Test conflict types
+         */
+
+
+        List<Model> models = readAllTestCases();
+        findFunctionalProperties(models);
+        identifyAndPrintConflicts(models);
+
+        /*
         Map<Model, Integer> modelPriorities = new HashMap<>();
         modelPriorities.put(model1, 1);
         modelPriorities.put(model2, 2);
@@ -49,7 +68,7 @@ public class Main {
         Model mergedModel = Merger.mergeGraphs(models);
         System.out.println("Merged");
         mergedModel.write(System.out, "RDF/XML-ABBREV");
-
+        */
 
     }
 }
