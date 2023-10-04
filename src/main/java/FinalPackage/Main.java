@@ -1,14 +1,12 @@
 package FinalPackage;
 
-import FinalPackage.Merging.Merger;
-import FinalPackage.analyzeGraph.ConflictFinder;
 import org.apache.jena.rdf.model.*;
 
 import java.util.*;
 
 import static FinalPackage.LoadRDF.readAllTestCases;
 import static FinalPackage.Merging.FunctionalPropertyFinder.findFunctionalProperties;
-import static FinalPackage.analyzeGraph.ConflictFinder.*;
+import static FinalPackage.conflictDetection.ConflictFinder.*;
 
 public class Main {
 

@@ -1,4 +1,4 @@
-package FinalPackage.analyzeGraph;
+package FinalPackage.conflictDetection;
 
 
 import FinalPackage.Merging.FunctionalPropertyFinder;

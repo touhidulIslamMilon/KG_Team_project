@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static FinalPackage.Merging.FunctionalPropertyFinder.findFunctionalProperties;
-import static FinalPackage.analyzeGraph.ConflictFinder.identifyAndPrintConflicts;
+import static FinalPackage.conflictDetection.ConflictFinder.identifyAndPrintConflicts;
 
 public class conflictType {
     public static void main(String[] args) {

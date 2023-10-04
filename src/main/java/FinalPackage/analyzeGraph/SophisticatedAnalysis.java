@@ -55,7 +55,6 @@ public class SophisticatedAnalysis {
             RDFNode type = stmt.getObject();
             typeCount.put(type, typeCount.getOrDefault(type, 0) + 1);
         }
-
         return typeCount;
     }
 
