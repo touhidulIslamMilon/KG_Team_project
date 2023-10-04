@@ -110,7 +110,7 @@ public class ConflictFinder {
         // Printing the occurrence of each type of conflict
         System.out.println("Conflict Types Count:");
         for (Map.Entry<String, Integer> entry : conflictCountMap.entrySet()) {
-            System.out.println(entry.getKey() + ": " + entry.getValue());
+            System.out.println(entry.getKey() + ": " + entry.getValue()/2);
         }
     }
 
