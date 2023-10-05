@@ -40,8 +40,10 @@ public class PriorityBasedResolutionStrategy implements Strategy {
 
         // If manual review is required for objects with the same highest priority, call it
         if (manualReviewRequired) {
-            ManualReviewResolutionStrategy manualReviewStrategy = new ManualReviewResolutionStrategy();
-            result = manualReviewStrategy.resolveConflict(objects, subject, predicate);
+            RandomStrategy randomStrategy = new RandomStrategy();
+            result = randomStrategy.resolveConflict(objects, subject, predicate);
+            /*ManualReviewResolutionStrategy manualReviewStrategy = new ManualReviewResolutionStrategy();
+            result = manualReviewStrategy.resolveConflict(objects, subject, predicate);*/
         }
 
         return result;
