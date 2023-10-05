@@ -82,7 +82,6 @@ public class HelperFunction {
         if (decimalPattern.matcher(input).matches()) {
             return "decimal";
         }
-
         // Integer detection
         if (integerPattern.matcher(input).matches()) {
             return "number";
@@ -223,9 +222,6 @@ public class HelperFunction {
     }
     //create a function that take two sting and return jaccard distance
 
-
-
-
     private static Set<String> tokenize(String str) {
         String[] tokens = str.split("\\s+"); // Tokenize by whitespace
         Set<String> set = new HashSet<>();
@@ -284,6 +280,7 @@ public class HelperFunction {
             return var2.toString().toCharArray();
         }
     }
+
     public RDFNode getMedianValue(ListMultimap<RDFNode, Integer> objects, Resource subject, Property predicate) {
          if (objects == null || objects.isEmpty()) {
             System.out.println("Input map is null or empty");

@@ -73,16 +73,13 @@ public class CustomResolutionStrategy implements Strategy{
             resolvedObject = getMeamValue(objects, subject, predicate);
         }else if(strategy == ResolutionStrategy.MEDIAN){
             HelperFunction helper = new HelperFunction();
-            
             resolvedObject =helper.getMedianValue(objects, subject, predicate);
-
         }else {
             ManualReviewResolutionStrategy strategy1 = new ManualReviewResolutionStrategy();
             resolvedObject = strategy1.resolveConflict(objects, subject, predicate);
         }
         return resolvedObject;
     }
-
 
     private RDFNode getMeamValue(ListMultimap<RDFNode, Integer> objects, Resource subject, Property predicate) {
          if (objects == null || objects.isEmpty()) {

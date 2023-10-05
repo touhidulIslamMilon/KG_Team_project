@@ -16,7 +16,9 @@ import org.apache.jena.rdf.model.*;
 public class SementicResolutionStrategy implements Strategy{
     static Map<String, ResolutionStrategy> strategyMap = new HashMap<>();
     Model model = ModelFactory.createDefaultModel();
+    Boolean spellChek = false;
     static {
+
         //sting uri and text only support long_vale and short value
         strategyMap.put("string", ResolutionStrategy.LONG_VALUE);
         strategyMap.put("uri", ResolutionStrategy.SHORT_VALUE);
@@ -68,26 +70,27 @@ public class SementicResolutionStrategy implements Strategy{
 
         // if the type of all the nodes are the same, then  the strategy is mean 
         if(isMean){
+
             // System.out.println("Mean True");
             try {
                 System.out.println("Strategy: " + ResolutionStrategy.MEAN);
                 return gerMeanVelue(objects, subject, predicate);
 
             } catch (ParseException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+
             }
         }
 
         // if the type of all the nodes are the same, then  the strategy is median
         if(isMedian){
+
             // System.out.println("Median True");
             System.out.println("Strategy: " + ResolutionStrategy.MEDIAN);
             return helperFunction.getMedianValue(objects, subject, predicate);
             
         }
     
-        // if the strategy is not mean or median, then we will use dwel comparison 
+        // if the strategy is not mean or median, then we will use dwel comparison to find the best node
         for (RDFNode key : objects.keySet()) {
             RDFNode node = key;
 
@@ -104,7 +107,7 @@ public class SementicResolutionStrategy implements Strategy{
             }
 
             // if the jacabDis is lower than 0.2, it could mean it is just a spelling mistake. we will use the manual review strategy
-            if (helperFunction.calculateJaccardDistance(node.toString(), bestNode.toString()) > jacabDis) {
+            if (spellChek && helperFunction.calculateJaccardDistance(node.toString(), bestNode.toString()) > jacabDis) {
                 
                 //perform the duel comparison
                 bestNode = fusenode(node, bestNode, predicate, subject);
@@ -112,6 +115,7 @@ public class SementicResolutionStrategy implements Strategy{
 
             } else {
                 System.out.println("Jaccard Distance: " + helperFunction.calculateJaccardDistance(node.toString(), bestNode.toString()));
+
                 //If the jacabDis is greater than 0.8, it could mean it is just a spelling mistake. we will use the manual review strategy
                 ListMultimap<RDFNode, Integer> objectForReview = ArrayListMultimap.create();  
                 objectForReview.put(node, 1);
@@ -165,12 +169,14 @@ public class SementicResolutionStrategy implements Strategy{
         HelperFunction helperFunction = new HelperFunction();
         System.out.println("Strategy: " + Strategy);
         if (Strategy == ResolutionStrategy.MAX_VALUE) {
+
             // System.out.println("Max value");
             try{
                 Double var1 = Double.parseDouble(First.toString());
                 Double var2 = Double.parseDouble(Second.toString());
                 resolvedObject = model.createTypedLiteral(String.valueOf( helperFunction.max_num(var1, var2)));   
             }catch(Exception e){
+
                 //If the jacabDis is greater than 0.8, it could mean it is just a spelling mistake. we will use the manual review strategy
                 ListMultimap<RDFNode, Integer> objectForReview = ArrayListMultimap.create();  
                 objectForReview.put(First, 1);
@@ -180,6 +186,7 @@ public class SementicResolutionStrategy implements Strategy{
                 resolvedObject = manualReviewStrategy.resolveConflict(objectForReview, subject, predicate);
             }
         } else if (Strategy == ResolutionStrategy.MIN_VALUE) {
+
             // System.out.println("Min value");
             try{
                 Double var1 = Double.parseDouble(First.toString());
@@ -187,6 +194,7 @@ public class SementicResolutionStrategy implements Strategy{
                 resolvedObject =  model.createTypedLiteral(String.valueOf(helperFunction.min_num(var1, var2)));   
 
             }catch(Exception e){
+
                 //If the jacabDis is greater than 0.8, it could mean it is just a spelling mistake. we will use the manual review strategy
                 ListMultimap<RDFNode, Integer> objectForReview = ArrayListMultimap.create();  
                 objectForReview.put(First, 1);
@@ -196,16 +204,20 @@ public class SementicResolutionStrategy implements Strategy{
                 resolvedObject = manualReviewStrategy.resolveConflict(objectForReview, subject, predicate);
             }
         } else if(Strategy == ResolutionStrategy.LONG_VALUE){
+
             // System.out.println("Long value");
             resolvedObject = helperFunction.findLongestString(First, Second);
         } else if(Strategy == ResolutionStrategy.SHORT_VALUE){
+
             // System.out.println("Short value");
             resolvedObject = helperFunction.findShortestString(First, Second);
         }else if(Strategy == ResolutionStrategy.RECENT_DATE){
+
             // System.out.println("Recent date");
             try{
                 resolvedObject = model.createTypedLiteral(String.valueOf(helperFunction.findMostRecentDate(First, Second)));   
             }catch(Exception e){
+
                 //If there is a error in Conversion then we will use the manual review strategy
                 ListMultimap<RDFNode, Integer> objectForReview = ArrayListMultimap.create();  
                 objectForReview.put(First, 1);
@@ -215,10 +227,12 @@ public class SementicResolutionStrategy implements Strategy{
                 resolvedObject = manualReviewStrategy.resolveConflict(objectForReview, subject, predicate);
             }
         }else if(Strategy == ResolutionStrategy.OLDEST_DATE){
+
             // System.out.println("Oldest date");
             try{
                 resolvedObject = model.createTypedLiteral(String.valueOf(helperFunction.findMostOldDate(First, Second)));   
             }catch(Exception e){
+
                 //If there is a error in Conversion then we will use the manual review strategy
                 ListMultimap<RDFNode, Integer> objectForReview = ArrayListMultimap.create();  
                 objectForReview.put(First, 1);
@@ -228,6 +242,7 @@ public class SementicResolutionStrategy implements Strategy{
                 resolvedObject = manualReviewStrategy.resolveConflict(objectForReview, subject, predicate);
             }
         }else if(Strategy == ResolutionStrategy.MANUAL_REVIEW){
+
             // System.out.println("Manual review");
             ListMultimap<RDFNode, Integer> objectForReview = ArrayListMultimap.create();  
                 objectForReview.put(First, 1);
@@ -235,8 +250,9 @@ public class SementicResolutionStrategy implements Strategy{
                 ManualReviewResolutionStrategy manualReviewStrategy = new ManualReviewResolutionStrategy();
                 System.out.println("Parsing problem. Please select the correct value");
                 resolvedObject = manualReviewStrategy.resolveConflict(objectForReview, subject, predicate);
-        
+                
         }else {
+
             // System.out.println("Default");
             ListMultimap<RDFNode, Integer> objectForReview = ArrayListMultimap.create();  
             objectForReview.put(First, 1);
