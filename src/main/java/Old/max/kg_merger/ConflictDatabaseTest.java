@@ -1,7 +1,6 @@
-package tests;
+package Old.max.kg_merger;
 
 import FinalPackage.LoadRDF;
-import FinalPackage.analyzeGraph.ConflictDatabase;
 import org.apache.jena.rdf.model.Model;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package FinalPackage.analyzeGraph;
+package Old.max.kg_merger;
 
 import FinalPackage.Merging.FunctionalPropertyFinder;
 import FinalPackage.Merging.ObjectResolution;
