@@ -14,9 +14,9 @@ public class ConflictFinderTest {
 
     public static void main(String[] args) {
         // Create a list of models from RDF files (you can replace this with your own data loading logic)
-        //List<Model> models = LoadRDF.readAllTestCases();
+        List<Model> models = LoadRDF.readAllTestCases();
 
-        Model model1 = ModelFactory.createDefaultModel();
+        /*Model model1 = ModelFactory.createDefaultModel();
         model1.read("src/test/testResources/starwars1Test.rdf");
 
         Model model2 = ModelFactory.createDefaultModel();
@@ -28,7 +28,7 @@ public class ConflictFinderTest {
         List<Model> models = new ArrayList<>();
         models.add(model1);
         models.add(model2);
-        models.add(model3);
+        models.add(model3);*/
 
         System.out.println("Models loaded");
 
@@ -40,6 +40,8 @@ public class ConflictFinderTest {
         for (Map.Entry<ConflictFinder.SubjectPredicatePair, List<RDFNode>> entry : conflicts.entrySet()) {
             System.out.println("\nSubject: " + entry.getKey().getSubject() + "\nPredicate: " + entry.getKey().getPredicate() + "\nConflicting Objects: " + entry.getValue());
         }
+
+        System.out.println("Total Conflicts: " + conflicts.size() + "\n");
 
     }
 
