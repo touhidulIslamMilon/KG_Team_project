@@ -1,0 +1,20 @@
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:sw="http://example.org/starwars/"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#">
+
+    <rdf:Description rdf:about="http://example.org/starwars/character/luke_skywalker">
+        <sw:name rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Luke Skywalker</sw:name>
+        <sw:gender>Male</sw:gender>
+         <sw:is_jedi rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</sw:is_jedi>
+        <sw:species>Human</sw:species>
+        <sw:pl rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">901</sw:pl>
+        <sw:lightsaber_color>Blue</sw:lightsaber_color>
+        <sw:birth_date rdf:datatype="http://www.w3.org/2001/XMLSchema#date">1977-05-25</sw:birth_date>
+        <sw:website rdf:resource="http://example.org/starwars/luke_skywalker" />
+        <sw:pl rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">9010</sw:pl>
+        <sw:exact_datetime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">1977-05-25T10:08:00</sw:exact_datetime>
+        <sw:power_level rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">9000.98</sw:power_level>
+    </rdf:Description>
+    <!-- Other characters unchanged -->
+</rdf:RDF>

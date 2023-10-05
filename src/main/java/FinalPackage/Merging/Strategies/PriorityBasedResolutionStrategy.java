@@ -1,5 +1,6 @@
 package FinalPackage.Merging.Strategies;
 
+import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
@@ -19,31 +20,31 @@ public class PriorityBasedResolutionStrategy implements Strategy {
             }
         }
 
-        RDFNode result = null;
-        boolean manualReviewRequired = false;
+        ListMultimap<RDFNode, Integer> highestPriorityObjects = ArrayListMultimap.create();
 
         for (Map.Entry<RDFNode, Integer> entry : objects.entries()) {
             RDFNode key = entry.getKey();
             int priority = entry.getValue();
 
             if (priority == highestPriority) {
-                // If the priority is the same as the highest priority, add to manual review list
-                manualReviewRequired = true;
-            }
-
-            if (result == null || priority > highestPriority) {
-                result = key;
-                highestPriority = priority;
-                manualReviewRequired = false; // Reset manual review flag if a new highest priority is found
+                highestPriorityObjects.put(key, priority);
             }
         }
 
-        // If manual review is required for objects with the same highest priority, call it
-        if (manualReviewRequired) {
-            ManualReviewResolutionStrategy manualReviewStrategy = new ManualReviewResolutionStrategy();
-            result = manualReviewStrategy.resolveConflict(objects, subject, predicate);
-        }
+        // If there is only one highest-priority object, return it
+        if (highestPriorityObjects.size() == 1) {
+            return highestPriorityObjects.entries().iterator().next().getKey();
+        } else {
+            // If there are multiple highest-priority objects, call other strategies
+            // You can choose one of the following approaches:
 
-        return result;
+            // Approach 1: Randomly select one of the highest-priority objects
+            RandomStrategy randomStrategy = new RandomStrategy();
+            return randomStrategy.resolveConflict(highestPriorityObjects, subject, predicate);
+
+            // Approach 2: Use a manual review strategy
+            // ManualReviewResolutionStrategy manualReviewStrategy = new ManualReviewResolutionStrategy();
+            // return manualReviewStrategy.resolveConflict(highestPriorityObjects, subject, predicate);
+        }
     }
 }

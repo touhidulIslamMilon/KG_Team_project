@@ -49,7 +49,7 @@ public class SementicResolutionStrategy implements Strategy{
 
         // iterate through the objects and check if the type of all the nodes are the same and if the type is mean or median
         for(RDFNode node : objects.keySet()){
-            String type = new HelperFunction().objectType(node);
+            String type = new HelperFunction().objectType1(node);
             ResolutionStrategy Strategy = strategyMap.get(type);
 
             if(Strategy !=ResolutionStrategy.MEAN && Strategy !=ResolutionStrategy.MEDIAN){
@@ -131,8 +131,8 @@ public class SementicResolutionStrategy implements Strategy{
     // This is a method that take two RDFNode and return the node that is more likely to be the correct one
     public RDFNode fusenode(RDFNode node1, RDFNode node2, Property Predicate, Resource subject) {
         HelperFunction helperFunction = new HelperFunction();
-        String type1 = helperFunction.objectType(node1);
-        String type2 = helperFunction.objectType(node2);
+        String type1 = helperFunction.objectType1(node1);
+        String type2 = helperFunction.objectType1(node2);
         if(strategyMap.get(type1) == strategyMap.get(type2)){
 
             //if two node have the same Strategy, then we will use the strategy that is specified in the strategyMap

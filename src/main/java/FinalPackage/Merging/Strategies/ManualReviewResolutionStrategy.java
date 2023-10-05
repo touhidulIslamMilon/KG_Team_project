@@ -1,15 +1,12 @@
 package FinalPackage.Merging.Strategies;
 
+import com.google.common.collect.ListMultimap;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.rdf.model.ResourceFactory;
 
-import com.google.common.collect.ListMultimap;
-
-import java.util.Map;
 import java.util.Scanner;
-
-import org.apache.jena.rdf.model.*;
 
 public class ManualReviewResolutionStrategy implements Strategy {
     @Override
@@ -38,10 +35,14 @@ public class ManualReviewResolutionStrategy implements Strategy {
         }
         if(userChoice == index + 1) {
             System.out.println("Please edit the object manually");
-            return ResourceFactory.createResource(scanner.next());
+            scanner.nextLine();
+            String editedObject = scanner.nextLine();
+            return ResourceFactory.createPlainLiteral(editedObject);
         }
         // Return the selected object based on user choice
         int selectedIndex = userChoice - 1;
         return (RDFNode) objects.keySet().toArray()[selectedIndex];
     }
+
+
 }

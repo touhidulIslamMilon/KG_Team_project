@@ -32,7 +32,15 @@ public class SophisticatedAnalysis {
             centralityMap.put(object, centralityMap.getOrDefault(object, 0) + 1);
         }
 
-        return centralityMap;
+        return centralityMap.entrySet()
+                .stream()
+                .sorted(Map.Entry.<RDFNode, Integer>comparingByValue().reversed())
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (e1, e2) -> e1,
+                        LinkedHashMap::new
+                ));
     }
 
     // get types of graph and display the most frequent ones
@@ -47,7 +55,6 @@ public class SophisticatedAnalysis {
             RDFNode type = stmt.getObject();
             typeCount.put(type, typeCount.getOrDefault(type, 0) + 1);
         }
-
         return typeCount;
     }
 
@@ -119,78 +126,4 @@ public class SophisticatedAnalysis {
             }
         }
     }
-
-    /////////////////////////////////////////////////////////////////////////////////
-
-    //graph analysis
-    public static Map<Pair<Resource, Resource>, Integer> computeAllShortestPaths(Model model) {
-        Map<Pair<Resource, Resource>, Integer> shortestPaths = new HashMap<>();
-
-        // Initialize distances with infinite values and 0 for diagonal
-        for (Resource u : model.listSubjects().toList()) {
-            for (Resource v : model.listSubjects().toList()) {
-                if (u.equals(v)) {
-                    shortestPaths.put(new Pair(u, v), 0);
-                } else {
-                    shortestPaths.put(new Pair(u, v), Integer.MAX_VALUE);
-                }
-            }
-        }
-
-        // Floyd-Warshall algorithm
-        for (Resource k : model.listSubjects().toList()) {
-            for (Resource i : model.listSubjects().toList()) {
-                for (Resource j : model.listSubjects().toList()) {
-                    int distIJ = shortestPaths.get(new Pair(i, j));
-                    int distIK = shortestPaths.get(new Pair(i, k));
-                    int distKJ = shortestPaths.get(new Pair(k, j));
-
-                    if (distIK + distKJ < distIJ) {
-                        shortestPaths.put(new Pair(i, j), distIK + distKJ);
-                    }
-                }
-            }
-        }
-
-        return shortestPaths;
-    }
-
-    public static int computeDiameter(Model model) {
-        Map<Pair<Resource, Resource>, Integer> shortestPaths = computeAllShortestPaths(model);
-        int diameter = 0;
-
-        for (Integer distance : shortestPaths.values()) {
-            if (distance > diameter) {
-                diameter = distance;
-            }
-        }
-
-        return diameter;
-    }
-
-    public static int computeRadius(Model model) {
-        Map<Pair<Resource, Resource>, Integer> shortestPaths = computeAllShortestPaths(model);
-        int radius = Integer.MAX_VALUE;
-
-        for (Resource node : model.listSubjects().toList()) {
-            int eccentricity = 0;
-            for (Resource otherNode : model.listSubjects().toList()) {
-                int distance = shortestPaths.get(new Pair(node, otherNode));
-                if (distance > eccentricity) {
-                    eccentricity = distance;
-                }
-            }
-            if (eccentricity < radius) {
-                radius = eccentricity;
-            }
-        }
-
-        return radius;
-    }
-
-
-
-
-
-
 }

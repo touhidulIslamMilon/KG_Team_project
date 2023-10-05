@@ -1,0 +1,20 @@
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:sw="http://example.org/starwars/"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#">
+
+    <rdf:Description rdf:about="http://example.org/starwars/character/luke_skywalker">
+        <sw:name rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Luke</sw:name> <!-- Conflict -->
+        <sw:gender>Female</sw:gender> <!-- Conflict -->
+        <sw:species>Alien</sw:species> <!-- Conflict -->
+        <sw:is_jedi rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</sw:is_jedi>
+        <sw:lightsaber_color>Green</sw:lightsaber_color> <!-- Conflict -->
+        <sw:birth_date rdf:datatype="http://www.w3.org/2001/XMLSchema#date">25.05.1977</sw:birth_date> <!-- Conflict -->
+        <sw:website rdf:resource="http://example.com/different_luke" /> <!-- Conflict -->
+        <sw:power_level rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">9000.01</sw:power_level> <!-- Conflict -->
+        <sw:pl rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">800001</sw:pl>
+        <sw:exact_time rdf:datatype="http://www.w3.org/2001/XMLSchema#time">10:09:00</sw:exact_time> <!-- New type -->
+        <sw:exact_datetime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">1977-05-25T10:09:00</sw:exact_datetime> <!-- New type -->
+    </rdf:Description>
+    <!-- Other characters unchanged -->
+</rdf:RDF>

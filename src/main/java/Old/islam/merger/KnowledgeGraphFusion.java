@@ -1,5 +1,5 @@
 package Old.islam.merger;
-import FinalPackage.Merging.Strategies.fusionStrategy;
+//import FinalPackage.Merging.Strategies.fusionStrategy;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
 import org.apache.jena.rdf.model.Model;
@@ -51,7 +51,7 @@ public class KnowledgeGraphFusion {
                 System.out.println(stmt);
 
                 //!SECTION conflict management goes here
-                fusionStrategy fusionStrategy = new fusionStrategy();
+                //fusionStrategy fusionStrategy = new fusionStrategy();
                 /*RDFNode res = fusionStrategy.resolvePredicateConflict(statement.getObject(),stmt.getObject());
                 
                 System.out.println(res);

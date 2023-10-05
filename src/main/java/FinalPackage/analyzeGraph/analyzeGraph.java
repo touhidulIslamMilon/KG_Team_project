@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 
 
 public class analyzeGraph {
+
     public static Set<Property> numberOfPredicates(Model model) {
         // Create a set to store unique predicates
         Set<Property> uniquePredicates = new HashSet<>();
@@ -160,12 +161,10 @@ public class analyzeGraph {
             RDFNode object = stmt.getObject();
 
             if (object.isLiteral()) {
-                String literalString = object.asLiteral().getString();
-                Matcher dateMatcher = DATE_PATTERN.matcher(literalString);
-
-                if (dateMatcher.matches()) {
+                Literal literal = object.asLiteral();
+                String datatypeURI = literal.getDatatypeURI();
+                if (datatypeURI.equals("http://www.w3.org/2001/XMLSchema#date"))
                     datePredicates.add(stmt.getPredicate());
-                }
             }
         }
         return datePredicates;

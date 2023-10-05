@@ -1,7 +1,6 @@
 package FinalPackage.Merging;
 
-import FinalPackage.Merging.Strategies.PriorityBasedResolutionStrategy;
-import FinalPackage.Merging.Strategies.Strategies;
+import FinalPackage.Merging.Strategies.*;
 import com.google.common.collect.ListMultimap;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
@@ -14,7 +13,7 @@ public class ConflictResolution {
      */
     public static RDFNode resolveConflict(ListMultimap<RDFNode, Integer> objects, Resource subject, Property predicate){
 
-        Strategies strategy = new Strategies(new PriorityBasedResolutionStrategy());
+        Strategies strategy = new Strategies(new RandomStrategy());
         return strategy.mergeObjects(objects, subject, predicate);
     }
 

@@ -1,6 +1,5 @@
-package FinalPackage.analyzeGraph;
+package analysisTest;
 
-import FinalPackage.LoadRDF;
 import org.apache.jena.rdf.model.*;
 
 import java.util.ArrayList;
@@ -8,34 +7,42 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static FinalPackage.LoadRDF.getModel;
+import static FinalPackage.LoadRDF.readAllTestCases;
 import static FinalPackage.analyzeGraph.SophisticatedAnalysis.*;
+import static FinalPackage.analyzeGraph.SophisticatedAnalysis.showPredicatesAndObjects2;
 import static FinalPackage.analyzeGraph.analyzeGraph.*;
 
-public class Main {
+public class Analysis {
     public static void main(String[] args) {
-        Model model1 = LoadRDF.getModel("swtor.rdf");
+        /*
+            Test for BIGDATA
+         */
 
+        Model model = ModelFactory.createDefaultModel();
+        model.read("src/test/testResources/analysisTest1.rdf");
+
+
+        List<Model> models = new ArrayList<>();
+        models.add(model);
+
+        //Model model1 = LoadRDF.getModel("test1.rdf");
         //model1.write(System.out, "RDF/XML-ABBREV");
         //normalizeModel(model1);
 
         //number of statements
-        System.out.println("Number of statements:" + model1.size());
+        System.out.println("Number of statements:" + models.get(0).size());
 
         System.out.println();
 
         //number of subjects
-        int numberOfSubjects = numberOfSubjects(model1).size();
+        int numberOfSubjects = numberOfSubjects(model).size();
         System.out.println("Number of subjects:" + numberOfSubjects);
 
         // show those subjects, only for usage with small graphs
         System.out.println("Subjects: ");
-        int counter = 0;
-        for(Resource r : numberOfSubjects(model1)) {
-            if (counter >= 10) {
-                break;
-            }
+        for(Resource r : numberOfSubjects(model)) {
             System.out.println(r);
-            counter++;
         }
 
         System.out.println();
@@ -43,12 +50,12 @@ public class Main {
         //////////////////////////////////////////////////////////////////
 
         //number of unique predicates
-        int numberOfPredicates = numberOfPredicates(model1).size();
+        int numberOfPredicates = numberOfPredicates(model).size();
         System.out.println("Number of predicates:" + numberOfPredicates);
 
         // show those predicates
         int counter1 = 0;
-        Set<Property> uniquePredicates = numberOfPredicates(model1);
+        Set<Property> uniquePredicates = numberOfPredicates(model);
         System.out.println("Unique predicates:");
         for(Property r:uniquePredicates){
             if(counter1 >= 10){
@@ -63,7 +70,7 @@ public class Main {
         //////////////////////////////////////////////////////////////////
 
         //number of objects
-        int numberOfObjects = numberOfObjects(model1).size();
+        int numberOfObjects = numberOfObjects(model).size();
         System.out.println("Number of unique objects:" + numberOfObjects);
 
         System.out.println();
@@ -71,12 +78,12 @@ public class Main {
         //////////////////////////////////////////////////////////////////
 
         // number of subjects with resource as the object
-        int numberOfSubWithResourceObj = countSubjectsWithResourceObjects(model1).size();
+        int numberOfSubWithResourceObj = countSubjectsWithResourceObjects(model).size();
         System.out.println("Number of subjects with resources as objects:" + numberOfSubWithResourceObj);
 
         // Show those subjects
         int counter2 = 0;
-        Set<Resource> subjectsWithResourceAsObjects = countSubjectsWithResourceObjects(model1);
+        Set<Resource> subjectsWithResourceAsObjects = countSubjectsWithResourceObjects(model);
         System.out.println("Subjects which have resource as an object:");
         for(Resource r:subjectsWithResourceAsObjects){
             if(counter2 >= 10){
@@ -91,12 +98,12 @@ public class Main {
         //////////////////////////////////////////////////////////////////
 
         //number of numeric predicates
-        int numberOfNumericPredicates = countNumericPredicates(model1).size();
+        int numberOfNumericPredicates = countNumericPredicates(model).size();
         System.out.println("Number of numeric predicates:" + numberOfNumericPredicates);
 
         //show numeric predicates.
         int counter3=0;
-        Set<Property> numericPredicates = countNumericPredicates(model1);
+        Set<Property> numericPredicates = countNumericPredicates(model);
         System.out.println("numeric predicates");
         for (Property p : numericPredicates) {
             if(counter3 >= 10){
@@ -111,12 +118,12 @@ public class Main {
         //////////////////////////////////////////////////////////////////
 
         // number of literal predicates
-        int numberOfLiteralPredicates = countStringPredicates(model1).size();
+        int numberOfLiteralPredicates = countStringPredicates(model).size();
         System.out.println("Number of literal predicates:" + numberOfLiteralPredicates);
 
         //show literal predicates.
         int counter4=0;
-        Set<Property> literalPredicates = countStringPredicates(model1);
+        Set<Property> literalPredicates = countStringPredicates(model);
         System.out.println("literal predicates");
         for (Property p : literalPredicates) {
             if(counter4>=10){
@@ -132,7 +139,7 @@ public class Main {
 
         //number of properties with type date
 
-        Set<Property> dateProperties = getDatePredicates(model1);
+        Set<Property> dateProperties = getDatePredicates(model);
         System.out.println("Number of date predicates:" + dateProperties.size());
 
         // show date predicates
@@ -144,23 +151,9 @@ public class Main {
         System.out.println();
 
         //////////////////////////////////////////////////////////////////
-        /*
-        // count predicates per subject
-        System.out.println("Subjects with their respective number of predicates:");
-        Map<Resource, Integer> predicateCountPerSubject = countPredicatesPerSubject(model1);
-
-        // Show the subjects and their predicate count
-        predicateCountPerSubject.entrySet().stream()
-                .sorted(Map.Entry.<Resource, Integer>comparingByValue().reversed()).limit(25)
-                .forEach(entry -> System.out.println("Subject: " + entry.getKey() + ", Predicates count: " + entry.getValue()));
-
-        */
-        System.out.println();
-
-        //////////////////////////////////////////////////////////////////
 
         //number of connected nodes.(it is like clusters)
-        List<Set<Resource>> connectedComponents = findConnectedComponents(model1);
+        List<Set<Resource>> connectedComponents = findConnectedComponents(model);
         System.out.println("Connected nodes:"+connectedComponents.size());
 
         // show those connected nodes
@@ -190,7 +183,7 @@ public class Main {
         // frequency of predicates in descending order.
 
         System.out.println("frequency of predicates:");
-        Map<Property, Integer> predicateFrequencies = countPredicateFrequencies(model1);
+        Map<Property, Integer> predicateFrequencies = countPredicateFrequencies(model);
 
         // Convert the frequency map entries to a list
         List<Map.Entry<Property, Integer>> entryList = new ArrayList<>(predicateFrequencies.entrySet());
@@ -208,48 +201,16 @@ public class Main {
 
         //////////////////////////////////////////////////////////////////
 
-        // counting most frequent objects for the most frequent predicates. UNNECESSARY
-        /*
-        System.out.println("FREQUENCY OF Objects for the most frequent predicates:");
-
-        Map<Property, Integer> predicateFrequencies1 = countPredicateFrequencies(model1);
-
-        // Convert the frequency map entries to a list
-        List<Map.Entry<Property, Integer>> entryList2 = new ArrayList<>(predicateFrequencies1.entrySet());
-
-        // Sort the list in descending order of the values (i.e., frequencies)
-        entryList2.sort(Map.Entry.<Property, Integer>comparingByValue().reversed());
-
-        // For the top three predicates, count and display the frequencies of their objects
-        for (int i = 0; i < Math.min(10, entryList2.size()); i++) {
-            Map.Entry<Property, Integer> entry = entryList2.get(i);
-            Property predicate = entry.getKey();
-            Map<RDFNode, Integer> objectFrequencies = countObjectFrequencies(model1, predicate);
-
-            List<Map.Entry<RDFNode, Integer>> objectList = new ArrayList<>(objectFrequencies.entrySet());
-            objectList.sort(Map.Entry.<RDFNode, Integer>comparingByValue().reversed());
-
-            System.out.println("Predicate: " + predicate);
-            for (int j = 0; j < Math.min(10, objectList.size()); j++) {
-                Map.Entry<RDFNode, Integer> objectEntry = objectList.get(j);
-                System.out.println("    Object: " + objectEntry.getKey() + ", Frequency: " + objectEntry.getValue());
-            }
-        }
-
-        System.out.println();
-
-        //////////////////////////////////////////////////////////////////
-         */
-
         // display functional properties and number of functional predicates
 
         // Adding the model to a list since the original function expects a List<Model>
-        List<Model> models = new ArrayList<>();
-        models.add(model1);
 
         // Get the functional properties sorted in descending order
         List<Property> sortedFunctionalProperties = getFunctionalPropertiesInDescOrder(models);
 
+        // Count and display the number of functional properties
+        int numOfFunctionalProperties = sortedFunctionalProperties.size();
+        System.out.println("Number of Functional Properties: " + numOfFunctionalProperties);
         // Display the sorted functional properties
         System.out.println("Functional Properties in Descending Order:");
         for (Property property : sortedFunctionalProperties) {
@@ -258,24 +219,21 @@ public class Main {
 
         System.out.println();
 
-        // Count and display the number of functional properties
-        int numOfFunctionalProperties = sortedFunctionalProperties.size();
-        System.out.println("Number of Functional Properties: " + numOfFunctionalProperties);
-
-        System.out.println();
 
         //////////////////////////////////////////////////////////////////
 
-        // print the node centrality. Is it useful? TODO: Show it in descending order?
+        // print the node centrality. Is it useful?
         int counter6 =0;
-        Map<RDFNode, Integer> centralityMap = calculateNodeCentrality(model1);
-        System.out.println("Node centrality:");
-        for (Map.Entry<RDFNode, Integer> entry : centralityMap.entrySet()) {
-            if(counter6>=30){
-                break;
-            }
+        Map<RDFNode, Integer> sortedCentralityMap = calculateNodeCentrality(model);
+
+        // Print the sorted map in a nice way
+        System.out.println("Node Centrality Scores: ");
+        for (Map.Entry<RDFNode, Integer> entry : sortedCentralityMap.entrySet()) {
             System.out.println(entry.getKey() + ": " + entry.getValue());
             counter6++;
+            if(counter6>10){
+                break;
+            }
         }
 
         System.out.println();
@@ -283,16 +241,17 @@ public class Main {
         //////////////////////////////////////////////////////////////////
 
         // types of nodes and most frequent ones. Display objects of those types as well.
+
         System.out.println("Types ");
-        Map<RDFNode, Integer> typeCount1 = countTypesForFrequency(model1);
-        showTopTypesAndObjects(model1, typeCount1, 10, 3);
+        Map<RDFNode, Integer> typeCount4 = countTypesForFrequency(model);
+        showTopTypesAndObjects(model, typeCount4, 10, 3);
 
         System.out.println();
 
         //////////////////////////////////////////////////////////////////
 
         //predicates with resource as objects
-        Set<Property> predicatesWithResourceAsObjects = countPredicatesWithResourceObjects(model1);
+        Set<Property> predicatesWithResourceAsObjects = countPredicatesWithResourceObjects(model);
         System.out.println("Predicates with resource as objects:");
         for (Property property : predicatesWithResourceAsObjects) {
             System.out.println("Predicate:"+ property);
@@ -305,23 +264,10 @@ public class Main {
         //show predicates and their objects which are presented in descending order
 
         System.out.println("Predicates and their objects");
-        showPredicatesAndObjects2(model1);
+        showPredicatesAndObjects2(model);
 
         System.out.println();
 
         //////////////////////////////////////////////////////////////////
-        System.out.println("Graph radius");
-        // Initialize your model here, for instance, read it from a file
-        Model model = ModelFactory.createDefaultModel();
-        // model.read("your_file.rdf");
-
-        // Assuming the functions computeDiameter and computeRadius are static methods in another class called GraphAnalysis
-        int diameter = SophisticatedAnalysis.computeDiameter(model);
-        int radius = SophisticatedAnalysis.computeRadius(model);
-
-        // Print or otherwise use the diameter and radius
-        System.out.println("The diameter of the graph is: " + diameter);
-        System.out.println("The radius of the graph is: " + radius);
-
     }
 }

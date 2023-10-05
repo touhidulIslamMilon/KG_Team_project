@@ -1,0 +1,28 @@
+<rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:sw="http://example.org/starwars/">
+
+    <rdf:Description rdf:about="http://example.org/starwars/character/luke_skywalker">
+        <sw:name rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Luke Skywalker</sw:name>
+        <sw:gender rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Male</sw:gender>
+        <sw:species rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Yoda's species</sw:species>
+        <sw:lightsaber_color rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Blue</sw:lightsaber_color>
+        <sw:birth_date rdf:datatype="http://www.w3.org/2001/XMLSchema#date">1977-05-26</sw:birth_date>
+        <sw:website rdf:resource="http://example.org/starwars/luke_skywalker1" />
+        <sw:pl rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">9012</sw:pl>
+        <sw:exact_datetime rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">1977-05-25T10:09:00</sw:exact_datetime>
+        <sw:power_level rdf:datatype="http://www.w3.org/2001/XMLSchema#decimal">9000.99</sw:power_level>
+    </rdf:Description>
+
+    <rdf:Description rdf:about="http://example.org/starwars/character/obi_wan_kenobi">
+        <sw:name rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Obi Wan Kenobi</sw:name>
+        <sw:isHuman rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</sw:isHuman>
+        <sw:exact_time rdf:datatype="http://www.w3.org/2001/XMLSchema#dateTime">10:09:00</sw:exact_time>
+    </rdf:Description>
+
+    <rdf:Description rdf:about="http://example.org/starwars/character/yoda">
+        <sw:name>Yoda</sw:name>
+        <sw:gender rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Male</sw:gender>
+        <sw:species rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Yoda's species</sw:species>
+        <sw:lightsaber_color rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Green</sw:lightsaber_color>
+    </rdf:Description>
+</rdf:RDF>

@@ -1,0 +1,12 @@
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:sw="http://example.org/starwars/"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#">
+
+    <rdf:Description rdf:about="http://example.org/starwars/character/obi_wan_kenobi">
+        <sw:pl rdf:datatype="http://www.w3.org/2001/XMLSchema#integer">801</sw:pl>
+        <sw:is_jedi rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</sw:is_jedi>
+        <sw:exact_time rdf:datatype="http://www.w3.org/2001/XMLSchema#time">10:10:00</sw:exact_time>
+    </rdf:Description>
+    <!-- Other characters unchanged -->
+</rdf:RDF>
