@@ -6,7 +6,7 @@ import java.util.*;
 
 import static FinalPackage.analyzeGraph.analyzeGraph.*;
 import static FinalPackage.Old.normlaisationFunctions.normalizeModel;
-import static FinalPackage.graphComparison.graphComparison.*;
+//import static FinalPackage.graphComparison.graphComparison.*;
 
 public class Main {
     public static void main(String[] args) {

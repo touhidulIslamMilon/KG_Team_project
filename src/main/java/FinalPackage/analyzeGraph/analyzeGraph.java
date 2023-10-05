@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 
 
 public class analyzeGraph {
+
     public static Set<Property> numberOfPredicates(Model model) {
         // Create a set to store unique predicates
         Set<Property> uniquePredicates = new HashSet<>();
