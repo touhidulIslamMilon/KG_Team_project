@@ -35,6 +35,8 @@ public class FrequencyAndPriorityBaseStrategy implements Strategy {
                 // to resolve the conflict
                 ManualReviewResolutionStrategy manualReviewStrategy = new ManualReviewResolutionStrategy();
                 highestWeightedNode = manualReviewStrategy.resolveConflict(objects, subject, predicate);
+
+
             }
         }
 

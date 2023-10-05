@@ -5,6 +5,7 @@ import org.apache.jena.rdf.model.*;
 
 import java.util.*;
 
+import static FinalPackage.LoadRDF.getModel;
 import static FinalPackage.LoadRDF.readAllTestCases;
 import static FinalPackage.Merging.FunctionalPropertyFinder.findFunctionalProperties;
 import static FinalPackage.analyzeGraph.SophisticatedAnalysis.*;
@@ -53,8 +54,8 @@ public class Main {
             Test conflict types
          */
 
-
         List<Model> models = readAllTestCases();
+        //Model mergedModel=models.get(0);
         Model mergedModel = Merger.mergeGraphs(models);
         //number of statements
         System.out.println("Number of statements:" + mergedModel.size());
@@ -67,8 +68,14 @@ public class Main {
 
         // show those subjects, only for usage with small graphs
         System.out.println("Subjects: ");
+        int counter = 0;
         for(Resource r : numberOfSubjects(mergedModel)) {
+            if(counter >= 10){
+                break;
+            }
+            counter++;
             System.out.println(r);
+
         }
 
         System.out.println();
@@ -185,7 +192,7 @@ public class Main {
         // show those connected nodes
         System.out.println("Components and their nodes");
         int maxComponentsToShow = connectedComponents.size();  // Show all components
-        int maxNodesToShow = 10;  // Limit to the first 10 nodes per component
+        int maxNodesToShow = 15;  // Limit to the first 10 nodes per component
 
         for (int i = 0; i < maxComponentsToShow; i++) {
             Set<Resource> component = connectedComponents.get(i);
@@ -232,6 +239,7 @@ public class Main {
         // Adding the model to a list since the original function expects a List<Model>
 
         // Get the functional properties sorted in descending order
+
         List<Property> sortedFunctionalProperties = getFunctionalPropertiesInDescOrder(models);
 
         // Count and display the number of functional properties
@@ -239,9 +247,16 @@ public class Main {
         System.out.println("Number of Functional Properties: " + numOfFunctionalProperties);
         // Display the sorted functional properties
         System.out.println("Functional Properties in Descending Order:");
+        int counter7 =0;
         for (Property property : sortedFunctionalProperties) {
+            if(counter7>=10){
+                break;
+            }
             System.out.println(property);
+            counter7++;
         }
+
+
 
         System.out.println();
 

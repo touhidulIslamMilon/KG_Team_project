@@ -161,12 +161,10 @@ public class analyzeGraph {
             RDFNode object = stmt.getObject();
 
             if (object.isLiteral()) {
-                String literalString = object.asLiteral().getString();
-                Matcher dateMatcher = DATE_PATTERN.matcher(literalString);
-
-                if (dateMatcher.matches()) {
+                Literal literal = object.asLiteral();
+                String datatypeURI = literal.getDatatypeURI();
+                if (datatypeURI.equals("http://www.w3.org/2001/XMLSchema#date"))
                     datePredicates.add(stmt.getPredicate());
-                }
             }
         }
         return datePredicates;
