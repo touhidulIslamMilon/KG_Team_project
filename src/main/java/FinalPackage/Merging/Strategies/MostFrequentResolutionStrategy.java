@@ -33,8 +33,10 @@ public class MostFrequentResolutionStrategy implements Strategy {
             }else if(weightedCount == highestWeight){
                 // If the priority is the same, then we will use the manual review strategy
                 // to resolve the conflict
-                ManualReviewResolutionStrategy manualReviewStrategy = new ManualReviewResolutionStrategy();
-                highestWeightedNode = manualReviewStrategy.resolveConflict(objects, subject, predicate);
+                // ManualReviewResolutionStrategy manualReviewStrategy = new ManualReviewResolutionStrategy();
+                // highestWeightedNode = manualReviewStrategy.resolveConflict(objects, subject, predicate);
+                RandomStrategy randomStrategy = new RandomStrategy();
+                highestWeightedNode = randomStrategy.resolveConflict(objects, subject, predicate);
             }
         }
 
