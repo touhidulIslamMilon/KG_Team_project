@@ -294,9 +294,11 @@ public class HelperFunction {
             try {
                 allValues.add(Double.parseDouble(value.toString()) );
             } catch (Exception e) {
-                ManualReviewResolutionStrategy strategy1 = new ManualReviewResolutionStrategy();
-                System.out.println("The value is not Number");
-                return strategy1.resolveConflict(objects, subject, predicate);
+                // ManualReviewResolutionStrategy strategy1 = new ManualReviewResolutionStrategy();
+                // System.out.println("The value is not Number");
+                // return strategy1.resolveConflict(objects, subject, predicate);
+                DefaultStratigy defaultStratigy = new DefaultStratigy();
+                return defaultStratigy.resolveConflict(objects, subject, predicate);
             }
         }
         // Sort the list in ascending order

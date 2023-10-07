@@ -20,8 +20,10 @@ public class MostOldestResolutionStrategy  implements Strategy{
         } catch (Exception e) {
 
             //if conversion to date fails, use manual review
-            ManualReviewResolutionStrategy manualReview = new ManualReviewResolutionStrategy();
-            return manualReview.resolveConflict(objects, subject, predicate);
+            // ManualReviewResolutionStrategy manualReview = new ManualReviewResolutionStrategy();
+            // return manualReview.resolveConflict(objects, subject, predicate);
+            DefaultStratigy defaultStratigy = new DefaultStratigy();
+            return defaultStratigy.resolveConflict(objects, subject, predicate);
         }
 
         for (Map.Entry<RDFNode, Date> entry : nodeCreationMap.entrySet()) {

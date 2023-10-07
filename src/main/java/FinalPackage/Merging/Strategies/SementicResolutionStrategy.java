@@ -120,9 +120,11 @@ public class SementicResolutionStrategy implements Strategy{
                 ListMultimap<RDFNode, Integer> objectForReview = ArrayListMultimap.create();  
                 objectForReview.put(node, 1);
                 objectForReview.put(bestNode, 1);  
-                ManualReviewResolutionStrategy manualReviewStrategy = new ManualReviewResolutionStrategy();
-                System.out.println("Both object have slightly different value.It could be spelling mistake Please select the correct value");
-                bestNode = manualReviewStrategy.resolveConflict(objectForReview, subject, predicate);
+                // ManualReviewResolutionStrategy manualReviewStrategy = new ManualReviewResolutionStrategy();
+                // System.out.println("Both object have slightly different value.It could be spelling mistake Please select the correct value");
+                // bestNode = manualReviewStrategy.resolveConflict(objectForReview, subject, predicate);
+                DefaultStratigy defaultStratigy = new DefaultStratigy();
+                return defaultStratigy.resolveConflict(objectForReview, subject, predicate);
             }
         }
         return bestNode;
@@ -143,9 +145,11 @@ public class SementicResolutionStrategy implements Strategy{
             ListMultimap<RDFNode, Integer> objectForReview = ArrayListMultimap.create();  
             objectForReview.put(node1, 1);
             objectForReview.put(node2, 1);  
-            ManualReviewResolutionStrategy manualReviewStrategy = new ManualReviewResolutionStrategy();
-            System.out.println("One of the value is not number.Please select the correct value");
-            return manualReviewStrategy.resolveConflict(objectForReview, subject, Predicate);
+            // ManualReviewResolutionStrategy manualReviewStrategy = new ManualReviewResolutionStrategy();
+            // System.out.println("One of the value is not number.Please select the correct value");
+            // return manualReviewStrategy.resolveConflict(objectForReview, subject, Predicate);
+            DefaultStratigy defaultStratigy = new DefaultStratigy();
+            return defaultStratigy.resolveConflict(objectForReview, subject, Predicate);
         }
     }
 
@@ -181,9 +185,11 @@ public class SementicResolutionStrategy implements Strategy{
                 ListMultimap<RDFNode, Integer> objectForReview = ArrayListMultimap.create();  
                 objectForReview.put(First, 1);
                 objectForReview.put(Second, 1);  
-                ManualReviewResolutionStrategy manualReviewStrategy = new ManualReviewResolutionStrategy();
-                System.out.println("One of the value is not number.Please select the correct value");
-                resolvedObject = manualReviewStrategy.resolveConflict(objectForReview, subject, predicate);
+                // ManualReviewResolutionStrategy manualReviewStrategy = new ManualReviewResolutionStrategy();
+                // System.out.println("One of the value is not number.Please select the correct value");
+                // resolvedObject = manualReviewStrategy.resolveConflict(objectForReview, subject, predicate);
+                DefaultStratigy defaultStratigy = new DefaultStratigy();
+                return defaultStratigy.resolveConflict(objectForReview, subject, predicate);
             }
         } else if (Strategy == ResolutionStrategy.MIN_VALUE) {
 
@@ -199,9 +205,12 @@ public class SementicResolutionStrategy implements Strategy{
                 ListMultimap<RDFNode, Integer> objectForReview = ArrayListMultimap.create();  
                 objectForReview.put(First, 1);
                 objectForReview.put(Second, 1);  
-                ManualReviewResolutionStrategy manualReviewStrategy = new ManualReviewResolutionStrategy();
-                System.out.println("One of the value is not number.Please select the correct value");
-                resolvedObject = manualReviewStrategy.resolveConflict(objectForReview, subject, predicate);
+                // ManualReviewResolutionStrategy manualReviewStrategy = new ManualReviewResolutionStrategy();
+                // System.out.println("One of the value is not number.Please select the correct value");
+                // resolvedObject = manualReviewStrategy.resolveConflict(objectForReview, subject, predicate);
+
+                DefaultStratigy defaultStratigy = new DefaultStratigy();
+            return defaultStratigy.resolveConflict(objectForReview, subject, predicate);
             }
         } else if(Strategy == ResolutionStrategy.LONG_VALUE){
 
@@ -222,9 +231,11 @@ public class SementicResolutionStrategy implements Strategy{
                 ListMultimap<RDFNode, Integer> objectForReview = ArrayListMultimap.create();  
                 objectForReview.put(First, 1);
                 objectForReview.put(Second, 1);  
-                ManualReviewResolutionStrategy manualReviewStrategy = new ManualReviewResolutionStrategy();
-                System.out.println("One of the value is not Date.Please select the correct value");
-                resolvedObject = manualReviewStrategy.resolveConflict(objectForReview, subject, predicate);
+                // ManualReviewResolutionStrategy manualReviewStrategy = new ManualReviewResolutionStrategy();
+                // System.out.println("One of the value is not Date.Please select the correct value");
+                // resolvedObject = manualReviewStrategy.resolveConflict(objectForReview, subject, predicate);
+                DefaultStratigy defaultStratigy = new DefaultStratigy();
+            return defaultStratigy.resolveConflict(objectForReview, subject, predicate);
             }
         }else if(Strategy == ResolutionStrategy.OLDEST_DATE){
 
@@ -237,9 +248,11 @@ public class SementicResolutionStrategy implements Strategy{
                 ListMultimap<RDFNode, Integer> objectForReview = ArrayListMultimap.create();  
                 objectForReview.put(First, 1);
                 objectForReview.put(Second, 1);  
-                ManualReviewResolutionStrategy manualReviewStrategy = new ManualReviewResolutionStrategy();
-                System.out.println("One of the value is not Date.Please select the correct value");
-                resolvedObject = manualReviewStrategy.resolveConflict(objectForReview, subject, predicate);
+                // ManualReviewResolutionStrategy manualReviewStrategy = new ManualReviewResolutionStrategy();
+                // System.out.println("One of the value is not Date.Please select the correct value");
+                // resolvedObject = manualReviewStrategy.resolveConflict(objectForReview, subject, predicate);
+                DefaultStratigy defaultStratigy = new DefaultStratigy();
+            return defaultStratigy.resolveConflict(objectForReview, subject, predicate);
             }
         }else if(Strategy == ResolutionStrategy.MANUAL_REVIEW){
 
@@ -247,9 +260,11 @@ public class SementicResolutionStrategy implements Strategy{
             ListMultimap<RDFNode, Integer> objectForReview = ArrayListMultimap.create();  
                 objectForReview.put(First, 1);
                 objectForReview.put(Second, 1);  
-                ManualReviewResolutionStrategy manualReviewStrategy = new ManualReviewResolutionStrategy();
-                System.out.println("Parsing problem. Please select the correct value");
-                resolvedObject = manualReviewStrategy.resolveConflict(objectForReview, subject, predicate);
+                // ManualReviewResolutionStrategy manualReviewStrategy = new ManualReviewResolutionStrategy();
+                // System.out.println("Parsing problem. Please select the correct value");
+                // resolvedObject = manualReviewStrategy.resolveConflict(objectForReview, subject, predicate);
+                DefaultStratigy defaultStratigy = new DefaultStratigy();
+            return defaultStratigy.resolveConflict(objectForReview, subject, predicate);
                 
         }else {
 
@@ -257,9 +272,11 @@ public class SementicResolutionStrategy implements Strategy{
             ListMultimap<RDFNode, Integer> objectForReview = ArrayListMultimap.create();  
             objectForReview.put(First, 1);
             objectForReview.put(Second, 1);  
-            ManualReviewResolutionStrategy manualReviewStrategy = new ManualReviewResolutionStrategy();
-            System.out.println("No Strategy Have been Speciried for this value. Please select the correct value");
-            resolvedObject = manualReviewStrategy.resolveConflict(objectForReview, subject, predicate);
+            // ManualReviewResolutionStrategy manualReviewStrategy = new ManualReviewResolutionStrategy();
+            // System.out.println("No Strategy Have been Speciried for this value. Please select the correct value");
+            // resolvedObject = manualReviewStrategy.resolveConflict(objectForReview, subject, predicate);
+            DefaultStratigy defaultStratigy = new DefaultStratigy();
+            return defaultStratigy.resolveConflict(objectForReview, subject, predicate);
         }
         return resolvedObject;
     }

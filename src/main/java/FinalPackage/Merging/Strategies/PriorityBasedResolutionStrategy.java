@@ -39,8 +39,8 @@ public class PriorityBasedResolutionStrategy implements Strategy {
             // You can choose one of the following approaches:
 
             // Approach 1: Randomly select one of the highest-priority objects
-            RandomStrategy randomStrategy = new RandomStrategy();
-            return randomStrategy.resolveConflict(highestPriorityObjects, subject, predicate);
+            DefaultStratigy defaultStratigy = new DefaultStratigy();
+            return defaultStratigy.resolveConflict(objects, subject, predicate);
 
             // Approach 2: Use a manual review strategy
             // ManualReviewResolutionStrategy manualReviewStrategy = new ManualReviewResolutionStrategy();

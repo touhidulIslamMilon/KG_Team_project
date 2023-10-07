@@ -75,8 +75,11 @@ public class CustomResolutionStrategy implements Strategy{
             HelperFunction helper = new HelperFunction();
             resolvedObject =helper.getMedianValue(objects, subject, predicate);
         }else {
-            ManualReviewResolutionStrategy strategy1 = new ManualReviewResolutionStrategy();
-            resolvedObject = strategy1.resolveConflict(objects, subject, predicate);
+            // ManualReviewResolutionStrategy strategy1 = new ManualReviewResolutionStrategy();
+            // resolvedObject = strategy1.resolveConflict(objects, subject, predicate);
+
+            DefaultStratigy defaultStratigy = new DefaultStratigy();
+            resolvedObject = defaultStratigy.resolveConflict(objects, subject, predicate);
         }
         return resolvedObject;
     }
@@ -92,9 +95,12 @@ public class CustomResolutionStrategy implements Strategy{
             try {
                 MeanValue += Double.parseDouble(node.toString());
             } catch (Exception e) {
-                System.out.println("The value is not Integer");
-                ManualReviewResolutionStrategy strategy1 = new ManualReviewResolutionStrategy();
-                return strategy1.resolveConflict(objects, subject, predicate);
+                // System.out.println("The value is not Integer");
+                // ManualReviewResolutionStrategy strategy1 = new ManualReviewResolutionStrategy();
+                // return strategy1.resolveConflict(objects, subject, predicate);
+
+                RandomStrategy randomStrategy = new RandomStrategy();
+                return randomStrategy.resolveConflict(objects, subject, predicate);
             }
                
         }
@@ -126,8 +132,11 @@ public class CustomResolutionStrategy implements Strategy{
                 longestNode = node;
                 longestString = node.toString().length();
             } else if(node.toString().length() == longestString){
-                ManualReviewResolutionStrategy manualReview = new ManualReviewResolutionStrategy();
-                return manualReview.resolveConflict(objects, subject, predicate);
+                // ManualReviewResolutionStrategy manualReview = new ManualReviewResolutionStrategy();
+                // return manualReview.resolveConflict(objects, subject, predicate);
+
+                RandomStrategy randomStrategy = new RandomStrategy();
+                return randomStrategy.resolveConflict(objects, subject, predicate);
             }
         }
 
@@ -151,8 +160,11 @@ public class CustomResolutionStrategy implements Strategy{
                 longestNode = node;
                 longestString = node.toString().length();
             } else if(node.toString().length() == longestString){
-                ManualReviewResolutionStrategy manualReview = new ManualReviewResolutionStrategy();
-                return manualReview.resolveConflict(objects, subject, predicate);
+                // ManualReviewResolutionStrategy manualReview = new ManualReviewResolutionStrategy();
+                // return manualReview.resolveConflict(objects, subject, predicate);
+
+                DefaultStratigy defaultStratigy = new DefaultStratigy();
+                return defaultStratigy.resolveConflict(objects, subject, predicate);
             }
         }
 
@@ -177,8 +189,11 @@ public class CustomResolutionStrategy implements Strategy{
                 minValue = value;
                 minNode = node;
             }else if(value == minValue){
-                ManualReviewResolutionStrategy manualReview = new ManualReviewResolutionStrategy();
-                return manualReview.resolveConflict(objects, subject, predicate);
+                // ManualReviewResolutionStrategy manualReview = new ManualReviewResolutionStrategy();
+                // return manualReview.resolveConflict(objects, subject, predicate);
+
+                DefaultStratigy defaultStratigy = new DefaultStratigy();
+                return defaultStratigy.resolveConflict(objects, subject, predicate);
             }
         }
 
@@ -204,8 +219,11 @@ public class CustomResolutionStrategy implements Strategy{
                 maxValue = value;
                 maxNode = node;
             }else if(value == maxValue){
-                ManualReviewResolutionStrategy manualReview = new ManualReviewResolutionStrategy();
-                return manualReview.resolveConflict(objects, subject, predicate);
+                // ManualReviewResolutionStrategy manualReview = new ManualReviewResolutionStrategy();
+                // return manualReview.resolveConflict(objects, subject, predicate);
+
+                DefaultStratigy defaultStratigy = new DefaultStratigy();
+                return defaultStratigy.resolveConflict(objects, subject, predicate);
             }
         }
 
