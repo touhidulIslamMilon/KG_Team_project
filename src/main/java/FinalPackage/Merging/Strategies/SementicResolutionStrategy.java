@@ -130,7 +130,7 @@ public class SementicResolutionStrategy implements Strategy{
         return bestNode;
     }
 
-    // This is a method that take two RDFNode and return the node that is more likely to be the correct one
+    // This is a method  that take two RDFNode and return the node that is more likely to be the correct one
     public RDFNode fusenode(RDFNode node1, RDFNode node2, Property Predicate, Resource subject) {
         HelperFunction helperFunction = new HelperFunction();
         String type1 = helperFunction.objectType1(node1);
@@ -266,7 +266,56 @@ public class SementicResolutionStrategy implements Strategy{
                 DefaultStratigy defaultStratigy = new DefaultStratigy();
             return defaultStratigy.resolveConflict(objectForReview, subject, predicate);
                 
-        }else {
+        } else if(Strategy == ResolutionStrategy.DEFAULT){
+             // System.out.println("Default");
+            ListMultimap<RDFNode, Integer> objectForReview = ArrayListMultimap.create();  
+            objectForReview.put(First, 1);
+            objectForReview.put(Second, 1);  
+            // ManualReviewResolutionStrategy manualReviewStrategy = new ManualReviewResolutionStrategy();
+            // System.out.println("No Strategy Have been Speciried for this value. Please select the correct value");
+            // resolvedObject = manualReviewStrategy.resolveConflict(objectForReview, subject, predicate);
+            DefaultStratigy defaultStratigy = new DefaultStratigy();
+            return defaultStratigy.resolveConflict(objectForReview, subject, predicate);
+        } else if(Strategy== ResolutionStrategy.RANDOM){
+                
+                // System.out.println("Random");
+                ListMultimap<RDFNode, Integer> objectForReview = ArrayListMultimap.create();  
+                objectForReview.put(First, 1);
+                objectForReview.put(Second, 1);  
+                RandomStrategy randomStrategy = new RandomStrategy();
+                return randomStrategy.resolveConflict(objectForReview, subject, predicate);
+
+        }else if(Strategy== ResolutionStrategy.HIGHEST_PRIORITY){
+                
+            // System.out.println("Priority and frequency");
+            ListMultimap<RDFNode, Integer> objectForReview = ArrayListMultimap.create();  
+            objectForReview.put(First, 1);
+            objectForReview.put(Second, 1);  
+            PriorityBasedResolutionStrategy priorityAndFrequencyStrategy = new PriorityBasedResolutionStrategy();
+            return priorityAndFrequencyStrategy.resolveConflict(objectForReview, subject, predicate);
+
+        }
+        else if(Strategy== ResolutionStrategy.MOST_FREQUENT){
+                
+            // System.out.println("Priority and frequency");
+            ListMultimap<RDFNode, Integer> objectForReview = ArrayListMultimap.create();  
+            objectForReview.put(First, 1);
+            objectForReview.put(Second, 1);  
+            MostFrequentResolutionStrategy priorityAndFrequencyStrategy = new MostFrequentResolutionStrategy();
+            return priorityAndFrequencyStrategy.resolveConflict(objectForReview, subject, predicate);
+
+        }
+        else if(Strategy== ResolutionStrategy.PRIORITY_AND_FREQUENCY){
+                
+            // System.out.println("Priority and frequency");
+            ListMultimap<RDFNode, Integer> objectForReview = ArrayListMultimap.create();  
+            objectForReview.put(First, 1);
+            objectForReview.put(Second, 1);  
+            FrequencyAndPriorityBaseStrategy priorityAndFrequencyStrategy = new FrequencyAndPriorityBaseStrategy();
+            return priorityAndFrequencyStrategy.resolveConflict(objectForReview, subject, predicate);
+
+        }
+        else {
 
             // System.out.println("Default");
             ListMultimap<RDFNode, Integer> objectForReview = ArrayListMultimap.create();  

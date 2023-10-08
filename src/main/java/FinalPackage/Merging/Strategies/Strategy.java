@@ -20,6 +20,7 @@ public interface Strategy {
         MANUAL_REVIEW,
         MEAN,
         MEDIAN,
+        RANDOM,
         DEFAULT
     }
 }
