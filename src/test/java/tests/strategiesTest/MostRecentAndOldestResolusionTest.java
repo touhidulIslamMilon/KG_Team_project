@@ -1,18 +1,14 @@
 package tests.strategiesTest;
 import FinalPackage.Merging.Strategies.HelperFunction;
-import FinalPackage.Merging.Strategies.MostFrequentResolutionStrategy;
 import FinalPackage.Merging.Strategies.MostOldestResolutionStrategy;
-import FinalPackage.Merging.Strategies.MostRecentResolusionStrategy;
-import FinalPackage.Merging.Strategies.Strategies;
+import FinalPackage.Merging.Strategies.MostRecentResolutionStrategy;
 
 import org.apache.jena.rdf.model.*;
 
 import java.text.ParseException;
-import java.util.HashMap;
-import java.util.Map;
+
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
-import FinalPackage.Merging.Strategies.MostFrequentResolutionStrategy;
 
 public class MostRecentAndOldestResolusionTest {
     public static void main(String[] args) {
@@ -40,7 +36,7 @@ public class MostRecentAndOldestResolusionTest {
         
    
         // Create an instance of PriorityBasedResolutionStrategy
-        MostRecentResolusionStrategy strategy = new MostRecentResolusionStrategy();
+        MostRecentResolutionStrategy strategy = new MostRecentResolutionStrategy();
         MostOldestResolutionStrategy strategy2 = new MostOldestResolutionStrategy();
        //perform the test and print the r  esult
         //RDFNode resolvedObject = strategy.resolveConflict(objects, subject, predicate);

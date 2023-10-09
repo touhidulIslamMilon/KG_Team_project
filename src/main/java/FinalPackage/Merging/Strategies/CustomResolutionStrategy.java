@@ -39,7 +39,7 @@ public class CustomResolutionStrategy implements Strategy{
         } else if(strategy == ResolutionStrategy.SHORT_VALUE){
             resolvedObject = getShortestValueForPropertyy(objects, subject, predicate);
         }else if(strategy == ResolutionStrategy.RECENT_DATE){
-            MostRecentResolusionStrategy strategy1 = new MostRecentResolusionStrategy();
+            MostRecentResolutionStrategy strategy1 = new MostRecentResolutionStrategy();
             resolvedObject = strategy1.resolveConflict(objects, subject, predicate);
         }else if(strategy == ResolutionStrategy.OLDEST_DATE){
             MostOldestResolutionStrategy strategy1 = new MostOldestResolutionStrategy();

@@ -9,7 +9,7 @@ import java.util.Map;
 
 import org.apache.jena.rdf.model.*;
 
-public class SementicResolutionStrategy implements Strategy{
+public class SemanticResolutionStrategy implements Strategy{
     static Map<String, ResolutionStrategy> strategyMap = new HashMap<>();
     Model model = ModelFactory.createDefaultModel();
     Boolean spellChek = false;
