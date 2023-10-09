@@ -1,24 +1,11 @@
 package FinalPackage.Merging.Strategies;
 
-import java.time.LocalDate;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import com.google.common.collect.ListMultimap;
 
-import java.util.Map.Entry;
-
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.rdf.model.impl.PropertyImpl;
-import org.apache.jena.rdf.model.impl.ResourceImpl;
-import org.apache.jena.rdf.model.impl.StatementImpl;
-import org.eclipse.rdf4j.model.vocabulary.RDF;
-import com.google.common.collect.ListMultimap;
-
-import java.util.ArrayList;
-
-import org.apache.jena.rdf.model.impl.LiteralImpl;
 
 public class CustomResolutionStrategy implements Strategy{
 
@@ -78,8 +65,8 @@ public class CustomResolutionStrategy implements Strategy{
             // ManualReviewResolutionStrategy strategy1 = new ManualReviewResolutionStrategy();
             // resolvedObject = strategy1.resolveConflict(objects, subject, predicate);
 
-            DefaultStratigy defaultStratigy = new DefaultStratigy();
-            resolvedObject = defaultStratigy.resolveConflict(objects, subject, predicate);
+            DefaultStrategy defaultStrategy = new DefaultStrategy();
+            resolvedObject = defaultStrategy.resolveConflict(objects, subject, predicate);
         }
         return resolvedObject;
     }
@@ -163,8 +150,8 @@ public class CustomResolutionStrategy implements Strategy{
                 // ManualReviewResolutionStrategy manualReview = new ManualReviewResolutionStrategy();
                 // return manualReview.resolveConflict(objects, subject, predicate);
 
-                DefaultStratigy defaultStratigy = new DefaultStratigy();
-                return defaultStratigy.resolveConflict(objects, subject, predicate);
+                DefaultStrategy defaultStrategy = new DefaultStrategy();
+                return defaultStrategy.resolveConflict(objects, subject, predicate);
             }
         }
 
@@ -192,8 +179,8 @@ public class CustomResolutionStrategy implements Strategy{
                 // ManualReviewResolutionStrategy manualReview = new ManualReviewResolutionStrategy();
                 // return manualReview.resolveConflict(objects, subject, predicate);
 
-                DefaultStratigy defaultStratigy = new DefaultStratigy();
-                return defaultStratigy.resolveConflict(objects, subject, predicate);
+                DefaultStrategy defaultStrategy = new DefaultStrategy();
+                return defaultStrategy.resolveConflict(objects, subject, predicate);
             }
         }
 
@@ -222,8 +209,8 @@ public class CustomResolutionStrategy implements Strategy{
                 // ManualReviewResolutionStrategy manualReview = new ManualReviewResolutionStrategy();
                 // return manualReview.resolveConflict(objects, subject, predicate);
 
-                DefaultStratigy defaultStratigy = new DefaultStratigy();
-                return defaultStratigy.resolveConflict(objects, subject, predicate);
+                DefaultStrategy defaultStrategy = new DefaultStrategy();
+                return defaultStrategy.resolveConflict(objects, subject, predicate);
             }
         }
 

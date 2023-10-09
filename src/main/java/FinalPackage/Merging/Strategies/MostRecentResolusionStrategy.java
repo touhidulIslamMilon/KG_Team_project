@@ -4,12 +4,9 @@ import java.util.Date;
 import java.util.Map;
 
 import com.google.common.collect.ListMultimap;
-import com.google.common.collect.ListMultimap;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
-
-import com.google.common.collect.ListMultimap;
 
 public class MostRecentResolusionStrategy implements Strategy {
 
@@ -25,8 +22,8 @@ public class MostRecentResolusionStrategy implements Strategy {
                 //if conversion to date fails, use manual review
                 // ManualReviewResolutionStrategy manualReview = new ManualReviewResolutionStrategy();
                 // return manualReview.resolveConflict(objects, subject, predicate);
-                DefaultStratigy defaultStratigy = new DefaultStratigy();
-            return defaultStratigy.resolveConflict(objects, subject, predicate);
+                DefaultStrategy defaultStrategy = new DefaultStrategy();
+            return defaultStrategy.resolveConflict(objects, subject, predicate);
         }
 
         for (Map.Entry<RDFNode, Date> entry : nodeCreationMap.entrySet()) {

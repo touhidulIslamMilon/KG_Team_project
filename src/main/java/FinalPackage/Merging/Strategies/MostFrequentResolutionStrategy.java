@@ -34,8 +34,8 @@ public class MostFrequentResolutionStrategy implements Strategy {
                 // to resolve the conflict
                 // ManualReviewResolutionStrategy manualReviewStrategy = new ManualReviewResolutionStrategy();
                 // highestWeightedNode = manualReviewStrategy.resolveConflict(objects, subject, predicate);
-                DefaultStratigy defaultStratigy = new DefaultStratigy();
-                return defaultStratigy.resolveConflict(objects, subject, predicate);
+                DefaultStrategy defaultStrategy = new DefaultStrategy();
+                return defaultStrategy.resolveConflict(objects, subject, predicate);
             }
         }
 

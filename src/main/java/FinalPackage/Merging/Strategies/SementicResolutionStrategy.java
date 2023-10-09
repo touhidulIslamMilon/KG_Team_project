@@ -3,12 +3,8 @@ package FinalPackage.Merging.Strategies;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 
-import de.lmu.ifi.dbs.elki.math.Mean;
-import smile.stat.Hypothesis.t;
-
 import java.text.ParseException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.apache.jena.rdf.model.*;
@@ -123,8 +119,8 @@ public class SementicResolutionStrategy implements Strategy{
                 // ManualReviewResolutionStrategy manualReviewStrategy = new ManualReviewResolutionStrategy();
                 // System.out.println("Both object have slightly different value.It could be spelling mistake Please select the correct value");
                 // bestNode = manualReviewStrategy.resolveConflict(objectForReview, subject, predicate);
-                DefaultStratigy defaultStratigy = new DefaultStratigy();
-                return defaultStratigy.resolveConflict(objectForReview, subject, predicate);
+                DefaultStrategy defaultStrategy = new DefaultStrategy();
+                return defaultStrategy.resolveConflict(objectForReview, subject, predicate);
             }
         }
         return bestNode;
@@ -148,8 +144,8 @@ public class SementicResolutionStrategy implements Strategy{
             // ManualReviewResolutionStrategy manualReviewStrategy = new ManualReviewResolutionStrategy();
             // System.out.println("One of the value is not number.Please select the correct value");
             // return manualReviewStrategy.resolveConflict(objectForReview, subject, Predicate);
-            DefaultStratigy defaultStratigy = new DefaultStratigy();
-            return defaultStratigy.resolveConflict(objectForReview, subject, Predicate);
+            DefaultStrategy defaultStrategy = new DefaultStrategy();
+            return defaultStrategy.resolveConflict(objectForReview, subject, Predicate);
         }
     }
 
@@ -188,8 +184,8 @@ public class SementicResolutionStrategy implements Strategy{
                 // ManualReviewResolutionStrategy manualReviewStrategy = new ManualReviewResolutionStrategy();
                 // System.out.println("One of the value is not number.Please select the correct value");
                 // resolvedObject = manualReviewStrategy.resolveConflict(objectForReview, subject, predicate);
-                DefaultStratigy defaultStratigy = new DefaultStratigy();
-                return defaultStratigy.resolveConflict(objectForReview, subject, predicate);
+                DefaultStrategy defaultStrategy = new DefaultStrategy();
+                return defaultStrategy.resolveConflict(objectForReview, subject, predicate);
             }
         } else if (Strategy == ResolutionStrategy.MIN_VALUE) {
 
@@ -209,8 +205,8 @@ public class SementicResolutionStrategy implements Strategy{
                 // System.out.println("One of the value is not number.Please select the correct value");
                 // resolvedObject = manualReviewStrategy.resolveConflict(objectForReview, subject, predicate);
 
-                DefaultStratigy defaultStratigy = new DefaultStratigy();
-            return defaultStratigy.resolveConflict(objectForReview, subject, predicate);
+                DefaultStrategy defaultStrategy = new DefaultStrategy();
+            return defaultStrategy.resolveConflict(objectForReview, subject, predicate);
             }
         } else if(Strategy == ResolutionStrategy.LONG_VALUE){
 
@@ -234,8 +230,8 @@ public class SementicResolutionStrategy implements Strategy{
                 // ManualReviewResolutionStrategy manualReviewStrategy = new ManualReviewResolutionStrategy();
                 // System.out.println("One of the value is not Date.Please select the correct value");
                 // resolvedObject = manualReviewStrategy.resolveConflict(objectForReview, subject, predicate);
-                DefaultStratigy defaultStratigy = new DefaultStratigy();
-            return defaultStratigy.resolveConflict(objectForReview, subject, predicate);
+                DefaultStrategy defaultStrategy = new DefaultStrategy();
+            return defaultStrategy.resolveConflict(objectForReview, subject, predicate);
             }
         }else if(Strategy == ResolutionStrategy.OLDEST_DATE){
 
@@ -251,8 +247,8 @@ public class SementicResolutionStrategy implements Strategy{
                 // ManualReviewResolutionStrategy manualReviewStrategy = new ManualReviewResolutionStrategy();
                 // System.out.println("One of the value is not Date.Please select the correct value");
                 // resolvedObject = manualReviewStrategy.resolveConflict(objectForReview, subject, predicate);
-                DefaultStratigy defaultStratigy = new DefaultStratigy();
-            return defaultStratigy.resolveConflict(objectForReview, subject, predicate);
+                DefaultStrategy defaultStrategy = new DefaultStrategy();
+            return defaultStrategy.resolveConflict(objectForReview, subject, predicate);
             }
         }else if(Strategy == ResolutionStrategy.MANUAL_REVIEW){
 
@@ -263,8 +259,8 @@ public class SementicResolutionStrategy implements Strategy{
                 // ManualReviewResolutionStrategy manualReviewStrategy = new ManualReviewResolutionStrategy();
                 // System.out.println("Parsing problem. Please select the correct value");
                 // resolvedObject = manualReviewStrategy.resolveConflict(objectForReview, subject, predicate);
-                DefaultStratigy defaultStratigy = new DefaultStratigy();
-            return defaultStratigy.resolveConflict(objectForReview, subject, predicate);
+                DefaultStrategy defaultStrategy = new DefaultStrategy();
+            return defaultStrategy.resolveConflict(objectForReview, subject, predicate);
                 
         } else if(Strategy == ResolutionStrategy.DEFAULT){
              // System.out.println("Default");
@@ -274,8 +270,8 @@ public class SementicResolutionStrategy implements Strategy{
             // ManualReviewResolutionStrategy manualReviewStrategy = new ManualReviewResolutionStrategy();
             // System.out.println("No Strategy Have been Speciried for this value. Please select the correct value");
             // resolvedObject = manualReviewStrategy.resolveConflict(objectForReview, subject, predicate);
-            DefaultStratigy defaultStratigy = new DefaultStratigy();
-            return defaultStratigy.resolveConflict(objectForReview, subject, predicate);
+            DefaultStrategy defaultStrategy = new DefaultStrategy();
+            return defaultStrategy.resolveConflict(objectForReview, subject, predicate);
         } else if(Strategy== ResolutionStrategy.RANDOM){
                 
                 // System.out.println("Random");
@@ -324,8 +320,8 @@ public class SementicResolutionStrategy implements Strategy{
             // ManualReviewResolutionStrategy manualReviewStrategy = new ManualReviewResolutionStrategy();
             // System.out.println("No Strategy Have been Speciried for this value. Please select the correct value");
             // resolvedObject = manualReviewStrategy.resolveConflict(objectForReview, subject, predicate);
-            DefaultStratigy defaultStratigy = new DefaultStratigy();
-            return defaultStratigy.resolveConflict(objectForReview, subject, predicate);
+            DefaultStrategy defaultStrategy = new DefaultStrategy();
+            return defaultStrategy.resolveConflict(objectForReview, subject, predicate);
         }
         return resolvedObject;
     }
