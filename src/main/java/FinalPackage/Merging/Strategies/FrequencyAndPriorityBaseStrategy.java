@@ -7,7 +7,7 @@ import org.apache.jena.rdf.model.Resource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+
 import com.google.common.collect.ListMultimap;
 public class FrequencyAndPriorityBaseStrategy implements Strategy {
     @Override
@@ -36,8 +36,8 @@ public class FrequencyAndPriorityBaseStrategy implements Strategy {
                 // ManualReviewResolutionStrategy manualReviewStrategy = new ManualReviewResolutionStrategy();
                 // highestWeightedNode = manualReviewStrategy.resolveConflict(objects, subject, predicate);
 
-                DefaultStratigy defaultStratigy = new DefaultStratigy();
-                return defaultStratigy.resolveConflict(objects, subject, predicate);
+                DefaultStrategy defaultStrategy = new DefaultStrategy();
+                return defaultStrategy.resolveConflict(objects, subject, predicate);
             }
         }
 
