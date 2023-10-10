@@ -13,7 +13,7 @@ public class ConflictResolution {
      */
     public static RDFNode resolveConflict(ListMultimap<RDFNode, Integer> objects, Resource subject, Property predicate){
 
-        Strategies strategy = new Strategies(new SemanticResolutionStrategy());
+        Strategies strategy = new Strategies(new SementicResolutionStrategy());
         return strategy.mergeObjects(objects, subject, predicate);
     }
 
