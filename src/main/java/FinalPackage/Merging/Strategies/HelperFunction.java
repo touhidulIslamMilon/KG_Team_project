@@ -13,9 +13,7 @@ import java.util.List;
 import org.apache.jena.rdf.model.*;
 import java.util.Set;
 import java.util.regex.Matcher;
-import java.text.ParseException;
 import java.util.regex.Pattern;
-import org.apache.jena.datatypes.xsd.XSDDatatype;
 
 import com.google.common.collect.ListMultimap;
 import com.ibm.icu.text.SimpleDateFormat;
@@ -101,7 +99,7 @@ public class HelperFunction {
         if (node == null) {
             throw new IllegalArgumentException("Input node is null");
         }
-        LocalDate date = LocalDate.parse(node.toString(), DateTimeFormatter.ISO_LOCAL_DATE);
+        LocalDate date = LocalDate.parse(node.asLiteral().getLexicalForm(), DateTimeFormatter.ISO_LOCAL_DATE);
         return  date;
     }
      //this method take two string and return the longest one
@@ -236,8 +234,8 @@ public class HelperFunction {
         return intersection.size();
     }
     public  RDFNode findLongestString(RDFNode stringLiteral1, RDFNode stringLiteral2) {
-        String value1 = stringLiteral1.toString();
-        String value2 = stringLiteral2.toString();
+        String value1 = stringLiteral1.asLiteral().getLexicalForm();
+        String value2 = stringLiteral2.asLiteral().getLexicalForm();
 
         if (value1.length() > value2.length()) {
             return stringLiteral1;
@@ -246,8 +244,8 @@ public class HelperFunction {
         }
     }
      public RDFNode findShortestString(RDFNode first, RDFNode second) {
-        String value1 = first.toString();
-        String value2 = second.toString();
+        String value1 = first.asLiteral().getLexicalForm();
+        String value2 = second.asLiteral().getLexicalForm();
         
         if (value1.length() < value2.length()) {
             return first;
@@ -255,12 +253,12 @@ public class HelperFunction {
             return second;
         }   
     }
-    public  Date intToDate(int timestampInSeconds) throws ParseException {
+    public  Date intToDate(int timestampInSeconds) throws Exception {
         long timestampInMillis = (long) timestampInSeconds * 1000;
         return new Date(timestampInMillis);
     }
    
-    public  int dateToInt(String dateString) throws ParseException {
+    public  int dateToInt(String dateString) throws Exception {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date date=null;
         date = sdf.parse(dateString);
@@ -292,7 +290,7 @@ public class HelperFunction {
         // Combine all values from the ListMultimap into a single list
         for (RDFNode value : objects.keys()) {
             try {
-                allValues.add(Double.parseDouble(value.toString()) );
+                allValues.add(Double.parseDouble(value.asLiteral().getLexicalForm()) );
             } catch (Exception e) {
                 // ManualReviewResolutionStrategy strategy1 = new ManualReviewResolutionStrategy();
                 // System.out.println("The value is not Number");
@@ -320,11 +318,9 @@ public class HelperFunction {
         }
     }
    
-    public RDFNode findMostOldDate(RDFNode first, RDFNode second) throws ParseException{
-        LocalDate date1 = LocalDate.parse(first.toString());
-        LocalDate date2 = LocalDate.parse(second.toString());
-        System.out.println(date2.toString());
-        System.out.println(date1.toString());
+    public RDFNode findMostOldDate(RDFNode first, RDFNode second) throws Exception{
+        LocalDate date1 = LocalDate.parse(first.asLiteral().getLexicalForm());
+        LocalDate date2 = LocalDate.parse(second.asLiteral().getLexicalForm());
         if (date1.isBefore(date2)) {
             
             return first;
@@ -332,10 +328,10 @@ public class HelperFunction {
             return second;
         }
     }
-    public  RDFNode findMostRecentDate(RDFNode dateLiteral1, RDFNode dateLiteral2) throws ParseException{
+    public  RDFNode findMostRecentDate(RDFNode dateLiteral1, RDFNode dateLiteral2) throws Exception{
         
-        LocalDate date1 = LocalDate.parse(dateLiteral1.toString());
-        LocalDate date2 = LocalDate.parse(dateLiteral2.toString());
+        LocalDate date1 = LocalDate.parse(dateLiteral1.asLiteral().getLexicalForm());
+        LocalDate date2 = LocalDate.parse(dateLiteral2.asLiteral().getLexicalForm());
 
         if (date1.isAfter(date2)) {
             return dateLiteral1;
@@ -343,8 +339,8 @@ public class HelperFunction {
             return dateLiteral2;
         }
     }
-    public RDFNode findMean(RDFNode first, RDFNode second) throws ParseException {
-        double mean = (Double.parseDouble(first.toString()) + Double.parseDouble(second.toString())) / 2;
+    public RDFNode findMean(RDFNode first, RDFNode second) throws Exception {
+        double mean = (Double.parseDouble(first.asLiteral().getLexicalForm()) + Double.parseDouble(second.asLiteral().getLexicalForm())) / 2;
         return ResourceFactory.createResource(String.valueOf(mean));
     }
 }

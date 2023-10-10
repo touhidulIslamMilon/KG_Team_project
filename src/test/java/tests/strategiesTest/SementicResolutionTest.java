@@ -2,10 +2,13 @@ package tests.strategiesTest;
 
 import java.text.ParseException;
 
+import org.apache.jena.datatypes.xsd.XSDDatatype;
+import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
+import org.eclipse.rdf4j.model.vocabulary.RDF;
 
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
@@ -27,6 +30,8 @@ public class SementicResolutionTest {
         RDFNode object3 = ResourceFactory.createResource("http://example.org/object3");
         RDFNode object4 = ResourceFactory.createResource("http://example.org/object2");
         RDFNode object5 = ResourceFactory.createResource("http://example.org/object4");
+        RDFNode object6 = ModelFactory.createDefaultModel().createTypedLiteral("6", XSDDatatype.XSDinteger);
+        RDFNode object7 = ModelFactory.createDefaultModel().createTypedLiteral("6", XSDDatatype.XSDinteger);
 
         //Test for number (Mean ,Max ,Min and Median)
         // RDFNode object1 = ResourceFactory.createResource("1");
@@ -44,11 +49,13 @@ public class SementicResolutionTest {
         // RDFNode object5 = ResourceFactory.createResource("1996-04-16");
 
         
-        objects.put(object1, 1);
-        objects.put(object2, 2);
-        objects.put(object3, 4);
-        objects.put(object4, 2);
-        objects.put(object5, 2);
+        // objects.put(object1, 1);
+        // objects.put(object2, 2);
+        // objects.put(object3, 4);
+        // objects.put(object4, 2);
+        // objects.put(object5, 2);
+        objects.put(object6, 2);
+        objects.put(object7, 2);
    
         // Create an instance of PriorityBasedResolutionStrategy
         SementicResolutionStrategy strategy = new SementicResolutionStrategy();

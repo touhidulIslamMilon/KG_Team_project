@@ -93,7 +93,7 @@ public class CustomResolutionStrategy implements Strategy{
         for (Map.Entry<RDFNode, Integer> entry : objects.entries()) {
             RDFNode node = entry.getKey();
             try {
-                MeanValue += Double.parseDouble(node.toString());
+                MeanValue += Double.parseDouble(node.asLiteral().getLexicalForm());
             } catch (Exception e) {
                 // System.out.println("The value is not Integer");
                 // ManualReviewResolutionStrategy strategy1 = new ManualReviewResolutionStrategy();

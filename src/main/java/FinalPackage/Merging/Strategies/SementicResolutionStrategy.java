@@ -6,6 +6,7 @@ import com.google.common.collect.ListMultimap;
 import de.lmu.ifi.dbs.elki.math.Mean;
 import smile.stat.Hypothesis.t;
 
+import java.io.EOFException;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.List;
@@ -18,7 +19,6 @@ public class SementicResolutionStrategy implements Strategy{
     Model model = ModelFactory.createDefaultModel();
     Boolean spellChek = false;
     static {
-
         //sting uri and text only support long_vale and short value
         strategyMap.put("string", ResolutionStrategy.LONG_VALUE);
         strategyMap.put("uri", ResolutionStrategy.SHORT_VALUE);
@@ -76,8 +76,8 @@ public class SementicResolutionStrategy implements Strategy{
                 System.out.println("Strategy: " + ResolutionStrategy.MEAN);
                 return gerMeanVelue(objects, subject, predicate);
 
-            } catch (ParseException e) {
-
+            } catch (Exception e) {
+                
             }
         }
 
@@ -154,12 +154,12 @@ public class SementicResolutionStrategy implements Strategy{
     }
 
     // This is a method that calculate the mean value of List of RDFNode
-    private RDFNode gerMeanVelue(ListMultimap<RDFNode, Integer> objects, Resource subject, Property predicate) throws ParseException {
+    private RDFNode gerMeanVelue(ListMultimap<RDFNode, Integer> objects, Resource subject, Property predicate) throws Exception {
         Double sum=0.0;
         for (RDFNode key : objects.keySet()) {
             RDFNode node = key;
             
-            sum = sum + Double.parseDouble(node.toString());
+            sum = sum + Double.parseDouble(node.asLiteral().getLexicalForm());
         }
         return ResourceFactory.createResource(String.valueOf(sum/objects.size()));
     }
@@ -176,8 +176,8 @@ public class SementicResolutionStrategy implements Strategy{
 
             // System.out.println("Max value");
             try{
-                Double var1 = Double.parseDouble(First.toString());
-                Double var2 = Double.parseDouble(Second.toString());
+                Double var1 = Double.parseDouble(First.asLiteral().getLexicalForm());
+                Double var2 = Double.parseDouble(Second.asLiteral().getLexicalForm());
                 resolvedObject = model.createTypedLiteral(String.valueOf( helperFunction.max_num(var1, var2)));   
             }catch(Exception e){
 
@@ -195,8 +195,8 @@ public class SementicResolutionStrategy implements Strategy{
 
             // System.out.println("Min value");
             try{
-                Double var1 = Double.parseDouble(First.toString());
-                Double var2 = Double.parseDouble(Second.toString());
+                Double var1 = Double.parseDouble(First.asLiteral().getLexicalForm());
+                Double var2 = Double.parseDouble(Second.asLiteral().getLexicalForm());
                 resolvedObject =  model.createTypedLiteral(String.valueOf(helperFunction.min_num(var1, var2)));   
 
             }catch(Exception e){
