@@ -6,7 +6,7 @@ import org.apache.jena.rdf.model.Resource;
 
 import com.google.common.collect.ListMultimap;
 
-public class DefaultStratigy implements Strategy{
+public class DefaultStrategy implements Strategy{
 
     @Override
     public RDFNode resolveConflict(ListMultimap<RDFNode, Integer> objects, Resource subject, Property predicate) {

@@ -4,7 +4,6 @@ import java.time.DateTimeException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -15,7 +14,6 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.text.ParseException;
 import java.util.regex.Pattern;
-import org.apache.jena.datatypes.xsd.XSDDatatype;
 
 import com.google.common.collect.ListMultimap;
 import com.ibm.icu.text.SimpleDateFormat;
@@ -297,8 +295,8 @@ public class HelperFunction {
                 // ManualReviewResolutionStrategy strategy1 = new ManualReviewResolutionStrategy();
                 // System.out.println("The value is not Number");
                 // return strategy1.resolveConflict(objects, subject, predicate);
-                DefaultStratigy defaultStratigy = new DefaultStratigy();
-                return defaultStratigy.resolveConflict(objects, subject, predicate);
+                DefaultStrategy defaultStrategy = new DefaultStrategy();
+                return defaultStrategy.resolveConflict(objects, subject, predicate);
             }
         }
         // Sort the list in ascending order

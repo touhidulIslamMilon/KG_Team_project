@@ -1,7 +1,5 @@
 package tests.strategiesTest;
 
-import java.text.ParseException;
-
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
@@ -10,8 +8,7 @@ import org.apache.jena.rdf.model.ResourceFactory;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ListMultimap;
 
-import FinalPackage.Merging.Strategies.FrequencyAndPriorityBaseStrategy;
-import FinalPackage.Merging.Strategies.SementicResolutionStrategy;
+import FinalPackage.Merging.Strategies.SemanticResolutionStrategy;
 
 public class SementicResolutionTest {
      public static void main(String[] args) {
@@ -51,7 +48,7 @@ public class SementicResolutionTest {
         objects.put(object5, 2);
    
         // Create an instance of PriorityBasedResolutionStrategy
-        SementicResolutionStrategy strategy = new SementicResolutionStrategy();
+        SemanticResolutionStrategy strategy = new SemanticResolutionStrategy();
 
        //perform the test and print the result
         RDFNode resolvedObject = strategy.resolveConflict(objects, subject, predicate);
