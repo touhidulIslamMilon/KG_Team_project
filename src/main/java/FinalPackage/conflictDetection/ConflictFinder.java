@@ -85,7 +85,6 @@ public class ConflictFinder {
             List<RDFNode> conflictingObjects = entry.getValue();
 
             System.out.println("Conflict Detected:");
-            // Assuming we have a way to find the model name
             // System.out.println("Model: " + findModelName(pair)); // Placeholder, replace with actual implementation
             System.out.println("Subject: " + pair.getSubject());
             System.out.println("Predicate: " + pair.getPredicate());

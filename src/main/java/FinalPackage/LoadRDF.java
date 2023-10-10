@@ -78,20 +78,20 @@ public class LoadRDF {
     public static List<Model> readAllTestCases() {
         List<Model> testModels = new ArrayList<>();
 
-        Model swtorKG = TrackRepository.Knowledgegraph.V4.getTestCase("starwars-swtor").getTargetOntology(OntModel.class);
-        testModels.add(swtorKG);
+        //Model swtorKG = TrackRepository.Knowledgegraph.V4.getTestCase("starwars-swtor").getTargetOntology(OntModel.class);
+        //testModels.add(swtorKG);
 
-        Model swgKG = TrackRepository.Knowledgegraph.V4.getTestCase("starwars-swg").getTargetOntology(OntModel.class);
-        testModels.add( swgKG);
+        //Model swgKG = TrackRepository.Knowledgegraph.V4.getTestCase("starwars-swg").getTargetOntology(OntModel.class);
+        //testModels.add( swgKG);
 
         Model marvelKG = TrackRepository.Knowledgegraph.V4.getTestCase("marvelcinematicuniverse-marvel").getTargetOntology(OntModel.class);
         testModels.add(marvelKG);
 
-        Model mbetaKG = TrackRepository.Knowledgegraph.V4.getTestCase("memoryalpha-memorybeta").getTargetOntology(OntModel.class);
-        testModels.add(mbetaKG);
+        //Model mbetaKG = TrackRepository.Knowledgegraph.V4.getTestCase("memoryalpha-memorybeta").getTargetOntology(OntModel.class);
+        //testModels.add(mbetaKG);
 
-        Model stexpandedKG = TrackRepository.Knowledgegraph.V4.getTestCase("memoryalpha-stexpanded").getTargetOntology(OntModel.class);
-        testModels.add(stexpandedKG);
+        //Model stexpandedKG = TrackRepository.Knowledgegraph.V4.getTestCase("memoryalpha-stexpanded").getTargetOntology(OntModel.class);
+        //testModels.add(stexpandedKG);
 
         return testModels;
     }

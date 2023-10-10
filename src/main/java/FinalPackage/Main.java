@@ -55,8 +55,10 @@ public class Main {
          */
 
         List<Model> models = readAllTestCases();
-        //Model mergedModel=models.get(0);
-        Model mergedModel = Merger.mergeGraphs(models);
+        Model mergedModel=models.get(0);
+        //Model mergedModel = Merger.mergeGraphs(models);
+        List<Model> models1 = new ArrayList<>();
+        models1.add(mergedModel);
         //number of statements
         System.out.println("Number of statements:" + mergedModel.size());
 
@@ -240,7 +242,7 @@ public class Main {
 
         // Get the functional properties sorted in descending order
 
-        List<Property> sortedFunctionalProperties = getFunctionalPropertiesInDescOrder(models);
+        List<Property> sortedFunctionalProperties = getFunctionalPropertiesInDescOrder(models1);
 
         // Count and display the number of functional properties
         int numOfFunctionalProperties = sortedFunctionalProperties.size();
