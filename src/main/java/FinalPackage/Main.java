@@ -61,7 +61,6 @@ public class Main {
         models1.add(mergedModel);
         //number of statements
         System.out.println("Number of statements:" + mergedModel.size());
-
         System.out.println();
 
         //number of subjects
