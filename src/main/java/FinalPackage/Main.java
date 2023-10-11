@@ -51,7 +51,7 @@ public class Main {
         */
 
         /*
-            Test conflict types
+            Analysis of graphs
          */
 
         List<Model> models = readAllTestCases();

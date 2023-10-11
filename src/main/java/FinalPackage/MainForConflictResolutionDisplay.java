@@ -4,14 +4,7 @@ import FinalPackage.Merging.Merger;
 import org.apache.jena.rdf.model.*;
 
 import java.util.*;
-
-import static FinalPackage.LoadRDF.getModel;
 import static FinalPackage.LoadRDF.readAllTestCases;
-import static FinalPackage.Merging.FunctionalPropertyFinder.findFunctionalProperties;
-import static FinalPackage.analyzeGraph.SophisticatedAnalysis.*;
-import static FinalPackage.analyzeGraph.SophisticatedAnalysis.showPredicatesAndObjects2;
-import static FinalPackage.analyzeGraph.analyzeGraph.*;
-import static FinalPackage.conflictDetection.ConflictFinder.*;
 import static FinalPackage.analyzeGraph.analyzeGraph.*;
 
 public class MainForConflictResolutionDisplay {
@@ -20,19 +13,19 @@ public class MainForConflictResolutionDisplay {
         Model mergedModel = Merger.mergeGraphs(models);
 
         System.out.println("For string conflict");
-        retrieveStatementsForPredicate(mergedModel, "http://www.w.org/2000/01/rdf-schema#label");
+        retrieveStatementsForSubjectPredicate(mergedModel,"http://dbkwik.webdatacommons.org/marvel.wikia.com/resource/Category:Kevin_McTaggart_(Earth-10005)/Appearances", "http://www.w.org/2000/01/rdf-schema#label");
 
         System.out.println("For integer conflict");
-        retrieveStatementsForPredicate(mergedModel, "http://dbkwik.webdatacommons.org/memory-beta.wikia.com/property/insignia");
+        retrieveStatementsForSubjectPredicate(mergedModel, "http://dbkwik.webdatacommons.org/memory-beta.wikia.com/resource/Kopman", "http://dbkwik.webdatacommons.org/memory-beta.wikia.com/property/insignia");
 
         System.out.println("For decimal conflict");
-        retrieveStatementsForPredicate(mergedModel, "http://dbkwik.webdatacommons.org/memory-beta.wikia.com/property/dp");
+        retrieveStatementsForSubjectPredicate(mergedModel, "http://dbkwik.webdatacommons.org/memory-beta.wikia.com/resource/2400s","http://dbkwik.webdatacommons.org/memory-beta.wikia.com/property/dp");
 
         System.out.println("For date conflict");
-        retrieveStatementsForPredicate(mergedModel, "http://dbkwik.webdatacommons.orq/stexpanded.wikia.com/property/originaldate");
+        retrieveStatementsForSubjectPredicate(mergedModel, "http://dbkwik.webdatacommons.org/stexpanded.wikia.com/resource/When_It_Rains...","http://dbkwik.webdatacommons.orq/stexpanded.wikia.com/property/originaldate");
 
         System.out.println("For URI conflict");
-        retrieveStatementsForPredicate(mergedModel, "http://dbkwik.webdatacommons.org/memory-beta.wikia.com/property/servicePeriod");
+        retrieveStatementsForSubjectPredicate(mergedModel, "http://dbkwik.webdatacommons.org/memory-beta.wikia.com/resource/D%27deridex_class","http://dbkwik.webdatacommons.org/memory-beta.wikia.com/property/servicePeriod");
 
 
     }
