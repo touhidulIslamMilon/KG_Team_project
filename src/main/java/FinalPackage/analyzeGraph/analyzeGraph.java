@@ -279,6 +279,17 @@ public class analyzeGraph {
         return predicatesWithResourceObjects;
     }
 
+    public static void retrieveStatementsForPredicate(Model model, String predicateURI) {
+        Property targetPredicate = ResourceFactory.createProperty(predicateURI);
+
+        StmtIterator stmtIterator = model.listStatements(null, targetPredicate, (RDFNode) null);
+
+        while (stmtIterator.hasNext()) {
+            Statement stmt = stmtIterator.nextStatement();
+            System.out.println(stmt.toString());
+        }
+    }
+
 
 }
 

@@ -15,5 +15,6 @@ public class mainForConflictDetection {
         //Model mergedModel = Merger.mergeGraphs(models);
         identifyAndPrintConflicts(models);
 
+
     }
 }

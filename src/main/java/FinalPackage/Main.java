@@ -55,8 +55,8 @@ public class Main {
          */
 
         List<Model> models = readAllTestCases();
-        //Model mergedModel=models.get(0);
-        Model mergedModel = Merger.mergeGraphs(models);
+        Model mergedModel=models.get(0);
+        //Model mergedModel = Merger.mergeGraphs(models);
         List<Model> models1 = new ArrayList<>();
         models1.add(mergedModel);
         //number of statements
@@ -311,6 +311,7 @@ public class Main {
         System.out.println();
 
         //////////////////////////////////////////////////////////////////
+
         /*
         findFunctionalProperties(models);
         identifyAndPrintConflicts(models);
