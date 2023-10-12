@@ -18,7 +18,7 @@ import org.apache.jena.rdf.model.*;
 public class SementicResolutionStrategy implements Strategy{
     static Map<String, ResolutionStrategy> strategyMap = new HashMap<>();
     Model model = ModelFactory.createDefaultModel();
-    Boolean spellChek = false;
+    
     static {
         //sting uri and text only support long_vale and short value
         strategyMap.put("string", ResolutionStrategy.LONG_VALUE);
@@ -60,6 +60,7 @@ public class SementicResolutionStrategy implements Strategy{
             }
             if(Strategy != ResolutionStrategy.MEAN ){
                 isMean = false;
+                System.out.println("Mean False");
                 break;
             }
 
@@ -106,16 +107,13 @@ public class SementicResolutionStrategy implements Strategy{
                 bestNode = node;
                 continue;
             }
-
+            Boolean spellChek = false;
             // if the jacabDis is lower than 0.2, it could mean it is just a spelling mistake. we will use the manual review strategy
-            if (spellChek && helperFunction.calculateJaccardDistance(node.toString(), bestNode.toString()) > jacabDis) {
+            if (spellChek == true&& helperFunction.calculateJaccardDistance(node.toString(), bestNode.toString()) > jacabDis) {
                 
-                //perform the duel comparison
-                bestNode = fusenode(node, bestNode, predicate, subject);
-                
+               System.out.println("Jaccard Distance: " + helperFunction.calculateJaccardDistance(node.toString(), bestNode.toString()));
 
-            } else {
-                System.out.println("Jaccard Distance: " + helperFunction.calculateJaccardDistance(node.toString(), bestNode.toString()));
+             
 
                 //If the jacabDis is greater than 0.8, it could mean it is just a spelling mistake. we will use the manual review strategy
                 ListMultimap<RDFNode, Integer> objectForReview = ArrayListMultimap.create();  
@@ -126,6 +124,12 @@ public class SementicResolutionStrategy implements Strategy{
                 // bestNode = manualReviewStrategy.resolveConflict(objectForReview, subject, predicate);
                 DefaultStrategy defaultStratigy = new DefaultStrategy();
                 return defaultStratigy.resolveConflict(objectForReview, subject, predicate);
+                
+
+            } else {
+                 //perform the duel comparison
+                bestNode = fusenode(node, bestNode, predicate, subject);
+                
             }
         }
         return bestNode;
@@ -157,11 +161,17 @@ public class SementicResolutionStrategy implements Strategy{
     // This is a method that calculate the mean value of List of RDFNode
     private RDFNode gerMeanVelue(ListMultimap<RDFNode, Integer> objects, Resource subject, Property predicate) throws Exception {
         Double sum=0.0;
+        for(RDFNode key : objects.keySet() ){
+            RDFNode node = key;
+            System.out.println("Object: " + node.toString());
+        }
         for (RDFNode key : objects.keySet()) {
             RDFNode node = key;
             
-            sum = sum + Double.parseDouble(node.asLiteral().getLexicalForm());
+            sum += Double.parseDouble(node.asLiteral().getLexicalForm());
+            System.out.println("Value: " + node.asLiteral().getLexicalForm());
         }
+        System.out.println("Sum: " + sum);
         return ResourceFactory.createResource(String.valueOf(sum/objects.size()));
     }
    

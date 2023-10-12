@@ -26,12 +26,13 @@ public class SementicResolutionTest {
 
         //Test for uri (Longest and shortest)
         RDFNode object1 = ResourceFactory.createResource("http://example.org/object1");
-        RDFNode object2 = ResourceFactory.createResource("httprg/object2s");
-        RDFNode object3 = ResourceFactory.createResource("http://example.org/object3");
-        RDFNode object4 = ResourceFactory.createResource("http://example.org/object2");
-        RDFNode object5 = ResourceFactory.createResource("http://example.org/object4");
-        RDFNode object6 = ModelFactory.createDefaultModel().createTypedLiteral("6", XSDDatatype.XSDinteger);
-        RDFNode object7 = ModelFactory.createDefaultModel().createTypedLiteral("6", XSDDatatype.XSDinteger);
+        RDFNode object2 = ResourceFactory.createResource("http://example.org/object/century");
+        RDFNode object3 = ResourceFactory.createResource("http://example.org/object/century2019");
+        RDFNode object4 = ResourceFactory.createResource("http://example.org/object/century20109");
+        RDFNode object5 = ResourceFactory.createResource("http://example.org/object/century201099");
+        RDFNode object6 = ModelFactory.createDefaultModel().createTypedLiteral("270", XSDDatatype.XSDdecimal);
+        RDFNode object7 = ModelFactory.createDefaultModel().createTypedLiteral("280", XSDDatatype.XSDdecimal);
+         RDFNode object8 = ModelFactory.createDefaultModel().createTypedLiteral("290", XSDDatatype.XSDdecimal);
 
         //Test for number (Mean ,Max ,Min and Median)
         // RDFNode object1 = ResourceFactory.createResource("1");
@@ -50,18 +51,22 @@ public class SementicResolutionTest {
 
         
         // objects.put(object1, 1);
-        // objects.put(object2, 2);
-        // objects.put(object3, 4);
-        // objects.put(object4, 2);
-        // objects.put(object5, 2);
-        objects.put(object6, 2);
-        objects.put(object7, 2);
+        objects.put(object2, 2);
+        objects.put(object3, 4);
+        objects.put(object4, 2);
+        objects.put(object5, 2);
+        // objects.put(object6, 2);
+        // objects.put(object7, 2);
+        // objects.put(object8, 2);
    
         // Create an instance of PriorityBasedResolutionStrategy
         SementicResolutionStrategy strategy = new SementicResolutionStrategy();
 
        //perform the test and print the result
         RDFNode resolvedObject = strategy.resolveConflict(objects, subject, predicate);
+        for(RDFNode node : objects.keySet()){
+            System.out.println(node.toString());
+        }
 
         System.out.println("ResolvedObject: " + resolvedObject.toString());
 

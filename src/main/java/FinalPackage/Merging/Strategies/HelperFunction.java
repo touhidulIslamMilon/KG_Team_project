@@ -233,8 +233,8 @@ public class HelperFunction {
         return intersection.size();
     }
     public  RDFNode findLongestString(RDFNode stringLiteral1, RDFNode stringLiteral2) {
-        String value1 = stringLiteral1.asLiteral().getLexicalForm();
-        String value2 = stringLiteral2.asLiteral().getLexicalForm();
+        String value1 = stringLiteral1.toString();
+        String value2 = stringLiteral2.toString();
 
         if (value1.length() > value2.length()) {
             return stringLiteral1;
@@ -243,8 +243,8 @@ public class HelperFunction {
         }
     }
      public RDFNode findShortestString(RDFNode first, RDFNode second) {
-        String value1 = first.asLiteral().getLexicalForm();
-        String value2 = second.asLiteral().getLexicalForm();
+        String value1 = first.toString();
+        String value2 = second.toString();
         
         if (value1.length() < value2.length()) {
             return first;
