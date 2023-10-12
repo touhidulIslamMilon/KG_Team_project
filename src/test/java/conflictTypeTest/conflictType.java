@@ -19,9 +19,13 @@ public class conflictType {
         Model model2 = ModelFactory.createDefaultModel();
         model2.read("src/test/testResources/analysisTest22.rdf");
 
+        Model model3 = ModelFactory.createDefaultModel();
+        model3.read("src/test/testResources/analysisTest33.rdf");
+
         List<Model> models = new ArrayList<>();
         models.add(model1);
         models.add(model2);
+        models.add(model3);
 
         System.out.println("Models loaded");
 

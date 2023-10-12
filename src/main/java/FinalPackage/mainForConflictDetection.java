@@ -12,8 +12,8 @@ public class mainForConflictDetection {
     public static void main(String[] args) {
 
         List<Model> models = readAllTestCases();
-        //Model mergedModel = Merger.mergeGraphs(models);
         identifyAndPrintConflicts(models);
+
 
     }
 }

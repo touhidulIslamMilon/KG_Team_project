@@ -51,7 +51,7 @@ public class Main {
         */
 
         /*
-            Test conflict types
+            Analysis of graphs
          */
 
         List<Model> models = readAllTestCases();
@@ -61,7 +61,6 @@ public class Main {
         models1.add(mergedModel);
         //number of statements
         System.out.println("Number of statements:" + mergedModel.size());
-
         System.out.println();
 
         //number of subjects
@@ -312,6 +311,7 @@ public class Main {
         System.out.println();
 
         //////////////////////////////////////////////////////////////////
+
         /*
         findFunctionalProperties(models);
         identifyAndPrintConflicts(models);
